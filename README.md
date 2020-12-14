@@ -33,26 +33,26 @@ Requires end-to-end payment, handling both success and failure
 
 
 # On php post, 
-# Call btcpy with invoice commands
-# Invoice is in USD (default) and converts automatically to BTC
-# conversion_to_usd.py
-# Call bitcoind to create a new address
-# Save invoice with address to database
+* Call btcpy with invoice commands
+* Invoice is in USD (default) and converts automatically to BTC
+* conversion_to_usd.py
+* Call bitcoind to create a new address
+* Save invoice with address to database
 	- Pandas
 	- SQL?
 	- Other?
-# read address form database back:
-# Pass address back to website
-# Wait for user send...
+* read address form database back:
+* Pass address back to website
+* Wait for user send...
 
 # btc_pay
-# Check bitcoind mempool every 5 seconds for incoming transactions,
-# wait for x confirmations (x also determines invoice_timeout)
-# After x confirmations, return as paid to website and unlock/call any other function. This could even be a custom script like sale_success_command.sh (link to digital good, call other APIs)
-# Need to integrate with at least 1 shop, woocommerce, as a proof of concept.
+* Check bitcoind mempool every 5 seconds for incoming transactions,
+* wait for x confirmations (x also determines invoice_timeout)
+* After x confirmations, return as paid to website and unlock/call any other function. This could even be a custom script like sale_success_command.sh (link to digital good, call other APIs)
+* Need to integrate with at least 1 shop, woocommerce, as a proof of concept.
 
 # lighting_pay
-# Same but integrate c_lightning.py for proof of concept.
+* Same but integrate c_lightning.py for proof of concept.
 
 
 # success/ 
