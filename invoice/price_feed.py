@@ -24,7 +24,7 @@ def get_btc_value(dollar_value, currency):
     if (price := get_price(currency)) is not None:
         
         try:
-            float_value = float(price) * dollar_value
+            float_value = dollar_value / float(price)
             if not isinstance(float_value, float):
                 raise Exception("Dollar value should be a float.")
         except Exception as e:
