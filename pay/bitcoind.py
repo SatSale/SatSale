@@ -4,20 +4,20 @@ import subprocess
 class btcd:
     def __init__(self):
         from bitcoinrpc.authproxy import AuthServiceProxy
-        
+
         connection_str = "http://{}:{}@{}:{}".format(config.username, config.password, config.host, config.rpcport)
         print("Attempting to connect to {}.".format(connection_str))
 
         try:
             self.rpc = AuthServiceProxy(connection_str)
-            info = self.rpc.getblockchaininfo()
-            info = self.rpc.help()
-    
+            # info = self.rpc.getblockchaininfo()
+            # info = self.rpc.help()
+
             print("Successfully contacted bitcoind.")
             print("-"*10)
             print(info)
             print("-"*10)
-            
+
         except Exception as e:
             print(e)
 
@@ -44,5 +44,4 @@ class btcd:
 
     def get_address(self):
         self.address = self.rpc.getnewaddress(self.label)
-        return 
-        
+        return
