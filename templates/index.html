@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>BTCPyServer</title>
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            namespace = '/pay';
+            var socket = io(namespace);
+
+            socket.on('connect', function() {
+                socket.emit('initialise', {data: 'initialising payment...'});
+            });
+
+            socket.on('my_response', function(msg, cb) {
+                console.log(msg.response);
+                $('#status').text(msg.status).html();
+                $('#address').text(msg.address).html();
+                $('#amount').text(msg.amount).html();
+                $('#log').append('<br>' + $('<div/>').text(msg.response).html());
+                $('#timer').text(msg.time_left).html();
+                if (cb)
+                    cb();
+            });
+
+            $('form#pay').submit(function(event) {
+                socket.emit('payment', {amount: $('#pay_data').val()});
+                return false;
+            });
+        });
+    </script>
+
+    <script type="text/javascript"  charset="utf-8">
+        intervalTimer = setInterval(function () {
+            var currentTime = document.getElementById('timer').innerHTML;
+            if (currentTime <= 0) {
+                currentTime = 1;
+            }
+            document.getElementById('timer').innerHTML = Math.round(currentTime - 1);
+        }, 1000)
+    </script>
+
+</head>
+<body style="background-color:white;">
+
+    <h1 style="background-color:white;">BTCPyServer</h1>
+
+    <form id="pay" method="POST" action='#'>
+        <input type="float" name="pay_data" id="pay_data" placeholder="Amount">
+        <input type="submit" value="$ (USD)">
+    </form>
+
+    <h2>Payment</h2>
+    <p><span id="status"></span></p>
+    <p>Address: <span id="address"></span></p>
+    <p>Amount: <span id="amount"></span> BTC</p>
+    <p><span id="timer"></span> seconds left.<p>
+    <div id="log" ></div>
+</body>
+</html>
