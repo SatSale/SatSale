@@ -15,7 +15,7 @@ class btcd:
 
             print("Successfully contacted bitcoind.")
             print("-"*10)
-            print(info)
+            #print(info)
             print("-"*10)
 
         except Exception as e:

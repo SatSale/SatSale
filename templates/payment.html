@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type=text/javascript src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/socket.io-client@3/dist/socket.io.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" charset="utf-8">
+    		var socket = io();
+    		socket.on('connect', function() {
+        	socket.emit('my event', {data: 'I\'m connected!'});
+    	});
+	</script>
 	<script type=text/javascript>
 		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	</script>
@@ -11,48 +17,8 @@
 <h1>Payment</h1>
 
 <script type=text/javascript>
-  $(function() {
-    $('a#calculate').bind('click', function() {
 
 
-		// Check for payment
-		// If paid, show confirmation message
-		// If unpaid, wait x seconds before checking again.
-		// Continue counting down until an expiry, this expiry will be refreshed
-		// in the javascript to remain in sync.
-		//
-		setInterval(
-			$.ajax({
-	            url: '/pay',
-	            type: 'get',
-				data: {'amount' : $('input[name="amount"]').val(),
-						'unique_id' : uuidv4()},
-	            success: function(response) {
-	                console.log(response);
-	                $("#result").html(response["paid"]);
-	            },
-	            error: function(error) {
-	                console.log(error);
-	            }}),
-
-			sleep(5));
-
-        };
-	})})
-
-  //
-  //
-	//   $.ajax({
-	// 	  url: "$SCRIPT_ROOT + '/pay'",
-	// 	  type:
-	// 	  {
-  //       amount: $('input[name="amount"]').val()
-  //     }, function(data) {
-  //       $("#result").text(data.result);
-  //     });
-  //     return false;
-  //   });
-  // });
 </script>
 
 <h1>Pay {{ amount }}</h1>
