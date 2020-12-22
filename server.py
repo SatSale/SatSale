@@ -1,5 +1,5 @@
-from flask import Flask, request, url_for, jsonify, render_template
-from flask_socketio import SocketIO
+from flask import Flask, render_template, session
+from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
 
@@ -8,90 +8,114 @@ import config
 import invoice
 from pay import bitcoind
 
+async_mode = None
 app = Flask(__name__)
-socketio = SocketIO(app)
+app.config['SECRET_KEY'] = 'secret!'
+socket_ = SocketIO(app, async_mode=async_mode)
+# thread = None
+# thread_lock = Lock()
 
-@app.route('/invoice', methods=['GET'])
-def invoice():
-    amount = request.values.get('amount')
+@app.route('/')
+def index():
+    return render_template('index.html', async_mode=socket_.async_mode)
 
+@socket_.on('initialise', namespace='/pay')
+def test_message(message):
+    emit('payresponse', {'time_left': -1, 'response': message['data']})
+
+@socket_.on('payment', namespace='/pay')
+def make_payment(payload):
+    print("Requesting payment for {}".format(payload['amount']))
+
+    # Check the amount is a float
+    amount = payload['amount']
     try:
         amount = float(amount)
     except:
-        print("Amount could not be interpreted as float {}".format(amount))
+        # Give response?
         amount = None
         return
 
-    payment = create_invoice(amount, currency, label)
+    # Validate amount is a positive float
+    if not (isinstance(amount, float) and amount >= 0):
+        # Give response?
+        amount = None
+        return
 
+    # Need to check this is safe!
+    label = payload['label']
 
+    # Initialise this payment
+    payment = create_invoice(amount, "USD", label)
 
-@app.route('/pay', methods=['GET', 'POST'])
-def pay():
-    start_time = time.time()
+    make_payment(payment)
 
-    if True: #request.method == 'POST':
-        print("CALLING BITCOIND MAIN")
+    if payment.paid:
+        payment.status = 'Payment finalised.'
+        payment.response = 'Payment finalised.'
+        update_status(payment)
 
-        amount = request.values.get('amount')
-
-        try:
-            amount = float(amount)
-        except:
-            print("Amount could not be interpreted as float {}".format(amount))
-            amount = None
-            return
-
-        if (isinstance(amount, float) and amount >= 0):
-            print("Calling main payment function for {}".format(amount))
-
-            if payment(amount, "USD", "wee"):
-                print("PAID")
-                return jsonify(paid=True)
-
-        else:
-            return jsonify(paid=False)
-
-    else:
-        return jsonify(paid=False)
-
+        ### DO SOMETHING
+        # Depends on config
+        # Get redirected?
+        # Nothing?
+        # Run custom script?
 
 def create_invoice(amount, currency, label):
-    inv = invoice.invoice(amount, currency, label)
-
-    payment = bitcoind.btcd()
-    payment.load_invoice(inv)
+    payment_invoice = invoice.invoice(amount, currency, label)
+    payment = bitcoind.btcd(payment_invoice)
     payment.get_address()
     return payment
 
+def update_status(payment, console_status=True):
+    if console_status:
+        print(payment.status)
 
-def payment(amount, currency, label):
-    payment = create_invoice(amount, currency, label)
+    emit('payresponse', {
+        'status' : payment.status,
+        'address' : payment.address,
+        'amount' : payment.value,
+        'time_left' : payment.time_left,
+        'response': payment.response})
+    return
 
-    start_time = time.time()
-    while time.time() - start_time < config.payment_timeout:
-        conf_paid, unconf_paid = payment.check_payment()
-        print(conf_paid, unconf_paid)
+def make_payment(payment):
+    payment.status = 'Awaiting payment.'
+    payment.response = 'Awaiting payment.'
+    update_status(payment)
 
-        if conf_paid > payment.value:
-            print("Invoice {} paid! {} BTC.".format(payment.label, conf_paid))
+    # Track start_time for payment timeouts
+    payment.start_time = time.time()
+    while (time_left := config.payment_timeout - (time.time() - payment.start_time)) > 0:
+        payment.time_left = time_left
+        payment.confirmed_paid, payment.unconfirmed_paid = payment.check_payment()
+
+        if payment.confirmed_paid > payment.value:
             payment.paid = True
-            return True
+            payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
+            payment.response = "Payment successful! {} BTC".format(payment.confirmed_paid)
+            update_status(payment)
+            break
+
+        elif payment.unconfirmed_paid > 0:
+            payment.status = "Discovered {} BTC payment. \
+                Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
+            payment.response = "Discovered {} BTC payment. \
+                Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
+            update_status(payment)
+            socket_.sleep(config.pollrate)
         else:
-            time.sleep(15)
+            payment.status = "Awaiting {} BTC payment...".format(payment.value)
+            payment.response = "Awaiting {} BTC payment...".format(payment.value)
+            update_status(payment)
+            socket_.sleep(config.pollrate)
     else:
-        print("Invoice {} expired.".format(payment.label))
+        payment.status = "Payment expired."
+        payment.status = "Payment expired."
+        update_status(payment)
 
-    if payment.paid:
-        print("Returning paid to site.")
-    else:
-        print("Reload page, etc. need to create new invoice")
+    return
 
-    return False
 
-if __name__ == "__main__":
-    socketio.run(app, debug=True)
-
-#with app.test_client() as c:
-#    resp = c.post('/pay', data=dict(amount=69))
-#    print(resp.data)
+if __name__ == '__main__':
+    socket_.run(app, debug=True)
