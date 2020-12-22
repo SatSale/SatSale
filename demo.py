@@ -32,13 +32,13 @@ def make_payment(payload):
     try:
         amount = float(amount)
     except:
-        # emit('payresponse', {'status' : '', 'address' : '', 'amount' : '', 'time_left': 0, 'response': "Invalid payment mount.".format(unconf_paid)})
+        # Give response?
         amount = None
         return
 
     # Validate amount is a positive float
     if not (isinstance(amount, float) and amount >= 0):
-        # emit('payresponse', {'status' : '', 'address' : '', 'amount' : '', 'time_left': 0, 'response': "Invalid payment mount.".format(unconf_paid)})
+        # Give response?
         amount = None
         return
 
@@ -61,11 +61,22 @@ def make_payment(payload):
         # Nothing?
         # Run custom script?
 
+def create_invoice(amount, currency, label):
+    payment_invoice = invoice.invoice(amount, currency, label)
+    payment = bitcoind.btcd(payment_invoice)
+    payment.get_address()
+    return payment
+
 def update_status(payment, console_status=True):
     if console_status:
         print(payment.status)
 
-    emit('payresponse', {'status' : payment.status, 'address' : payment.address, 'amount' : payment.value, 'time_left': payment.time_left, 'response': payment.response})
+    emit('payresponse', {
+        'status' : payment.status,
+        'address' : payment.address,
+        'amount' : payment.value,
+        'time_left' : payment.time_left,
+        'response': payment.response})
     return
 
 def make_payment(payment):
@@ -87,8 +98,10 @@ def make_payment(payment):
             break
 
         elif payment.unconfirmed_paid > 0:
-            payment.status = "Discovered {} BTC payment. Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
-            payment.response = "Discovered {} BTC payment. Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
+            payment.status = "Discovered {} BTC payment. \
+                Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
+            payment.response = "Discovered {} BTC payment. \
+                Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
             update_status(payment)
             socket_.sleep(config.pollrate)
         else:
@@ -102,13 +115,6 @@ def make_payment(payment):
         update_status(payment)
 
     return
-
-
-def create_invoice(amount, currency, label):
-    payment_invoice = invoice.invoice(amount, currency, label)
-    payment = bitcoind.btcd(payment_invoice)
-    payment.get_address()
-    return payment
 
 
 if __name__ == '__main__':
