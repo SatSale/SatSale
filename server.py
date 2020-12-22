@@ -1,4 +1,5 @@
 from flask import Flask, request, url_for, jsonify, render_template
+from flask_socketio import SocketIO
 from markupsafe import escape
 import time
 
@@ -8,13 +9,9 @@ import invoice
 from pay import bitcoind
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
-@app.route('/')
-def index():
-    return render_template('payment.html')
-
-
-app.route('/invoice', methods=['GET'])
+@app.route('/invoice', methods=['GET'])
 def invoice():
     amount = request.values.get('amount')
 
@@ -92,6 +89,8 @@ def payment(amount, currency, label):
 
     return False
 
+if __name__ == "__main__":
+    socketio.run(app, debug=True)
 
 #with app.test_client() as c:
 #    resp = c.post('/pay', data=dict(amount=69))

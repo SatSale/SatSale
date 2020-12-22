@@ -10,10 +10,10 @@
             var socket = io(namespace);
 
             socket.on('connect', function() {
-                socket.emit('initialise', {data: 'initialising payment...'});
+                socket.emit('initialise', {'data': 'initialising payment...'});
             });
 
-            socket.on('my_response', function(msg, cb) {
+            socket.on('payresponse', function(msg, cb) {
                 console.log(msg.response);
                 $('#status').text(msg.status).html();
                 $('#address').text(msg.address).html();
@@ -25,7 +25,7 @@
             });
 
             $('form#pay').submit(function(event) {
-                socket.emit('payment', {amount: $('#pay_data').val()});
+                socket.emit('payment', {'amount': $('#pay_data').val(), 'label' : null});
                 return false;
             });
         });
@@ -40,8 +40,8 @@
             document.getElementById('timer').innerHTML = Math.round(currentTime - 1);
         }, 1000)
     </script>
-
 </head>
+
 <body style="background-color:white;">
 
     <h1 style="background-color:white;">BTCPyServer</h1>

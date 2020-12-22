@@ -8,7 +8,6 @@ import config
 import invoice
 from pay import bitcoind
 
-
 async_mode = None
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -16,69 +15,98 @@ socket_ = SocketIO(app, async_mode=async_mode)
 # thread = None
 # thread_lock = Lock()
 
-
 @app.route('/')
 def index():
     return render_template('index.html', async_mode=socket_.async_mode)
 
 @socket_.on('initialise', namespace='/pay')
 def test_message(message):
-    emit('my_response', {'time_left': config.payment_timeout, 'response': message['data']})
+    emit('payresponse', {'time_left': -1, 'response': message['data']})
 
 @socket_.on('payment', namespace='/pay')
-def make_payment(message):
-    print("Requesting payment for {}".format(message['amount']))
+def make_payment(payload):
+    print("Requesting payment for {}".format(payload['amount']))
 
     # Check the amount is a float
-    amount = message['amount']
+    amount = payload['amount']
     try:
         amount = float(amount)
     except:
-        emit('my_response', {'status' : '', 'address' : '', 'amount' : '', 'time_left': 0, 'response': "Invalid payment mount.".format(unconf_paid)})
+        # emit('payresponse', {'status' : '', 'address' : '', 'amount' : '', 'time_left': 0, 'response': "Invalid payment mount.".format(unconf_paid)})
         amount = None
         return
 
     # Validate amount is a positive float
     if not (isinstance(amount, float) and amount >= 0):
-        emit('my_response', {'status' : '', 'address' : '', 'amount' : '', 'time_left': 0, 'response': "Invalid payment mount.".format(unconf_paid)})
+        # emit('payresponse', {'status' : '', 'address' : '', 'amount' : '', 'time_left': 0, 'response': "Invalid payment mount.".format(unconf_paid)})
         amount = None
         return
 
+    # Need to check this is safe!
+    label = payload['label']
+
     # Initialise this payment
-    payment = create_invoice(amount, "USD", "wee")
-    emit('my_response', {'status' : 'Awaiting payment.', 'address' : payment.address, 'amount' : payment.value, 'time_left': config.payment_timeout, 'response' : 'Awaiting payment.'})
+    payment = create_invoice(amount, "USD", label)
 
-    # Track start_time for payment timeouts
-    start_time = time.time()
-    while (time_left := config.payment_timeout - (time.time() - start_time)) > 0:
-        conf_paid, unconf_paid = payment.check_payment()
-        print(conf_paid, unconf_paid)
-
-        if conf_paid > payment.value:
-            print("Invoice {} paid! {} BTC.".format(payment.label, conf_paid))
-            payment.paid = True
-            break
-
-        elif unconf_paid > 0:
-            emit('my_response', {'status' : 'Discovered {} BTC payment... Waiting for {} confirmations.'.format(config.required_confirmations), 'address' : payment.address, 'amount' : payment.value, 'time_left': time_left, 'response': "Discovered {} BTC payment, waiting for {} confirmations.".format(unconf_paid, config.required_confirmations)})
-            socket_.sleep(15)
-        else:
-            emit('my_response', {'status' : 'Awaiting payment.', 'address' : payment.address, 'amount' : payment.value, 'time_left': time_left, 'response': 'Awaiting {} BTC payment...'.format(payment.value)})
-            socket_.sleep(15)
-    else:
-        emit('my_response', {'status' : 'EXPIRED', 'address' : payment.address, 'amount' : payment.value, 'time_left': 0, 'response':'INVOICE EXPIRED'})
-        print("Invoice {} expired.".format(payment.label))
-        payment.paid = False
+    make_payment(payment)
 
     if payment.paid:
-        print("PAID")
-        emit('my_response', {'status' : 'Paid!', 'address' : payment.address, 'amount' : payment.value, 'time_left': time_left, 'response': 'Payment finalised.'})
+        payment.status = 'Payment finalised.'
+        payment.response = 'Payment finalised.'
+        update_status(payment)
+
+        ### DO SOMETHING
+        # Depends on config
+        # Get redirected?
+        # Nothing?
+        # Run custom script?
+
+def update_status(payment, console_status=True):
+    if console_status:
+        print(payment.status)
+
+    emit('payresponse', {'status' : payment.status, 'address' : payment.address, 'amount' : payment.value, 'time_left': payment.time_left, 'response': payment.response})
+    return
+
+def make_payment(payment):
+    payment.status = 'Awaiting payment.'
+    payment.response = 'Awaiting payment.'
+    update_status(payment)
+
+    # Track start_time for payment timeouts
+    payment.start_time = time.time()
+    while (time_left := config.payment_timeout - (time.time() - payment.start_time)) > 0:
+        payment.time_left = time_left
+        payment.confirmed_paid, payment.unconfirmed_paid = payment.check_payment()
+
+        if payment.confirmed_paid > payment.value:
+            payment.paid = True
+            payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
+            payment.response = "Payment successful! {} BTC".format(payment.confirmed_paid)
+            update_status(payment)
+            break
+
+        elif payment.unconfirmed_paid > 0:
+            payment.status = "Discovered {} BTC payment. Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
+            payment.response = "Discovered {} BTC payment. Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
+            update_status(payment)
+            socket_.sleep(config.pollrate)
+        else:
+            payment.status = "Awaiting {} BTC payment...".format(payment.value)
+            payment.response = "Awaiting {} BTC payment...".format(payment.value)
+            update_status(payment)
+            socket_.sleep(config.pollrate)
+    else:
+        payment.status = "Payment expired."
+        payment.status = "Payment expired."
+        update_status(payment)
+
+    return
+
 
 def create_invoice(amount, currency, label):
-    inv = invoice.invoice(amount, currency, label)
-
-    payment = bitcoind.btcd()
-    payment.load_invoice(inv)
+    payment_invoice = invoice.invoice(amount, currency, label)
+    payment = bitcoind.btcd(payment_invoice)
     payment.get_address()
     return payment
 

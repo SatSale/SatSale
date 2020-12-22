@@ -2,7 +2,9 @@ import config
 import subprocess
 
 class btcd:
-    def __init__(self):
+    def __init__(self, invoice):
+        self.__dict__ = invoice.__dict__.copy()
+
         from bitcoinrpc.authproxy import AuthServiceProxy
 
         connection_str = "http://{}:{}@{}:{}".format(config.username, config.password, config.host, config.rpcport)
@@ -20,12 +22,6 @@ class btcd:
 
         except Exception as e:
             print(e)
-
-    def load_invoice(self, invoice):
-        self.value = invoice.value
-        self.label = invoice.label
-        self.paid = False
-        return
 
     def check_payment(self):
         self.address = "bc1qwxlwghumfmhwdc2deyn7h42syp2t496penax2y"
