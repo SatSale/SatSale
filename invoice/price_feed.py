@@ -1,28 +1,37 @@
 import requests
 
+import config
+
 def get_price(currency):
     price_feed = "https://api.coindesk.com/v1/bpi/currentprice.json"
     r = requests.get(price_feed)
-    
-    try:
-        price_data = r.json()
-        prices = price_data['bpi']
-    except:
-        print("Failed to reach {}.".format(price_feed))
-        return None
+
+    for i in range(config.connection_attempts):
+        try:
+            price_data = r.json()
+            prices = price_data['bpi']
+            break
+
+        except Exception as e:
+            print(e)
+            print("Attempting again... {}/{}...".format(i+1, config.connection_attempts))
+
+    else:
+        raise("Failed to reach {}.".format(price_feed))
+
 
     try:
         price = prices[currency]['rate'].replace(',', '')
+        return price
+
     except:
         print("Failed to find currency {} from {}.".format(currency, price_feed))
         return None
 
-    return price
-
 
 def get_btc_value(dollar_value, currency):
     if (price := get_price(currency)) is not None:
-        
+
         try:
             float_value = dollar_value / float(price)
             if not isinstance(float_value, float):

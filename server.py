@@ -61,9 +61,10 @@ def make_payment(payload):
         # Nothing?
         # Run custom script?
 
-def create_invoice(amount, currency, label):
-    payment_invoice = invoice.invoice(amount, currency, label)
-    payment = bitcoind.btcd(payment_invoice)
+def create_invoice(dollar_amount, currency, label):
+    # payment_invoice = invoice.invoice(amount, currency, label)
+    payment = bitcoind.btcd(dollar_amount, currency, label)
+    # payment = bitcoind.btcd(payment_invoice)
     payment.get_address()
     return payment
 
@@ -89,6 +90,8 @@ def make_payment(payment):
     while (time_left := config.payment_timeout - (time.time() - payment.start_time)) > 0:
         payment.time_left = time_left
         payment.confirmed_paid, payment.unconfirmed_paid = payment.check_payment()
+        print()
+        print(payment.__dict__)
 
         if payment.confirmed_paid > payment.value:
             payment.paid = True
