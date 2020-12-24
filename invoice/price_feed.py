@@ -38,7 +38,7 @@ def get_btc_value(dollar_value, currency):
                 raise Exception("Dollar value should be a float.")
         except Exception as e:
             print(e)
-            raise
+
 
         return float_value
 

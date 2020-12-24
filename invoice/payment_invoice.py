@@ -8,7 +8,7 @@ class invoice:
     def __init__(self, dollar_value, currency, label):
         self.dollar_value = dollar_value
         self.currency = currency
-        self.value = get_btc_value(dollar_value, currency)
+        self.value = round(get_btc_value(dollar_value, currency), 8)
         self.label = label
         self.id = str(uuid.uuid4())
         self.status = 'Payment initialised.'
@@ -16,3 +16,4 @@ class invoice:
         self.time_left = config.payment_timeout
         self.confirmed_paid = 0
         self.unconfirmed_paid = 0
+        self.paid = False
