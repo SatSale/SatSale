@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
 
-import main
+import ssh_tunnel
 import config
 import invoice
 from pay import bitcoind
