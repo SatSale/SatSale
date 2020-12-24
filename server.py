@@ -108,8 +108,8 @@ def make_payment(payment):
             update_status(payment)
             socket_.sleep(config.pollrate)
         else:
-            payment.status = "Awaiting {} BTC payment...".format(payment.value)
-            payment.response = "Awaiting {} BTC payment...".format(payment.value)
+            payment.status = "Awaiting payment...".format(payment.value)
+            payment.response = "Awaiting payment...".format(payment.value)
             update_status(payment)
             socket_.sleep(config.pollrate)
     else:

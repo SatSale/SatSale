@@ -5,61 +5,98 @@
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
     <script src="{{ url_for('static', filename='server_connection.js') }}"></script>
-    <!-- <script type="text/javascript"  charset="utf-8">
-    $(document).ready(function() {
-        namespace = '/pay';
-        var socket = io(namespace);
 
-        socket.on('connect', function() {
-            socket.emit('initialise', {'data': 'initialising payment...'});
-        });
 
-        socket.on('payresponse', function(msg, cb) {
-            console.log(msg.response);
-            $('#status').text(msg.status).html();
-            $('#address').text(msg.address).html();
-            $('#amount').text(msg.amount).html();
-            $('#log').append('<br>' + $('<div/>').text(msg.response).html());
-            $('#timer').text(msg.time_left).html();
-            if (cb)
-                cb();
-        });
+    <style>
+        html, body {
+            display: flex;
+            /* height:auto;
+            width:260px; */
+        }
+        body{
+            background-color: inherit;
+            overflow: hidden;
+        }
+        /* body {
+            background-color: inherit;
+            height: 200px;
+        } */
+        #paybox {
+            background-color: #f7931a;
+            border-radius: 25px;
+            padding-left: 30px;
+            padding-right: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-size: 16px
 
-        $('form#pay').submit(function(event) {
-            socket.emit('payment', {'amount': $('#pay_data').val(), 'label' : null});
-            return false;
-        });
-    });
-    </script> -->
+            height:auto;
+            width:220px;
+        }
 
-    <!-- <script type="text/javascript"  charset="utf-8">
-        intervalTimer = setInterval(function () {
-            var currentTime = document.getElementById('timer').innerHTML;
-            if (currentTime <= 0) {
-                currentTime = 1;
-            }
-            document.getElementById('timer').innerHTML = Math.round(currentTime - 1);
-        }, 1000)
-    </script> -->
+        .row {
+            display: flex;
+        }
+         .left {
+          width: 70%;
+          padding: 0 10px 0 0;
+          float: left;
+        }
+        .right {
+          width: 30%;
+          padding: 0 10px 0 0;
+          float: right;
+        }
+        p {
+            /* display: inline-block; */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            margin: 0;
+            padding: 5px;
+        }
+        address {
+            overflow-wrap: break-word;
+        }
+        paymentDetails.p {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
 </head>
 
-<body style="background-color:white;">
+<body>
 
-    <h1 style="background-color:white;">BTCPyServer</h1>
+    <div id="paybox">
+        <!-- <div id="row" height="50px">
+            <div id="left" style="display:inline-block;">
+                <p>Pay with Bitcoin</p>
+            </div>
+            <div id="right">
+                <img align="right" width="50px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png">
+            </div>
+        </div> -->
+        <h1><img style="padding-left: 15px; float:right;" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png">Pay with <br> Bitcoin</h1>
 
-    <form id="pay" method="POST" action='#'>
-        <input type="float" name="pay_data" id="pay_data" placeholder="Amount">
-        <input type="submit" value="$ (USD)">
-    </form>
+        <center>
+            <form id="pay" method="POST" action='#' style="margin:0;padding0;">
+                <h2 style="margin:0;padding0;">Amount:
+                <input style="display:inline" size="4" type="float" name="pay_data" id="pay_data" placeholder="USD">
+                </h2>
+                <br>
+                <input style="width:100%" type="submit" value="Pay"  onclick="showDiv()">
+            </form>
+        </center>
 
-    <h2>Payment</h2>
-    <p><span id="status"></span></p>
-    <p>Address: <span id="address"></span></p>
-    <p>Amount: <span id="amount"></span> BTC</p>
-    <p><span id="timer"></span> seconds left.<p>
-    <div id="log" ></div>
+        <div id="paymentDetails" style="display:none;">
+            <p>Send: <b><span id="amount"></span></b> BTC</p>
+            <p>To: <br><b><span id="address" onclick="CopyToClipboard('address')"></span></b></p>
+            <p><span id="status"></span>.</p>
+            <p><span id="timer"></span> seconds remaining.</p>
+        </div>
 
-    <div id="paybutton"></div>
-    <script
+        <div id="paybutton"></div>
+    </div>
 </body>
 </html>
