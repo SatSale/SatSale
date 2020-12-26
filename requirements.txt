@@ -1,0 +1,7 @@
+python_bitcoinrpc==1.0
+qrcode==6.1
+Flask_SocketIO==5.0.0
+Flask==1.1.2
+MarkupSafe==1.1.1
+requests==2.25.0
+bitcoinrpc==0.3.1
