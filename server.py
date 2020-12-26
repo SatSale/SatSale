@@ -58,6 +58,8 @@ def make_payment(payload):
         payment.response = 'Payment finalised. Thankyou!'
         update_status(payment)
 
+        invoice.success.success()
+
         ### DO SOMETHING
         # Depends on config
         # Get redirected?
