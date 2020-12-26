@@ -25,17 +25,3 @@ The main code can be found in `server.py`. invoice and bitcoind handling in `inv
 
 # Disclaimer
 BtcPyment is in early development, as such we are not responsible for any loss of funds or vulnerabilities.
-
-# success/
-Payment success
-Display on website as successfuly paid, write to database to confirm payment.
-Navigate elsewhere by calling script from `sales/*.py`
-This script will control what happens after payment confirmation, can integate many shops / styles.
-
-# failure/
-Also customisable!
-Times out after XX minutes, (depend on confirmations required).
-Default:
-	- Add button to recreate invoice
-		- Recalculates value request.
-	-
