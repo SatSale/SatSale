@@ -23,3 +23,5 @@ class invoice:
         img = qrcode.make(self.address)
         img.save('static/qr_codes/{}.png'.format(self.uuid))
         return
+
+    

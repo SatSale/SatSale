@@ -1,61 +1,30 @@
-# BTCPYSERVER
-BTCPayserver is incredibly bloated. The goal of BTCpyserver is to act as a lightweight bitcoin payment system for your website.
+Widely used non-custodial Bitcoin payment processors are bloated and difficult for the average person to install. BtcPyment strives to exist as an easily deployable, highly customisable, lightweight Bitcoin payment processor that keeps your coins belonging to your keys. Almost purely written in Python and Javascript, BtcPyment makes donation buttons simple for your website; via a simple embedded iframe that talks to your own Bitcoin node via Flask websockets.
 
 # Installation
 This should be easy to install.
 
-# Architecture
-btcpysever
--site/
---website.php
--invoice/
---main.py
---database.py
---price_feed.py
--btc_pay/
---bitcoind.py
---clightning.py
--success/
---success.py
--failure
---failure.py
--main.py
+# Feature
+* Lightweight, python and javascript talk to your own bitcoin node via websockets and ssh.
+* Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
+* Natively supports all bitcoind node features through RPC.
+* QR codes, customisable payment confirmations and payment expiry duration.
+* No shitcoin bloat.
 
+# Developers
+## You only need a little python!
+The main code can be found in `server.py`. invoice and bitcoind handling in `invoice/`, donation button javascript logic in `static/`, button appearance in `template/`. Please have ago at implementing some of the things below!
 
-# Minimum requirements for proof of concept
-Requires end-to-end payment, handling both success and failure
-- PHP invoice page, could everything be php...?
-- Not PHP, need something that can dynamically show the progress!
-- Feedback: timeleft, confirmations, etc.
-- integrate with bitcoind, monitor transactions
-- 
+# Coming soon:
+* Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
+* Lightning support
+* More readily customisable donation button (text/color/QR code)
+* Database integration for payment invoices
+* Multiple choice of price feeds
 
+# Disclaimer
+BtcPyment is in early development, as such we are not responsible for any loss of funds or vulnerabilities.
 
-
-# On php post, 
-* Call btcpy with invoice commands
-* Invoice is in USD (default) and converts automatically to BTC
-* conversion_to_usd.py
-* Call bitcoind to create a new address
-* Save invoice with address to database
-	- Pandas
-	- SQL?
-	- Other?
-* read address form database back:
-* Pass address back to website
-* Wait for user send...
-
-# btc_pay
-* Check bitcoind mempool every 5 seconds for incoming transactions,
-* wait for x confirmations (x also determines invoice_timeout)
-* After x confirmations, return as paid to website and unlock/call any other function. This could even be a custom script like sale_success_command.sh (link to digital good, call other APIs)
-* Need to integrate with at least 1 shop, woocommerce, as a proof of concept.
-
-# lighting_pay
-* Same but integrate c_lightning.py for proof of concept.
-
-
-# success/ 
+# success/
 Payment success
 Display on website as successfuly paid, write to database to confirm payment.
 Navigate elsewhere by calling script from `sales/*.py`

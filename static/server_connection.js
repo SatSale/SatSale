@@ -1,9 +1,10 @@
+// Websocket logic, talks to server.py pay
 $(document).ready(function() {
     namespace = '/pay';
     var socket = io(namespace);
 
     socket.on('connect', function() {
-        socket.emit('initialise', {'data': 'initialising payment...'});
+        socket.emit('initialise', {'data': 'Initialising payment.'});
     });
 
     socket.on('payresponse', function(msg, cb) {
@@ -26,11 +27,16 @@ $(document).ready(function() {
     });
 });
 
+// Additional steps to take when giving a response to the webpage
+// Update qr code, and hide timer
 function conditionalPageLogic(msg) {
     if (msg.address != null) {
         document.getElementById('logo').classList.add("qr");
-        document.getElementById('logo').src = "static/qr_codes/" + msg.uuid + ".png";
-        document.getElementById('qrClick').href = "/static/qr_codes/" + msg.uuid + ".png"
+        // document.getElementById('logo').src = "static/qr_codes/" + msg.uuid + ".png";
+        document.getElementById('logo').style.display = "none";
+        document.getElementById('qrImage').style.display = "block";
+        document.getElementById('qrClick').href = "/static/qr_codes/" + msg.uuid + ".png";
+        document.getElementById('qrImage').src = "/static/qr_codes/" + msg.uuid + ".png";
     }
 
     if (msg.time_left == 0) {
@@ -38,6 +44,7 @@ function conditionalPageLogic(msg) {
     }
 }
 
+// Hide payment form and show payment details when payment is initiated
 function hideAmountShowPayment() {
     if (document.getElementById('pay_data').value > 0) {
         document.getElementById('paymentDetails').style.display = "block";
@@ -45,6 +52,7 @@ function hideAmountShowPayment() {
     }
 }
 
+// Copy text functions
 function copyText(text) {
   navigator.clipboard.writeText(text);
 }
@@ -56,7 +64,7 @@ function copyTextFromElement(elementID) {
   alert("Copied address:" + elementText)
 }
 
-
+// Payment timer, can't go below zero, update every second
 intervalTimer = setInterval(function () {
     var currentTime = document.getElementById('timer').innerHTML;
     if (currentTime <= 0) {
