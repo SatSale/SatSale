@@ -30,19 +30,20 @@
             padding-bottom: 10px;
             font-size: 16px
 
-            height:auto;
+            /* height:auto; */
+            height: 275px;
             width:220px;
         }
 
-        .row {
+        #row {
             display: flex;
         }
-         .left {
+         #left {
           width: 70%;
           padding: 0 10px 0 0;
           float: left;
         }
-        .right {
+        #right {
           width: 30%;
           padding: 0 10px 0 0;
           float: right;
@@ -54,46 +55,60 @@
             margin: 0;
             padding: 5px;
         }
-        address {
+        #address {
             overflow-wrap: break-word;
+            text-align: right;
         }
-        paymentDetails.p {
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            padding: 0;
-            margin: 0;
+        .qr {
+            transition: transform .2s;
+            object-fit: cover;
+        }
+        .qr:hover {
+            -ms-transform: scale(3); /* IE 9 */
+            -webkit-transform: scale(3); /* Safari 3-8 */
+            transform: scale(3);
         }
     </style>
 </head>
 
+
+<!-- Issues:
+    The style is a mess
+    The copy address doesnt work
+    The logo title columns don't work
+    The iframe expands beyond its max height. -->
+
+
 <body>
 
     <div id="paybox">
-        <!-- <div id="row" height="50px">
+        <div id="row" height="50px">
             <div id="left" style="display:inline-block;">
-                <p>Pay with Bitcoin</p>
+                <h1>Pay with Bitcoin</h1>
             </div>
             <div id="right">
-                <img align="right" width="50px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png">
+                <a id="qrClick" target="_blank"><img class="" id="logo" style="padding-top:25px" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
             </div>
-        </div> -->
-        <h1><img style="padding-left: 15px; float:right;" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png">Pay with <br> Bitcoin</h1>
+        </div>
+        <!-- <h1><img id="logoQR" style="padding-left: 15px; float:right;" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png">Pay with <br> Bitcoin</h1> -->
 
-        <center>
-            <form id="pay" method="POST" action='#' style="margin:0;padding0;">
-                <h2 style="margin:0;padding0;">Amount:
-                <input style="display:inline" size="4" type="float" name="pay_data" id="pay_data" placeholder="USD">
-                </h2>
-                <br>
-                <input style="width:100%" type="submit" value="Pay"  onclick="showDiv()">
-            </form>
-        </center>
+        <div id="paymentForm">
+            <center>
+                <form id="pay" method="POST" action='#' style="margin:0;padding0;">
+                    <h2 style="margin:0;padding0;">Amount:
+                    <input style="display:inline" size="4" type="float" name="pay_data" id="pay_data" placeholder="USD">
+                    </h2>
+                    <br>
+                    <input style="width:100%" type="submit" value="Pay"  onclick="hideAmountShowPayment()">
+                </form>
+            </center>
+        </div>
 
-        <div id="paymentDetails" style="display:none;">
-            <p>Send: <b><span id="amount"></span></b> BTC</p>
-            <p>To: <br><b><span id="address" onclick="CopyToClipboard('address')"></span></b></p>
-            <p><span id="status"></span>.</p>
-            <p><span id="timer"></span> seconds remaining.</p>
+        <div id="paymentDetails" style="display:none; padding: 0;">
+            <p style="padding:0;">Send: <b><span id="amount"></span></b> BTC</p>
+            <p style="padding:0;">To: </p><b><p id="address" onclick="copyTextFromElement('address')"></p></b>
+            <p style="padding:0;"><span id="status"></span></p>
+            <p id="timerContainer" style="padding:0;"><span id="timer"></span> seconds remaining.</p>
         </div>
 
         <div id="paybutton"></div>

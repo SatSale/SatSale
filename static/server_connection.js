@@ -12,7 +12,10 @@ $(document).ready(function() {
         $('#address').text(msg.address).html();
         $('#amount').text(msg.amount).html();
         $('#log').append('<br>' + $('<div/>').text(msg.response).html());
-        $('#timer').text(msg.time_left).html();
+        $('#timer').text(Math.round(msg.time_left)).html();
+
+        conditionalPageLogic(msg)
+
         if (cb)
             cb();
     });
@@ -23,6 +26,37 @@ $(document).ready(function() {
     });
 });
 
+function conditionalPageLogic(msg) {
+    if (msg.address != null) {
+        document.getElementById('logo').classList.add("qr");
+        document.getElementById('logo').src = "static/qr_codes/" + msg.uuid + ".png";
+        document.getElementById('qrClick').href = "/static/qr_codes/" + msg.uuid + ".png"
+    }
+
+    if (msg.time_left == 0) {
+        document.getElementById('timerContainer').style.visibility = "hidden";
+    }
+}
+
+function hideAmountShowPayment() {
+    if (document.getElementById('pay_data').value > 0) {
+        document.getElementById('paymentDetails').style.display = "block";
+        document.getElementById('paymentForm').style.display = "none";
+    }
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+}
+
+function copyTextFromElement(elementID) {
+  let element = document.getElementById(elementID); //select the element
+  let elementText = element.textContent; //get the text content from the element
+  copyText(elementText); //use the copyText function below
+  alert("Copied address:" + elementText)
+}
+
+
 intervalTimer = setInterval(function () {
     var currentTime = document.getElementById('timer').innerHTML;
     if (currentTime <= 0) {
@@ -30,24 +64,3 @@ intervalTimer = setInterval(function () {
     }
     document.getElementById('timer').innerHTML = Math.round(currentTime - 1);
 }, 1000)
-
-function showDiv() {
-    if (document.getElementById('pay_data').value > 0) {
-        document.getElementById('paymentDetails').style.display = "block";
-    }
-}
-
-function CopyToClipboard(containerid) {
-  if (document.selection) {
-    var range = document.body.createTextRange();
-    range.moveToElementText(document.getElementById(containerid));
-    range.select().createTextRange();
-    document.execCommand("copy");
-  } else if (window.getSelection) {
-    var range = document.createRange();
-    range.selectNode(document.getElementById(containerid));
-    window.getSelection().addRange(range);
-    document.execCommand("copy");
-    alert("Copied address!");
-  }
-}

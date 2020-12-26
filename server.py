@@ -66,6 +66,7 @@ def create_invoice(dollar_amount, currency, label):
     payment = bitcoind.btcd(dollar_amount, currency, label)
     # payment = bitcoind.btcd(payment_invoice)
     payment.get_address()
+    payment.create_qr()
     return payment
 
 def update_status(payment, console_status=True):
@@ -77,6 +78,7 @@ def update_status(payment, console_status=True):
         'address' : payment.address,
         'amount' : payment.value,
         'time_left' : payment.time_left,
+        'uuid' : payment.uuid,
         'response': payment.response})
     return
 
@@ -95,6 +97,7 @@ def make_payment(payment):
 
         if payment.confirmed_paid > payment.value:
             payment.paid = True
+            payment.time_left = 0
             payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
             payment.response = "Payment successful! {} BTC".format(payment.confirmed_paid)
             update_status(payment)
