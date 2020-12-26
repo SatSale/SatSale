@@ -17,10 +17,16 @@
             background-color: inherit;
             overflow: hidden;
         }
-        /* body {
-            background-color: inherit;
-            height: 200px;
-        } */
+        p {
+            /* display: inline-block; */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            margin: 0;
+            padding: 5px;
+        }
+        h1 {
+            font-size: 2em;
+        }
         #paybox {
             background-color: #f7931a;
             border-radius: 25px;
@@ -34,63 +40,51 @@
             height: 275px;
             width:220px;
         }
-
         #row {
             display: flex;
         }
          #left {
-          width: 70%;
+          width: 60%;
           padding: 0 10px 0 0;
           float: left;
         }
         #right {
-          width: 30%;
+          width: 40%;
           padding: 0 10px 0 0;
           float: right;
-        }
-        p {
-            /* display: inline-block; */
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            margin: 0;
-            padding: 5px;
         }
         #address {
             overflow-wrap: break-word;
             text-align: right;
+        }
+        #about {
+            color:#000;
         }
         .qr {
             transition: transform .2s;
             object-fit: cover;
         }
         .qr:hover {
-            -ms-transform: scale(3); /* IE 9 */
-            -webkit-transform: scale(3); /* Safari 3-8 */
+            -ms-transform: scale(2.5); /* IE 9 */
+            -webkit-transform: scale(2.5); /* Safari 3-8 */
             transform: scale(3);
         }
     </style>
+
 </head>
 
 
-<!-- Issues:
-    The style is a mess
-    The copy address doesnt work
-    The logo title columns don't work
-    The iframe expands beyond its max height. -->
-
-
 <body>
-
     <div id="paybox">
         <div id="row" height="50px">
-            <div id="left" style="display:inline-block;">
-                <h1>Pay with Bitcoin</h1>
+            <div id="left" style="display:inline-block;" height="75px">
+                <h1>Donate Bitcoin</h>
             </div>
             <div id="right">
-                <a id="qrClick" target="_blank"><img class="" id="logo" style="padding-top:25px" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
+                <a id="logo" target="_blank"><img id="logo" style="padding-top:25px;padding-left:30px;" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
+                <a id="qrClick" target="_blank"><img class="qr" id="qrImage" style="padding-top:25px;display:none" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
             </div>
         </div>
-        <!-- <h1><img id="logoQR" style="padding-left: 15px; float:right;" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png">Pay with <br> Bitcoin</h1> -->
 
         <div id="paymentForm">
             <center>
@@ -109,6 +103,10 @@
             <p style="padding:0;">To: </p><b><p id="address" onclick="copyTextFromElement('address')"></p></b>
             <p style="padding:0;"><span id="status"></span></p>
             <p id="timerContainer" style="padding:0;"><span id="timer"></span> seconds remaining.</p>
+        </div>
+
+        <div id="information" style="text-align: right; padding: 0;">
+            <p><a id="about" href="https://github.com/nickfarrow/BTCPythonServer" target="_blank">About</a></p>
         </div>
 
         <div id="paybutton"></div>

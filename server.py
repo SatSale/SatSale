@@ -8,21 +8,24 @@ import config
 import invoice
 from pay import bitcoind
 
+# Begin websocket
 async_mode = None
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socket_ = SocketIO(app, async_mode=async_mode)
-# thread = None
-# thread_lock = Lock()
 
+# Render html
 @app.route('/')
 def index():
     return render_template('index.html', async_mode=socket_.async_mode)
 
+# Basic return on initialisation
 @socket_.on('initialise', namespace='/pay')
 def test_message(message):
     emit('payresponse', {'time_left': -1, 'response': message['data']})
 
+# Main payment method for websocket
+# Recieves form amount and initiates invoice and payment processing.
 @socket_.on('payment', namespace='/pay')
 def make_payment(payload):
     print("Requesting payment for {}".format(payload['amount']))
@@ -48,11 +51,11 @@ def make_payment(payload):
     # Initialise this payment
     payment = create_invoice(amount, "USD", label)
 
-    make_payment(payment)
+    process_payment(payment)
 
     if payment.paid:
-        payment.status = 'Payment finalised.'
-        payment.response = 'Payment finalised.'
+        payment.status = 'Payment finalised. Thankyou!'
+        payment.response = 'Payment finalised. Thankyou!'
         update_status(payment)
 
         ### DO SOMETHING
@@ -61,14 +64,15 @@ def make_payment(payload):
         # Nothing?
         # Run custom script?
 
+# Initialise the payment via the payment method (bitcoind / lightningc / etc),
+# create qr code for the payment.
 def create_invoice(dollar_amount, currency, label):
-    # payment_invoice = invoice.invoice(amount, currency, label)
     payment = bitcoind.btcd(dollar_amount, currency, label)
-    # payment = bitcoind.btcd(payment_invoice)
     payment.get_address()
     payment.create_qr()
     return payment
 
+# Return feedback via the websocket, updating the status and time remaining.
 def update_status(payment, console_status=True):
     if console_status:
         print(payment.status)
@@ -82,7 +86,9 @@ def update_status(payment, console_status=True):
         'response': payment.response})
     return
 
-def make_payment(payment):
+# Payment processing function.
+# Handle payment logic.
+def process_payment(payment):
     payment.status = 'Awaiting payment.'
     payment.response = 'Awaiting payment.'
     update_status(payment)
