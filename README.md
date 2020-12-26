@@ -1,14 +1,16 @@
+# BTCPyment
 Widely used non-custodial Bitcoin payment processors are bloated and difficult for the average person to install. BtcPyment strives to exist as an easily deployable, highly customisable, lightweight Bitcoin payment processor that keeps your coins belonging to your keys. Almost purely written in Python and Javascript, BtcPyment makes donation buttons simple for your website; via a simple embedded iframe that talks to your own Bitcoin node via Flask websockets.
 
 # Installation
 This should be easy to install.
 
-# Feature
+# Features
 * Lightweight, python and javascript talk to your own bitcoin node via websockets and ssh.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
 * Natively supports all bitcoind node features through RPC.
 * QR codes, customisable payment confirmations and payment expiry duration.
 * No shitcoin bloat.
+* Highly extendable, just take a look at the code! Optional code excecution upon payment.
 
 # Developers
 ## You only need a little python!
