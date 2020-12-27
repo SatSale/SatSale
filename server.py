@@ -116,7 +116,8 @@ def process_payment(payment):
                 Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
             payment.response = "Discovered {} BTC payment. \
                 Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
-            update_status(payment)
+            # console_status=False to reduce console spam
+            update_status(payment, console_status=False)
             socket_.sleep(config.pollrate)
         else:
             payment.status = "Awaiting payment...".format(payment.value)
