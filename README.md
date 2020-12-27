@@ -5,7 +5,15 @@ Existing non-custodial Bitcoin payment processors are bloated, difficult to inst
 
 BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. Soon, we hope to support lightning payments as well as function as a payment processor for a variety of web shops (woocommerce, shopify).
 
-# Installation (easy!)
+# Features
+* Lightweight, Python and Javascript talk to your own bitcoin node via websockets and ssh.
+* Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
+* Natively supports all bitcoind node features through RPC.
+* QR codes, customisable payment confirmations and payment expiry duration.
+* No shitcoin bloat. Bitcoin only.
+* Highly extendable, just take a look at the code! Optional code excecution upon payment.
+
+# Installation (short!)
 BTCPyment requires a connection to a Bitcoin node. If you don't have one, you should [install one](https://bitcoincore.org/en/download/)!
 ### Install
 Clone and install dependencies
@@ -36,13 +44,13 @@ tail -f log.txt
 ```
 
 ## Embed Donation Button
-Now embed the donation button into your website
+Now embed the donation button into your website:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:300px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
 
 ## Using a Subdomain with nginx & certbot (HTTPS)
-If your website uses https, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. It is best that we create a new subdomain like `btcpyment.yoursite.com` from which we can serve payments. If you use nginx, you can create a new file `/etc/nginx/sites-enabled/BTCpyment`:
+Embedded iframes are easy if your site only uses HTTP. But if your site uses https, then you can likely see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. It is best that we create a new subdomain like `btcpyment.yoursite.com` from which we can serve payments. If you use nginx, you can create a new file `/etc/nginx/sites-enabled/BTCpyment`:
 ```
 server {
     listen 80;
@@ -56,14 +64,6 @@ server {
 we can now point our domain `btcpyment.YOURWEBSITE.com` DNS to our server IP and create HTTPS certificates by runnining `certbot`.
 
 You can try provide gunicorn your website's https certificate with the flags `--certfile=cert.pem --keyfile=key.key`. If you use certbot for SSL, your keys are probably in `/etc/letsencrypt/live/`.
-
-# Features
-* Lightweight, Python and Javascript talk to your own bitcoin node via websockets and ssh.
-* Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
-* Natively supports all bitcoind node features through RPC.
-* QR codes, customisable payment confirmations and payment expiry duration.
-* No shitcoin bloat. Bitcoin only.
-* Highly extendable, just take a look at the code! Optional code excecution upon payment.
 
 # Developers
 ## You only need a little python!
