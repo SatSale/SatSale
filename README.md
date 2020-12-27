@@ -55,15 +55,15 @@ Now embed the donation button into your website:
 Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can likely see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 # Developers
-## You only need a little python!
-The main code can be found in `server.py`. invoice and bitcoind handling in `invoice/`, donation button javascript logic in `static/`, button appearance in `template/`. Please have ago at implementing some of the things below!
+### You only need a little python!
+The main code can be found in `server.py`. The client logic for the donation button sits in `static/server_connection.js`, invoice structure and bitcoind interface in `invoice/`, button appearance in `template/index.html`. Please have ago at implementing some of the things below!
 
 More documentation will be added in the near future.
 
 # Coming soon:
 * Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
 * Lightning support
-* *Better UI* with more variety of size and theme.
+* **Better UI** with more variety of size and theme.
 * More readily customisable donation button (text/color/QR code)
 * Database integration for payment invoices
 * Multiple choice of price feeds
