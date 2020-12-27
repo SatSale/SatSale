@@ -9,8 +9,8 @@ class invoice:
         self.dollar_value = dollar_value
         self.currency = currency
         self.value = round(get_btc_value(dollar_value, currency), 8)
-        self.label = label
         self.uuid = str(uuid.uuid4())
+        self.label = self.uuid
         self.status = 'Payment initialised.'
         self.response = ''
         self.time_left = config.payment_timeout
