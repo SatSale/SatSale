@@ -1,8 +1,7 @@
 # BTCPyment
-Existing non-custodial Bitcoin payment processors are bloated and difficult for the average person to install. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node.
+Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node.
 
-## Demonstration
-
+[![demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/)
 
 BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. Soon, we hope to support lightning payments as well as function as a payment processor for a variety of web shops (woocommerce, shopify).
 
