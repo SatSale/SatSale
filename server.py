@@ -97,8 +97,8 @@ def process_payment(payment):
 
     # Track start_time for payment timeouts
     payment.start_time = time.time()
-    while (time_left := config.payment_timeout - (time.time() - payment.start_time)) > 0:
-        payment.time_left = time_left
+    while (config.payment_timeout - (time.time() - payment.start_time)) > 0:
+        payment.time_left = config.payment_timeout - (time.time() - payment.start_time)
         payment.confirmed_paid, payment.unconfirmed_paid = payment.check_payment()
         print()
         print(payment.__dict__)
