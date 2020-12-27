@@ -8,6 +8,12 @@ import config
 import invoice
 from pay import bitcoind
 
+# Begin websocket
+async_mode = None
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socket_ = SocketIO(app, async_mode=async_mode)
+
 # Render html
 @app.route('/')
 def index():
@@ -123,13 +129,6 @@ def process_payment(payment):
         update_status(payment)
 
     return
-
-
-# Begin websocket
-async_mode = None
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socket_ = SocketIO(app, async_mode=async_mode)
 
 # Test Bitcoind connection on startup:
 print("Checking node connectivity...")
