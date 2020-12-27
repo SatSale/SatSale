@@ -22,6 +22,7 @@ class btcd(invoice):
 
             except Exception as e:
                 print(e)
+                time.sleep(config.pollrate)
                 print("Attempting again... {}/{}...".format(i+1, config.connection_attempts))
         else:
             raise Exception("Could not connect to bitcoind. Check your RPC / port tunneling settings and try again.")
