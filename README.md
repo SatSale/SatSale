@@ -8,12 +8,12 @@ Currently, BTCPyment only provides donation buttons, but we plan to extend BTCPy
  BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. Soon, we hope to support lightning payments as well as function as a payment processor for a variety of web shops (woocommerce, shopify).
 
 # Features
-* Lightweight, Python and Javascript talk to your own bitcoin node via websockets and ssh.
+* Lightweight, Python and Javascript talk to your own Bitcoin node via websockets and SSH.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
-* Natively supports all bitcoind node features through RPC.
-* QR codes, customisable payment confirmations and payment expiry duration.
+* Natively supports all bitcoind node features (e.g. segwit) through RPC.
+* QR codes, user decided minimum payment confirmations and payment expiry duration.
+* Highly extendable, just take a look at the code! Optional code execution upon payment.
 * No shitcoin bloat. Bitcoin only.
-* Highly extendable, just take a look at the code! Optional code excecution upon payment.
 
 # Installation (short!)
 BTCPyment requires a connection to a Bitcoin node. If you don't have one, you should [install one](https://bitcoincore.org/en/download/)!
@@ -39,7 +39,7 @@ Run BTCPyment with
 ```
 gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
-That's it! You should now be able to view your BTCPyment server at http://YOUR_SERVER_IP:8000/. If running locally, this will be `127.0.0.1:8000`. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. You will want to run with nohup so it continues serving in the background:
+That's it! You should now be able to view your BTCPyment server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. You will want to run with nohup so it continues serving in the background:
 ```
 nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt 2>&1 &
 tail -f log.txt
@@ -80,7 +80,7 @@ The main code can be found in `server.py`. invoice and bitcoind handling in `inv
 * Multiple choice of price feeds
 
 # Disclaimer
-BTCPyment is in early development, as such we are not responsible for any loss of funds or vulnerabilities.
+BTCPyment is in very early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise.
 
 # Sponsors
-Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of BTCPyment :). Corporate/whale support would greatly assist my ability to work on BTCPyment and other Bitcoin projects with 100% of my attention, please email `baseddepartment@nickfarrow.com`.
+Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of BTCPyment :). Corporate/whale support would greatly assist my ability to give 100% of my attention to BTCPyment and other Bitcoin projects, please email `baseddepartment@nickfarrow.com`.
