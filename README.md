@@ -23,7 +23,7 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPCPASSWORD"
 ```
-(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`.
+(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`.
 
 ### Run BTCPyment
 Run BTCPyment with
@@ -42,8 +42,21 @@ Now embed the donation button into your website
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:300px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
 
-### HTTPS
-If you can see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe, you need to provide gunicorn your website's https certificate with the flags `--certfile=cert.pem --keyfile=key.key`. If you use certbot for SSL, your keys are probably in `/etc/letsencrypt/live/`.
+## Using a Subdomain with nginx & certbot (HTTPS)
+If your website uses https, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. It is best that we create a new subdomain like `btcpyment.yoursite.com` from which we can serve payments. If you use nginx, you can create a new file `/etc/nginx/sites-enabled/BTCpyment`:
+```
+server {
+    listen 80;
+    server_name btcpyment.YOURWEBSITE.com;
+
+    location / {
+        proxy_pass http://localhost:8000;
+    }
+}
+```
+we can now point our domain `btcpyment.YOURWEBSITE.com` DNS to our server IP and create HTTPS certificates by runnining `certbot`.
+
+You can try provide gunicorn your website's https certificate with the flags `--certfile=cert.pem --keyfile=key.key`. If you use certbot for SSL, your keys are probably in `/etc/letsencrypt/live/`.
 
 # Features
 * Lightweight, Python and Javascript talk to your own bitcoin node via websockets and ssh.

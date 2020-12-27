@@ -12,7 +12,7 @@ from pay import bitcoind
 async_mode = None
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socket_ = SocketIO(app, async_mode=async_mode)
+socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 
 # Render html
 @app.route('/')
@@ -132,7 +132,7 @@ def process_payment(payment):
 
 # Test Bitcoind connection on startup:
 print("Checking node connectivity...")
-bitcoind.btcd('1', 'USD', 'Init test.')
+bitcoind.btcd(1, 'USD', 'Init test.')
 print("Connection successful.")
 
 
