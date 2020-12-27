@@ -112,9 +112,9 @@ def process_payment(payment):
             break
 
         elif payment.unconfirmed_paid > 0:
-            payment.status = "Discovered {} BTC payment. \
+            payment.status = "Discovered payment. \
                 Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
-            payment.response = "Discovered {} BTC payment. \
+            payment.response = "Discovered payment. \
                 Waiting for {} confirmations...".format(payment.unconfirmed_paid, config.required_confirmations)
             # console_status=False to reduce console spam
             update_status(payment, console_status=False)

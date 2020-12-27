@@ -39,7 +39,7 @@ gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
 That's it! You should now be able to view your BTCPyment server at http://YOUR_SERVER_IP:8000/. If running locally, this will be `127.0.0.1:8000`. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. You will want to run with nohup so it continues serving in the background:
 ```
-nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt &
+nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt 2>&1 &
 tail -f log.txt
 ```
 
@@ -72,6 +72,7 @@ The main code can be found in `server.py`. invoice and bitcoind handling in `inv
 # Coming soon:
 * Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
 * Lightning support
+* *Better UI* with more variety of size and theme.
 * More readily customisable donation button (text/color/QR code)
 * Database integration for payment invoices
 * Multiple choice of price feeds
@@ -80,3 +81,4 @@ The main code can be found in `server.py`. invoice and bitcoind handling in `inv
 BTCPyment is in early development, as such we are not responsible for any loss of funds or vulnerabilities.
 
 # Sponsors
+Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of BTCPyment :). Corporate/whale support would greatly assist my ability to work on BTCPyment and other Bitcoin projects with 100% of my attention, please email `baseddepartment@nickfarrow.com`.
