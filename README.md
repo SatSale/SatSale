@@ -28,15 +28,22 @@ password = "RPCPASSWORD"
 ### Run BTCPyment
 Run BTCPyment with
 ```
-gunicorn --worker-class eventlet -w 1 server:app
+gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
-That's it! You should now be able to view your BTCPyment server at http://YOUR_SERVER_IP:8000/. If running locally, this will be `127.0.0.1:8000`.
+That's it! You should now be able to view your BTCPyment server at http://YOUR_SERVER_IP:8000/. If running locally, this will be `127.0.0.1:8000`. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. You will want to run with nohup so it continues serving in the background:
+```
+nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt &
+tail -f log.txt
+```
 
 ## Embed Donation Button
 Now embed the donation button into your website
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:300px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
+
+### HTTPS
+If you can see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe, you need to provide gunicorn your website's https certificate with the flags `--certfile=cert.pem --keyfile=key.key`. If you use certbot for SSL, your keys are probably in `/etc/letsencrypt/live/`.
 
 # Features
 * Lightweight, Python and Javascript talk to your own bitcoin node via websockets and ssh.
