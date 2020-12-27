@@ -34,6 +34,7 @@ class btcd(invoice):
         conf_paid = 0
         unconf_paid = 0
         for tx in relevant_txs:
+            self.txid = tx['txid']
             if tx['confirmations'] >= config.required_confirmations:
                 conf_paid += tx['amount']
             else:

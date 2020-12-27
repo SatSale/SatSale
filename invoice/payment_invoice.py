@@ -17,11 +17,10 @@ class invoice:
         self.confirmed_paid = 0
         self.unconfirmed_paid = 0
         self.paid = False
+        self.txid = ""
 
 
     def create_qr(self):
         img = qrcode.make(self.address)
         img.save('static/qr_codes/{}.png'.format(self.uuid))
         return
-
-    
