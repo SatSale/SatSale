@@ -52,24 +52,13 @@ Now embed the donation button into your website:
 ```
 
 ## Using a Subdomain with nginx & certbot (HTTPS)
-Embedded iframes are easy if your site only uses HTTP. But if your site uses https, then you can likely see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. It is best that we create a new subdomain like `btcpyment.yoursite.com` from which we can serve payments. If you use nginx, you can create a new file `/etc/nginx/sites-enabled/BTCpyment`:
-```
-server {
-    listen 80;
-    server_name btcpyment.YOURWEBSITE.com;
-
-    location / {
-        proxy_pass http://localhost:8000;
-    }
-}
-```
-we can now point our domain `btcpyment.YOURWEBSITE.com` DNS to our server IP and create HTTPS certificates by runnining `certbot`.
-
-You can try provide gunicorn your website's https certificate with the flags `--certfile=cert.pem --keyfile=key.key`. If you use certbot for SSL, your keys are probably in `/etc/letsencrypt/live/`.
+Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can likely see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 # Developers
 ## You only need a little python!
 The main code can be found in `server.py`. invoice and bitcoind handling in `invoice/`, donation button javascript logic in `static/`, button appearance in `template/`. Please have ago at implementing some of the things below!
+
+More documentation will be added in the near future.
 
 # Coming soon:
 * Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
