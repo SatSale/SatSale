@@ -51,7 +51,7 @@ Now embed the donation button into your website:
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:300px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
 
-## Using a Subdomain with nginx & certbot (HTTPS)
+## Using HTTPS
 Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can likely see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 # Developers
