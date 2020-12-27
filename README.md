@@ -2,10 +2,35 @@
 Existing non-custodial Bitcoin payment processors are bloated and difficult for the average person to install. BTCPyment strives to exist as an easily deployable, highly customisable, lightweight Bitcoin payment processor that keeps your coins with your keys. Almost purely written in Python and Javascript, BTCPyment makes donation buttons simple; via a simple embedded iframe that talks to your own Bitcoin node via Flask websockets.
 
 # Installation
-## Deploy Server
-This should be easy to install.
-## Insert HTML Donation Button
+## Install
+Clone and install dependencies
+```
+git clone https://github.com/nickfarrow/BTCPyment
+pip install -r requirements.txt
+```
+## Connect to your Bitcoin Node
+Edit the `config.py` configuration and point to your Bitcoin node:
+```python
+host = "127.0.0.1"
+rpcport = "8332"
+username = "bitcoinrpc"
+password = "RPCPASSWORD"
+```
+(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an ssh `tunnel_host = "pi@192.168.0.252"`.
 
+## Run BTCPyment
+Run server with
+```
+cd BTCPyment/
+gunicorn --worker-class eventlet -w 1 server:app
+```
+That's it! You should now be able to view your BTCPyment server at http://YOUR_SERVER_IP:8000/. If running locally, this will be `127.0.0.1:8000`.
+
+## Embed Donation Button
+Now embed the donation button into your website
+```html
+<iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:300px;border:none;overflow:hidden;" scrolling="no"></iframe>
+```
 
 # Features
 * Lightweight, Python and Javascript talk to your own bitcoin node via websockets and ssh.
