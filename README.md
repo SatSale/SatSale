@@ -3,7 +3,9 @@ Existing non-custodial Bitcoin payment processors are bloated, difficult to inst
 
 [![demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/)
 
-BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. Soon, we hope to support lightning payments as well as function as a payment processor for a variety of web shops (woocommerce, shopify).
+Currently, BTCPyment only provides donation buttons, but we plan to extend BTCPyment to handle payments from common webstores (shopify, woocommerce, etc).
+
+ BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. Soon, we hope to support lightning payments as well as function as a payment processor for a variety of web shops (woocommerce, shopify).
 
 # Features
 * Lightweight, Python and Javascript talk to your own bitcoin node via websockets and ssh.
