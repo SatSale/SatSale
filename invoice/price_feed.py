@@ -30,7 +30,7 @@ def get_price(currency):
 
 
 def get_btc_value(dollar_value, currency):
-    price = get_price(currency))
+    price = get_price(currency)
     if price is not None:
 
         try:
