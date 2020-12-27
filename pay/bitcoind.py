@@ -27,7 +27,6 @@ class btcd(invoice):
             raise Exception("Could not connect to bitcoind. Check your RPC / port tunneling settings and try again.")
 
     def check_payment(self):
-        self.address = self.get_address()
         transactions = self.rpc.listtransactions()
         relevant_txs = [tx for tx in transactions if tx['address'] == self.address]
 
