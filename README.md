@@ -11,12 +11,12 @@ Currently, BTCPyment only provides donation buttons, but we plan to soon extend 
 * Lightweight, Python and Javascript talk to your own Bitcoin node via websockets and SSH.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
 * Natively supports all bitcoind node features (e.g. segwit) through RPC.
-* QR codes, user decided minimum payment confirmations and payment expiry duration.
+* QR codes, user chooses the minimum payment confirmations and payment expiry duration.
 * Highly extendable, just take a look at the code! Optional code execution upon payment.
 * No shitcoin bloat. Bitcoin only.
 
 # Installation (short!)
-BTCPyment requires a connection to a Bitcoin node. If you don't have one, you should [install one](https://bitcoincore.org/en/download/)!
+BTCPyment requires you to have a server host on, and a connection to a Bitcoin node. If you don't have one, you should [install one](https://bitcoincore.org/en/download/).
 ### Install
 Clone and install dependencies
 ```
@@ -71,5 +71,5 @@ More documentation will be added in the near future.
 # Disclaimer
 BTCPyment is in very early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise.
 
-# Sponsors
+# Sponsor
 Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of BTCPyment :). Corporate/whale support would greatly assist my ability to give 100% of my attention to BTCPyment and other Bitcoin projects, please email `baseddepartment@nickfarrow.com`.
