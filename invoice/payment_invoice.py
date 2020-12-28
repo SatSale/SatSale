@@ -21,6 +21,7 @@ class invoice:
 
 
     def create_qr(self):
-        img = qrcode.make(self.address)
+        qr_str = "bitcoin:{}?amount={}&label=".format(self.address, self.value, self.label)
+        img = qrcode.make(qr_str)
         img.save('static/qr_codes/{}.png'.format(self.uuid))
         return
