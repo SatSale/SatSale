@@ -53,6 +53,9 @@ Now embed the donation button into your website:
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment through. Optionally, you can redirect a domain to that IP and use that instead.
 
+## Security
+For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
+
 ## Using HTTPS & Domains
 Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can likely see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
