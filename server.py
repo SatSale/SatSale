@@ -7,6 +7,7 @@ import ssh_tunnel
 import config
 import invoice
 from pay import bitcoind
+from pay import lnd
 
 # Begin websocket
 async_mode = None
@@ -69,7 +70,16 @@ def make_payment(payload):
 # Initialise the payment via the payment method (bitcoind / lightningc / etc),
 # create qr code for the payment.
 def create_invoice(dollar_amount, currency, label):
-    payment = bitcoind.btcd(dollar_amount, currency, label)
+    if config.pay_method == "bitcoind":
+        print("AHHHHHhhhhhhh")
+        payment = bitcoind.btcd(dollar_amount, currency, label)
+    elif config.pay_method == "lnd":
+        payment = lnd.lnd(dollar_amount, currency, label)
+    else:
+        # There probably should be config checking code within main.py
+        print("Invalid payment method")
+        return
+
     payment.get_address()
     payment.create_qr()
     return payment
@@ -133,9 +143,13 @@ def process_payment(payment):
 
 # Test Bitcoind connection on startup:
 print("Checking node connectivity...")
-bitcoind.btcd(1, 'USD', 'Init test.')
+if config.pay_method == "bitcoind":
+    bitcoind.btcd(1, 'USD', 'Init test.')
+elif config.pay_method == "lnd":
+    lnd.lnd(1, 'USD', 'Init test')
 print("Connection successful.")
 
 
 if __name__ == '__main__':
     socket_.run(app, debug=True)
+    socket_.run(app, debug=False)
