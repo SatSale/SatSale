@@ -1,5 +1,6 @@
-import config
+import time
 import subprocess
+import config
 from invoice.payment_invoice import invoice
 
 class btcd(invoice):
