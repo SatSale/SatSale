@@ -76,10 +76,10 @@ def make_payment(payload):
         update_status(payment)
 
         invoice.success.success()
-
+        print("ABOUT TO WEBHOOOK")
         # Call webhook
         response = requests.post(
-            payload['webhook_url'], data={'id' : label},
+            payload['webhook_url'], data={'id' : payload['id']},
             headers={'Content-Type': 'application/json'}
         )
         if response.status_code != 200:
