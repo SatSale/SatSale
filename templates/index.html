@@ -3,10 +3,13 @@
 <head>
     <title>BTCPyment</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    
+
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
     <script src="{{ url_for('static', filename='server_connection.js') }}"></script>
+    <script type="text/javascript">
+        initiate({{ amount }});
+    </script>
 
 
     <style>
@@ -80,15 +83,15 @@
     <div id="paybox">
         <div id="row" height="50px">
             <div id="left" style="display:inline-block;" height="75px">
-                <h1>Donate Bitcoin</h>
+                <h1>Pay Bitcoin</h>
             </div>
             <div id="right">
-                <a id="logo" target="_blank"><img id="logo" style="padding-top:25px;padding-left:30px;" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
-                <a id="qrClick" target="_blank"><img class="qr" id="qrImage" style="padding-top:25px;display:none" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
+                <!-- <a id="logo" target="_blank"><img id="logo" style="padding-top:25px;padding-left:30px;" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a> -->
+                <a id="qrClick" target="_blank"><img class="qr" id="qrImage" style="padding-top:25px;display:block" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
             </div>
         </div>
 
-        <div id="paymentForm">
+        <!-- <div id="paymentForm">
             <center>
                 <form id="pay" method="POST" action='#' style="margin:0;padding0;">
                     <h2 style="margin:0;padding0;">Amount:
@@ -98,9 +101,9 @@
                     <input style="width:100%" type="submit" value="Pay"  onclick="hideAmountShowPayment()">
                 </form>
             </center>
-        </div>
+        </div> -->
 
-        <div id="paymentDetails" style="display:none; padding: 0;">
+        <div id="paymentDetails" style="display:block; padding: 0;">
             <p style="padding:0;">Send: <b><span id="amount"></span></b> BTC</p>
             <p style="padding:0;">To: </p><b><p id="address" onclick="copyTextFromElement('address')"></p></b>
             <p style="padding:0;"><span id="status"></span></p>

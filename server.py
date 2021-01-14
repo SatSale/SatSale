@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
@@ -18,20 +18,24 @@ socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 # Render html
 @app.route('/')
 def index():
+    # TODO
+    # DONATION STYLE FORM PAGE
     return render_template('index.html', async_mode=socket_.async_mode)
 
-@app.route('/payment', methods=['GET', 'POST'])
-def payment():
-    return render_template('index.html', async_mode=socket_.async_mode)
+@app.route('/pay')
+def payment_page():
+    amount = request.args.get('amount')
+    payload={'amount' : amount}
+    return render_template('index.html', amount=amount, async_mode=socket_.async_mode)
 
 # Basic return on initialisation
-@socket_.on('initialise', namespace='/pay')
+@socket_.on('initialise')
 def test_message(message):
     emit('payresponse', {'time_left': -1, 'response': message['data']})
 
 # Main payment method for websocket
 # Recieves form amount and initiates invoice and payment processing.
-@socket_.on('payment', namespace='/pay')
+@socket_.on('make_payment')
 def make_payment(payload):
     print("Requesting payment for {}".format(payload['amount']))
 

@@ -11,6 +11,21 @@
 /*
  * This action hook registers our PHP class as a WooCommerce payment gateway
  */
+
+ if (!function_exists('write_log')) {
+
+     function write_log($log) {
+         if (true === WP_DEBUG) {
+             if (is_array($log) || is_object($log)) {
+                 error_log(print_r($log, true));
+             } else {
+                 error_log($log);
+             }
+         }
+     }
+
+ }
+
 add_filter( 'woocommerce_payment_gateways', 'btcpyment_add_gateway_class' );
 function btcpyment_add_gateway_class( $gateways ) {
 	$gateways[] = 'WC_btcpyment_Gateway'; // your class name is here
@@ -61,7 +76,7 @@ function btcpyment_init_gateway_class() {
            	add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
 
            	// You can also register a webhook here
-           	// add_action( 'woocommerce_api_BTCPyment', array( $this, 'webhook' ) );
+           	add_action( 'woocommerce_api_btcpyment', array( $this, 'webhook' ) );
  		}
 
 		/**
@@ -142,17 +157,17 @@ function btcpyment_init_gateway_class() {
             	if ( ! $this->testmode && ! is_ssl() ) {
             		return;
             	}
-
-            	// let's suppose it is our payment processor JavaScript that allows to obtain a token
-            	wp_enqueue_script( 'btcpyment_js', 'https://btcpyment.nickfarrow.com/pay.js' );
-
-            	// and this is our custom JS in your plugin directory that works with token.js
-            	wp_register_script( 'woocommerce_btcpyment', plugins_url( 'btcpyment.js', __FILE__ ), array( 'jquery', 'btcpyment_js' ) );
-
-            	// in most payment processors you have to use PUBLIC KEY to obtain a token
-            	wp_localize_script( 'woocommerce_btcpyment', 'btcpyment_params', array(
-            		'publishableKey' => $this->publishable_key
-            	) );
+                //
+            	// // let's suppose it is our payment processor JavaScript that allows to obtain a token
+            	// wp_enqueue_script( 'btcpyment_js', 'https://btcpyment.nickfarrow.com' );
+                //
+            	// // and this is our custom JS in your plugin directory that works with token.js
+            	// wp_register_script( 'woocommerce_btcpyment', plugins_url( 'btcpyment.js', __FILE__ ), array( 'jquery', 'btcpyment_js' ) );
+                //
+            	// // in most payment processors you have to use PUBLIC KEY to obtain a token
+            	// wp_localize_script( 'woocommerce_btcpyment', 'btcpyment_params', array(
+            	// 	'publishableKey' => $this->publishable_key
+            	// ) );
 
             	wp_enqueue_script( 'woocommerce_btcpyment' );
 
@@ -174,16 +189,35 @@ function btcpyment_init_gateway_class() {
           	 * Array with parameters for API interaction
          	 */
          	$args = array(
-                bogus => 2
+                'amount' => 100
          	);
 
          	/*
          	 * Your API interaction could be built with wp_remote_post()
           	 */
-         	 $response = wp_remote_post( '{payment processor endpoint}', $args );
+             $redir_url = add_query_arg(
+                $args,
+                'https://btcpyment.nickfarrow.com/payment'
+            );
 
+            write_log($redir_url);
 
-         	 if( !is_wp_error( $response ) ) {
+            // $response = wp_remote_post( 'https://btcpyment.nickfarrow.com/', $args );
+            $response = wp_remote_post($redir_url);
+
+            write_log($response);
+            //
+            // $querystring = http_build_query( $payload );
+
+            // echo '<script>console.log("PHP error: ' . implode(", ", $redir_url) . '")</script>';
+            // echo '<script>console.log("PHP error: ' . implode(", ", $response) . '")</script>';
+
+            return [
+                'result'   => 'success',
+                'redirect' => $redir_url
+            ];    
+
+         	if( !is_wp_error( $response ) ) {
 
          		 $body = json_decode( $response['body'], true );
 
@@ -212,7 +246,7 @@ function btcpyment_init_gateway_class() {
          		}
 
          	} else {
-         		wc_add_notice(  'Connection error.', 'error' );
+                wc_add_notice(  'Connection error.', 'error' );
          		return;
          	}
 

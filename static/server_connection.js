@@ -1,6 +1,6 @@
 // Websocket logic, talks to server.py pay
-$(document).ready(function() {
-    namespace = '/pay';
+function initiate(amount) {
+    namespace = '/';
     var socket = io(namespace);
 
     socket.on('connect', function() {
@@ -21,19 +21,17 @@ $(document).ready(function() {
             cb();
     });
 
-    $('form#pay').submit(function(event) {
-        socket.emit('payment', {'amount': $('#pay_data').val(), 'label' : null});
-        return false;
-    });
-});
+    socket.emit('make_payment', {'amount': amount, 'label' : null});
+    return false
+}
 
 // Additional steps to take when giving a response to the webpage
 // Update qr code, and hide timer
 function conditionalPageLogic(msg) {
     if (msg.address != null) {
-        document.getElementById('logo').classList.add("qr");
+        // document.getElementById('logo').classList.add("qr");
         // document.getElementById('logo').src = "static/qr_codes/" + msg.uuid + ".png";
-        document.getElementById('logo').style.display = "none";
+        // document.getElementById('logo').style.display = "none";
         document.getElementById('qrImage').style.display = "block";
         document.getElementById('qrClick').href = "/static/qr_codes/" + msg.uuid + ".png";
         document.getElementById('qrImage').src = "/static/qr_codes/" + msg.uuid + ".png";
