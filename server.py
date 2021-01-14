@@ -2,6 +2,8 @@ from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
+import os
+import requests
 
 import ssh_tunnel
 import config
@@ -12,21 +14,25 @@ from pay import lnd
 # Begin websocket
 async_mode = None
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+app.config['SECRET_KEY'] = os.urandom(24).hex()
+print("Initialised Flask with secret key: {}".format(app.config['SECRET_KEY']))
 socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 
-# Render html
+# Render index pages
+# To-do, this will be a donation form page that submits to /pay
 @app.route('/')
 def index():
-    # TODO
-    # DONATION STYLE FORM PAGE
     return render_template('index.html', async_mode=socket_.async_mode)
 
 @app.route('/pay')
 def payment_page():
-    amount = request.args.get('amount')
-    id = amount = request.args.get('id')
-    return render_template('index.html', amount=amount, id=id, async_mode=socket_.async_mode)
+    #
+    # # Label is blank if not supplied
+    # params = {'label':''}
+    # for key, value in dict(request.args).items():
+    #     params[key] = value
+    params = dict(request.args)
+    return render_template('index.html', params=params, async_mode=socket_.async_mode)
 
 # Basic return on initialisation
 @socket_.on('initialise')
@@ -37,8 +43,6 @@ def test_message(message):
 # Recieves form amount and initiates invoice and payment processing.
 @socket_.on('make_payment')
 def make_payment(payload):
-    print("Requesting payment for {}".format(payload['amount']))
-
     # Check the amount is a float
     amount = payload['amount']
     try:
@@ -54,8 +58,12 @@ def make_payment(payload):
         amount = None
         return
 
-    # Need to check this is safe!
-    label = payload['label']
+    # Return if label missing
+    if 'label' not in payload.keys():
+        return
+    #     label = payload['label']
+    # else:
+    #     label = "undefined"
 
     # Initialise this payment
     payment = create_invoice(amount, "USD", label)
@@ -68,6 +76,19 @@ def make_payment(payload):
         update_status(payment)
 
         invoice.success.success()
+
+        # Call webhook
+        response = requests.post(
+            payload['webhook_url'], data={'id' : label},
+            headers={'Content-Type': 'application/json'}
+        )
+        if response.status_code != 200:
+            raise ValueError(
+                'Failed to confirm payment via webhook %s, the response is:\n%s'
+                % (response.status_code, response.text)
+            )
+        else:
+            print("Successfully confirmed payment via webhook.")
 
         ### DO SOMETHING
         # Depends on config
@@ -109,8 +130,8 @@ def update_status(payment, console_status=True):
 # Payment processing function.
 # Handle payment logic.
 def process_payment(payment):
-    payment.status = 'Awaiting payment.'
-    payment.response = 'Awaiting payment.'
+    payment.status = 'Payment intialised, awaiting payment.'
+    payment.response = 'Payment intialised, awaiting payment.'
     update_status(payment)
 
     # Track start_time for payment timeouts
@@ -138,8 +159,8 @@ def process_payment(payment):
             update_status(payment, console_status=False)
             socket_.sleep(config.pollrate)
         else:
-            payment.status = "Awaiting payment...".format(payment.value)
-            payment.response = "Awaiting payment...".format(payment.value)
+            payment.status = "Waiting for payment...".format(payment.value)
+            payment.response = "Waiting for payment...".format(payment.value)
             update_status(payment)
             socket_.sleep(config.pollrate)
     else:
@@ -159,5 +180,4 @@ print("Connection successful.")
 
 
 if __name__ == '__main__':
-    socket_.run(app, debug=True)
     socket_.run(app, debug=False)

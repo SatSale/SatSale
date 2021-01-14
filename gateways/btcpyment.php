@@ -48,10 +48,10 @@ function btcpyment_init_gateway_class() {
  		 */
  		public function __construct() {
 
-           	$this->id = 'btcpyment'; // payment gateway plugin ID
+           	$this->id = 'BTCPyment'; // payment gateway plugin ID
            	$this->icon = ''; // URL of the icon that will be displayed on checkout page near your gateway name
            	$this->has_fields = true; // in case you need a custom credit card form
-           	$this->method_title = 'btcpyment Gateway';
+           	$this->method_title = 'BTCPyment Gateway';
            	$this->method_description = 'Description of btcpyment payment gateway'; // will be displayed on the options page
 
            	// gateways can support subscriptions, refunds, saved payment methods,
@@ -68,9 +68,12 @@ function btcpyment_init_gateway_class() {
            	$this->title = $this->get_option( 'title' );
            	$this->description = $this->get_option( 'description' );
            	$this->enabled = $this->get_option( 'enabled' );
+            $this->btcpyment_server_url = $this->get_option( 'btcpyment_server_url' );
+            $this->redirect_url = $this->get_option( 'redirect_url' );
            	$this->testmode = 'yes' === $this->get_option( 'testmode' );
            	$this->private_key = $this->testmode ? $this->get_option( 'test_private_key' ) : $this->get_option( 'private_key' );
            	$this->publishable_key = $this->testmode ? $this->get_option( 'test_publishable_key' ) : $this->get_option( 'publishable_key' );
+            $this->callback_URL = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'wc_api_btcpyment)', home_url( '/' ) ) );
 
            	// This action hook saves the settings
            	add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -79,7 +82,7 @@ function btcpyment_init_gateway_class() {
            	add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
 
            	// You can also register a webhook here
-           	add_action( 'woocommerce_api_btcpyment', array( $this, 'webhook' ) );
+           	add_action( 'wc_api_btcpyment', array( $this, 'webhook' ) );
  		}
 
 		/**
@@ -108,6 +111,16 @@ function btcpyment_init_gateway_class() {
             			'description' => 'This controls the description which the user sees during checkout.',
             			'default'     => 'Pay with Bitcoin via BTCPyment',
             		),
+                    'btcpyment_server_url' => array(
+                        'title'       => 'BTCPyment URL',
+                        'type'        => 'text',
+                        'description' => 'Points towards your instance of BTCPyment, should be IP or https://SERVER.com'
+                    ),
+                    'redirect_url' => array(
+                        'title'       => 'Redirect URL',
+                        'type'        => 'text',
+                        'description' => 'URL the user is redirected to after payment.'
+                    ),
             		'testmode' => array(
             			'title'       => 'Test mode',
             			'label'       => 'Enable Test Mode',
@@ -192,67 +205,57 @@ function btcpyment_init_gateway_class() {
          	 */
          	$args = array(
                 'amount' => $order->get_total(),
-                'id' => $order->get_id()
+                'id' => $order->get_id(),
+                'webhook_url' => $this->callback_URL
                 // HASH??? FOR SECURE PAYMENTS?
          	);
 
          	/*
          	 * Your API interaction could be built with wp_remote_post()
           	 */
-             $redir_url = add_query_arg(
+             write_log($this->callback_URL);
+             $payment_url = add_query_arg(
                 $args,
-                'https://btcpyment.nickfarrow.com/pay'
+                $this->btcpyment_server_url . "/pay"
             );
-
-            write_log($redir_url);
-
-            // $response = wp_remote_post( 'https://btcpyment.nickfarrow.com/', $args );
-            $response = wp_remote_post($redir_url);
-
-            write_log($response);
-            //
-            // $querystring = http_build_query( $payload );
-
-            // echo '<script>console.log("PHP error: ' . implode(", ", $redir_url) . '")</script>';
-            // echo '<script>console.log("PHP error: ' . implode(", ", $response) . '")</script>';
 
             return [
                 'result'   => 'success',
-                'redirect' => $redir_url
+                'redirect' => $payment_url
             ];
 
-         	if( !is_wp_error( $response ) ) {
-
-         		 $body = json_decode( $response['body'], true );
-
-         		 // it could be different depending on your payment processor
-         		 if ( $body['response']['responseCode'] == 'APPROVED' ) {
-
-         			// we received the payment
-         			$order->payment_complete();
-         			$order->reduce_order_stock();
-
-         			// some notes to customer (replace true with false to make it private)
-         			$order->add_order_note( 'Hey, your order is paid! Thank you!', true );
-
-         			// Empty cart
-         			$woocommerce->cart->empty_cart();
-
-         			// Redirect to the thank you page
-         			return array(
-         				'result' => 'success',
-         				'redirect' => $this->get_return_url( $order )
-         			);
-
-         		 } else {
-         			wc_add_notice(  'Please try again.', 'error' );
-         			return;
-         		}
-
-         	} else {
-                wc_add_notice(  'Connection error.', 'error' );
-         		return;
-         	}
+         	// if( !is_wp_error( $response ) ) {
+            //
+         	// 	 $body = json_decode( $response['body'], true );
+            //
+         	// 	 // it could be different depending on your payment processor
+         	// 	 if ( $body['response']['responseCode'] == 'APPROVED' ) {
+            //
+         	// 		// we received the payment
+         	// 		$order->payment_complete();
+         	// 		$order->reduce_order_stock();
+            //
+         	// 		// some notes to customer (replace true with false to make it private)
+         	// 		$order->add_order_note( 'Hey, your order is paid! Thank you!', true );
+            //
+         	// 		// Empty cart
+         	// 		$woocommerce->cart->empty_cart();
+            //
+         	// 		// Redirect to the thank you page
+         	// 		return array(
+         	// 			'result' => 'success',
+         	// 			'redirect' => $this->get_return_url( $order )
+         	// 		);
+            //
+         	// 	 } else {
+         	// 		wc_add_notice(  'Please try again.', 'error' );
+         	// 		return;
+         	// 	}
+            //
+         	// } else {
+            //     wc_add_notice(  'Connection error.', 'error' );
+         	// 	return;
+         	// }
 
          }
 
