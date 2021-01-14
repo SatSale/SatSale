@@ -75,8 +75,12 @@ def make_payment(payload):
         payment.response = 'Payment finalised. Thankyou!'
         update_status(payment)
 
-        invoice.success.success()
         print("ABOUT TO WEBHOOOK")
+        payment.status = 'HOOKING'
+        payment.response = 'HOOKING'
+        update_status(payment)
+
+
         # Call webhook
         response = requests.post(
             payload['webhook_url'], data={'id' : payload['id']},
@@ -87,6 +91,9 @@ def make_payment(payload):
         else:
             print("Successfully confirmed payment via webhook.")
 
+        payment.status = 'HOOKED'
+        payment.response = 'HOOKED'
+        update_status(payment)
         print("Done response part...")
         ### DO SOMETHING
         # Depends on config
