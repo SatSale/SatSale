@@ -7,8 +7,10 @@
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
     <script src="{{ url_for('static', filename='server_connection.js') }}"></script>
+
+    <!-- Initate the payment websocket -->
     <script type="text/javascript">
-        initiate({{ amount }});
+        initiate({{ amount }}, {{ id }});
     </script>
 
 

@@ -25,8 +25,8 @@ def index():
 @app.route('/pay')
 def payment_page():
     amount = request.args.get('amount')
-    payload={'amount' : amount}
-    return render_template('index.html', amount=amount, async_mode=socket_.async_mode)
+    id = amount = request.args.get('id')
+    return render_template('index.html', amount=amount, id=id, async_mode=socket_.async_mode)
 
 # Basic return on initialisation
 @socket_.on('initialise')

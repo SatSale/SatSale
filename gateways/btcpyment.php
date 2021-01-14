@@ -7,6 +7,9 @@
  * Author URI: https://nickfarrow.com
  * Version: 1.0.1
  *
+*/
+
+/* Based on https://rudrastyh.com/woocommerce/payment-gateway-plugin.html */
 
 /*
  * This action hook registers our PHP class as a WooCommerce payment gateway
@@ -184,12 +187,13 @@ function btcpyment_init_gateway_class() {
          	// we need it to get any order detailes
          	$order = wc_get_order( $order_id );
 
-
          	/*
           	 * Array with parameters for API interaction
          	 */
          	$args = array(
-                'amount' => 100
+                'amount' => $order->get_total(),
+                'id' => $order->get_id()
+                // HASH??? FOR SECURE PAYMENTS?
          	);
 
          	/*
@@ -197,7 +201,7 @@ function btcpyment_init_gateway_class() {
           	 */
              $redir_url = add_query_arg(
                 $args,
-                'https://btcpyment.nickfarrow.com/payment'
+                'https://btcpyment.nickfarrow.com/pay'
             );
 
             write_log($redir_url);
@@ -215,7 +219,7 @@ function btcpyment_init_gateway_class() {
             return [
                 'result'   => 'success',
                 'redirect' => $redir_url
-            ];    
+            ];
 
          	if( !is_wp_error( $response ) ) {
 
