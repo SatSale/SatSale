@@ -88,11 +88,13 @@ def make_payment(payload):
         )
         if response.status_code != 200:
             print('Failed to confirm payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
+            payment.status = response.text
+            payment.response = response.text
         else:
             print("Successfully confirmed payment via webhook.")
+            payment.status = 'HOOKED'
+            payment.response = 'HOOKED'
 
-        payment.status = 'HOOKED'
-        payment.response = 'HOOKED'
         update_status(payment)
         print("Done response part...")
         ### DO SOMETHING
