@@ -1,5 +1,5 @@
 // Websocket logic, talks to server.py pay
-function initiate(amount, id) {
+function initiate(payment_data) {
     namespace = '/';
     var socket = io(namespace);
 
@@ -21,7 +21,7 @@ function initiate(amount, id) {
             cb();
     });
 
-    socket.emit('make_payment', {'amount': amount, 'label' : id});
+    socket.emit('make_payment', payment_data);
     return false
 }
 
