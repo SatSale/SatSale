@@ -10,7 +10,9 @@
 
     <!-- Initate the payment websocket -->
     <script type="text/javascript">
-        initiate({{ amount }}, {{ id }});
+        payment_data = {{ params|tojson }};
+        console.log(payment_data);
+        initiate(payment_data);
     </script>
 
 
