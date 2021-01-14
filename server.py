@@ -83,13 +83,11 @@ def make_payment(payload):
             headers={'Content-Type': 'application/json'}
         )
         if response.status_code != 200:
-            raise ValueError(
-                'Failed to confirm payment via webhook %s, the response is:\n%s'
-                % (response.status_code, response.text)
-            )
+            print('Failed to confirm payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
         else:
             print("Successfully confirmed payment via webhook.")
 
+        print("Done response part...")
         ### DO SOMETHING
         # Depends on config
         # Get redirected?
