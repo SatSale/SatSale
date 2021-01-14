@@ -20,7 +20,7 @@ socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 def index():
     return render_template('index.html', async_mode=socket_.async_mode)
 
-@app.route('/payment', methods=['POST'])
+@app.route('/payment', methods=['GET', 'POST'])
 def payment():
     return render_template('index.html', async_mode=socket_.async_mode)
 
