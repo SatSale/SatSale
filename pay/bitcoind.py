@@ -1,6 +1,8 @@
 import config
 import subprocess
+import time
 from invoice.payment_invoice import invoice
+
 
 class btcd(invoice):
     def __init__(self, dollar_value, currency, label):
@@ -17,6 +19,7 @@ class btcd(invoice):
             try:
                 self.rpc = AuthServiceProxy(connection_str)
                 info = self.rpc.getblockchaininfo()
+                print(info)
                 print("Successfully contacted bitcoind.")
                 break
 
