@@ -9,12 +9,14 @@
  *
 */
 
-/* Based on https://rudrastyh.com/woocommerce/payment-gateway-plugin.html */
+/* Based.
+* Based on https://rudrastyh.com/woocommerce/payment-gateway-plugin.html */
 
 /*
  * This action hook registers our PHP class as a WooCommerce payment gateway
  */
 
+//Debugging helper
  if (!function_exists('write_log')) {
      function write_log($log) {
          if (true === WP_DEBUG) {
@@ -25,25 +27,23 @@
              }
          }
      }
-
  }
 
+// BTCPyment class
 add_filter( 'woocommerce_payment_gateways', 'btcpyment_add_gateway_class' );
 function btcpyment_add_gateway_class( $gateways ) {
-	$gateways[] = 'WC_Btcpyment_Gateway'; // your class name is here
+	$gateways[] = 'WC_Btcpyment_Gateway';
 	return $gateways;
 }
 
-/*
- * The class itself, please note that it is inside plugins_loaded action hook
- */
+// Extend existing payment gateway
 add_action( 'plugins_loaded', 'btcpyment_init_gateway_class' );
 function btcpyment_init_gateway_class() {
 
 	class WC_Btcpyment_Gateway extends WC_Payment_Gateway {
 
  		/**
- 		 * Class constructor, more about it in Step 3
+ 		 * Class constructor
  		 */
  		public function __construct() {
 
@@ -53,8 +53,6 @@ function btcpyment_init_gateway_class() {
            	$this->method_title = 'BTCPyment Gateway';
            	$this->method_description = 'Description of btcpyment payment gateway'; // will be displayed on the options page
 
-           	// gateways can support subscriptions, refunds, saved payment methods,
-           	// but in this tutorial we begin with simple payments
            	$this->supports = array(
            		'products'
            	);
@@ -79,14 +77,14 @@ function btcpyment_init_gateway_class() {
            	add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
            	// We need custom JavaScript to obtain a token
-           	add_action( 'wp_enqueue_scri6pts', array( $this, 'payment_scripts' ) );
+           	// add_action( 'wp_enqueue_scri6pts', array( $this, 'payment_scripts' ) );
 
            	// You can also register a webhook here
            	add_action( 'woocommerce_api_wc_btcpyment_gateway', array( $this, 'webhook' ) );
  		}
 
 		/**
- 		 * Plugin options, we deal with it in Step 3 too
+ 		 * Plugin options
  		 */
  		public function init_form_fields(){
 
@@ -191,7 +189,7 @@ function btcpyment_init_gateway_class() {
 
 
 		/*
-		 * We're processing the payments here, everything about it is in Step 5
+		 * Processing the payments
 		 */
          public function process_payment( $order_id ) {
 
@@ -206,66 +204,29 @@ function btcpyment_init_gateway_class() {
          	$args = array(
                 'amount' => $order->get_total(),
                 'id' => $order->get_id(),
-                'webhook_url' => $this->callback_URL );
+                'w_url' => $this->callback_URL );
                 // HASH??? FOR SECURE PAYMENTS?
 
-         	/*
-         	 * Your API interaction could be built with wp_remote_post()
-          	 */
              $payment_url = add_query_arg(
                 $args,
                 $this->btcpyment_server_url . "/pay"
             );
 
+            // Redirect to BTCPyment
             return [
                 'result'   => 'success',
                 'redirect' => $payment_url
             ];
-
-         	// if( !is_wp_error( $response ) ) {
-            //
-         	// 	 $body = json_decode( $response['body'], true );
-            //
-         	// 	 // it could be different depending on your payment processor
-         	// 	 if ( $body['response']['responseCode'] == 'APPROVED' ) {
-            //
-         	// 		// we received the payment
-         	// 		$order->payment_complete();
-         	// 		$order->reduce_order_stock();
-            //
-         	// 		// some notes to customer (replace true with false to make it private)
-         	// 		$order->add_order_note( 'Hey, your order is paid! Thank you!', true );
-            //
-         	// 		// Empty cart
-         	// 		$woocommerce->cart->empty_cart();
-            //
-         	// 		// Redirect to the thank you page
-         	// 		return array(
-         	// 			'result' => 'success',
-         	// 			'redirect' => $this->get_return_url( $order )
-         	// 		);
-            //
-         	// 	 } else {
-         	// 		wc_add_notice(  'Please try again.', 'error' );
-         	// 		return;
-         	// 	}
-            //
-         	// } else {
-            //     wc_add_notice(  'Connection error.', 'error' );
-         	// 	return;
-         	// }
-
          }
 
 		/*
-		 * In case you need a webhook, like PayPal IPN etc
+		 * Webhook to confirm payment
 		 */
          public function webhook() {
             header( 'HTTP/1.1 200 OK' );
          	$order = wc_get_order( $_GET['id'] );
-            write_log($_GET['id'])
-         	// $order->payment_complete();
-         	// $order->reduce_order_stock();
+         	$order->payment_complete();
+         	$order->reduce_order_stock();
 
          	update_option('webhook_debug', $_GET);
          }
