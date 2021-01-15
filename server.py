@@ -22,7 +22,7 @@ socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 # To-do, this will be a donation form page that submits to /pay
 @app.route('/')
 def index():
-    return render_template('index.html', async_mode=socket_.async_mode)
+    return render_template('donate.html', async_mode=socket_.async_mode)
 
 @app.route('/pay')
 def payment_page():
@@ -75,30 +75,23 @@ def make_payment(payload):
         payment.response = 'Payment finalised. Thankyou!'
         update_status(payment)
 
-        print("ABOUT TO WEBHOOOK")
-        payment.status = payload['webhook_url']
-        payment.response = payload['webhook_url']
-        update_status(payment)
-
-
         # Call webhook
-        print("PAYLOADDDDDDDDDDDDDDDDDDDDD")
-        print({'id' : payload['id']})
-        response = requests.get(
-            payload['webhook_url'], params={'id' : payload['id']},
-            headers={'Content-Type': 'application/json'}
-        )
-        if response.status_code != 200:
-            print('Failed to confirm payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
-            payment.status = response.text
-            payment.response = response.text
-        else:
-            print("Successfully confirmed payment via webhook.")
-            payment.status = 'HOOKED'
-            payment.response = 'HOOKED'
+        if config.gateway is not None and config.gateway:
+            response = requests.get(
+                payload['w_url'], params={'id' : payload['id']},
+                headers={'Content-Type': 'application/json'}
+            )
+            if response.status_code != 200:
+                print('Failed to confirm payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
+                payment.status = response.text
+                payment.response = response.text
+            else:
+                print("Successfully confirmed payment via webhook.")
+                payment.status = 'Payment confirmed.'
+                payment.response = 'Payment confirmed.'
 
-        update_status(payment)
-        print("Done response part...")
+            update_status(payment)
+
         ### DO SOMETHING
         # Depends on config
         # Get redirected?
