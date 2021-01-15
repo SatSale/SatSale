@@ -16,7 +16,6 @@
  */
 
  if (!function_exists('write_log')) {
-
      function write_log($log) {
          if (true === WP_DEBUG) {
              if (is_array($log) || is_object($log)) {
@@ -31,7 +30,7 @@
 
 add_filter( 'woocommerce_payment_gateways', 'btcpyment_add_gateway_class' );
 function btcpyment_add_gateway_class( $gateways ) {
-	$gateways[] = 'WC_btcpyment_Gateway'; // your class name is here
+	$gateways[] = 'WC_Btcpyment_Gateway'; // your class name is here
 	return $gateways;
 }
 
@@ -41,7 +40,7 @@ function btcpyment_add_gateway_class( $gateways ) {
 add_action( 'plugins_loaded', 'btcpyment_init_gateway_class' );
 function btcpyment_init_gateway_class() {
 
-	class WC_btcpyment_Gateway extends WC_Payment_Gateway {
+	class WC_Btcpyment_Gateway extends WC_Payment_Gateway {
 
  		/**
  		 * Class constructor, more about it in Step 3
@@ -73,16 +72,17 @@ function btcpyment_init_gateway_class() {
            	$this->testmode = 'yes' === $this->get_option( 'testmode' );
            	$this->private_key = $this->testmode ? $this->get_option( 'test_private_key' ) : $this->get_option( 'private_key' );
            	$this->publishable_key = $this->testmode ? $this->get_option( 'test_publishable_key' ) : $this->get_option( 'publishable_key' );
-            $this->callback_URL = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'wc_api_btcpyment)', home_url( '/' ) ) );
+            $this->callback_URL = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'wc_btcpyment_gateway', home_url( '/' ) ) );
+            // $this->callback_URL = home_url( '/' ) . 'wc-api/' . 'WC_Btcpyment_Gateway/';
 
            	// This action hook saves the settings
            	add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
            	// We need custom JavaScript to obtain a token
-           	add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
+           	add_action( 'wp_enqueue_scri6pts', array( $this, 'payment_scripts' ) );
 
            	// You can also register a webhook here
-           	add_action( 'wc_api_btcpyment', array( $this, 'webhook' ) );
+           	add_action( 'woocommerce_api_wc_btcpyment_gateway', array( $this, 'webhook' ) );
  		}
 
 		/**
@@ -206,14 +206,12 @@ function btcpyment_init_gateway_class() {
          	$args = array(
                 'amount' => $order->get_total(),
                 'id' => $order->get_id(),
-                'webhook_url' => $this->callback_URL
+                'webhook_url' => $this->callback_URL );
                 // HASH??? FOR SECURE PAYMENTS?
-         	);
 
          	/*
          	 * Your API interaction could be built with wp_remote_post()
           	 */
-             write_log($this->callback_URL);
              $payment_url = add_query_arg(
                 $args,
                 $this->btcpyment_server_url . "/pay"
@@ -263,10 +261,11 @@ function btcpyment_init_gateway_class() {
 		 * In case you need a webhook, like PayPal IPN etc
 		 */
          public function webhook() {
-
+            header( 'HTTP/1.1 200 OK' );
          	$order = wc_get_order( $_GET['id'] );
-         	$order->payment_complete();
-         	$order->reduce_order_stock();
+            write_log($_GET['id'])
+         	// $order->payment_complete();
+         	// $order->reduce_order_stock();
 
          	update_option('webhook_debug', $_GET);
          }

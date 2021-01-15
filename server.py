@@ -76,13 +76,13 @@ def make_payment(payload):
         update_status(payment)
 
         print("ABOUT TO WEBHOOOK")
-        payment.status = 'HOOKING'
-        payment.response = 'HOOKING'
+        payment.status = payload['webhook_url']
+        payment.response = payload['webhook_url']
         update_status(payment)
 
 
         # Call webhook
-        response = requests.post(
+        response = requests.get(
             payload['webhook_url'], data={'id' : payload['id']},
             headers={'Content-Type': 'application/json'}
         )
