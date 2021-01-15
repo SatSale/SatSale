@@ -82,8 +82,10 @@ def make_payment(payload):
 
 
         # Call webhook
+        print("PAYLOADDDDDDDDDDDDDDDDDDDDD")
+        print({'id' : payload['id']})
         response = requests.get(
-            payload['webhook_url'], data={'id' : payload['id']},
+            payload['webhook_url'], params={'id' : payload['id']},
             headers={'Content-Type': 'application/json'}
         )
         if response.status_code != 200:
