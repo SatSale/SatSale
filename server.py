@@ -60,7 +60,7 @@ def make_payment(payload):
 
     # Return if label missing
     if 'id' in payload.keys():
-        label = payload['label']
+        label = payload['id']
     else:
         label = "undefined"
 
