@@ -55,11 +55,14 @@ Now embed the donation button into your website:
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment through. Optionally, you can redirect a domain to that IP and use that instead.
 
+### Using HTTPS & Domains
+Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
+
+## Payment Gateway (Woocommerce)
+Currently we only support Woocommerce via Wordpress, with plans to extend to others in the future. BTCPyment acts as a custom payment gateway for Woocommerce via the plugin found in `/gateways`. Please click here for installation instructions.
+
 ## Security
 For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
-
-## Using HTTPS & Domains
-Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 # Developers
 ### You only need a little python!
