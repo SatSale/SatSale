@@ -2,7 +2,7 @@
 /*
  * Plugin Name: BTCPyment
  * Plugin URI: https://github.com/nickfarrow/BTCPyment
- * Description: Take credit card payments on your store.
+ * Description: Take Bitcoin payments on your store.
  * Author: Nick Farrow
  * Author URI: https://nickfarrow.com
  * Version: 1.0.1
@@ -17,17 +17,17 @@
  */
 
 //Debugging helper
- if (!function_exists('write_log')) {
-     function write_log($log) {
-         if (true === WP_DEBUG) {
-             if (is_array($log) || is_object($log)) {
-                 error_log(print_r($log, true));
-             } else {
-                 error_log($log);
-             }
-         }
-     }
- }
+ // if (!function_exists('write_log')) {
+ //     function write_log($log) {
+ //         if (true === WP_DEBUG) {
+ //             if (is_array($log) || is_object($log)) {
+ //                 error_log(print_r($log, true));
+ //             } else {
+ //                 error_log($log);
+ //             }
+ //         }
+ //     }
+ // }
 
 // BTCPyment class
 add_filter( 'woocommerce_payment_gateways', 'btcpyment_add_gateway_class' );
@@ -47,7 +47,7 @@ function btcpyment_init_gateway_class() {
  		 */
  		public function __construct() {
 
-           	$this->id = 'BTCPyment'; // payment gateway plugin ID
+           	$this->id = 'btcpyment'; // payment gateway plugin ID
            	$this->icon = ''; // URL of the icon that will be displayed on checkout page near your gateway name
            	$this->has_fields = true; // in case you need a custom credit card form
            	$this->method_title = 'BTCPyment Gateway';
@@ -70,6 +70,7 @@ function btcpyment_init_gateway_class() {
            	$this->testmode = 'yes' === $this->get_option( 'testmode' );
            	$this->private_key = $this->testmode ? $this->get_option( 'test_private_key' ) : $this->get_option( 'private_key' );
            	$this->publishable_key = $this->testmode ? $this->get_option( 'test_publishable_key' ) : $this->get_option( 'publishable_key' );
+
             $this->callback_URL = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'wc_btcpyment_gateway', home_url( '/' ) ) );
             // $this->callback_URL = home_url( '/' ) . 'wc-api/' . 'WC_Btcpyment_Gateway/';
 
@@ -77,7 +78,7 @@ function btcpyment_init_gateway_class() {
            	add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
            	// We need custom JavaScript to obtain a token
-           	// add_action( 'wp_enqueue_scri6pts', array( $this, 'payment_scripts' ) );
+           	// add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
 
            	// You can also register a webhook here
            	add_action( 'woocommerce_api_wc_btcpyment_gateway', array( $this, 'webhook' ) );
@@ -112,12 +113,12 @@ function btcpyment_init_gateway_class() {
                     'btcpyment_server_url' => array(
                         'title'       => 'BTCPyment URL',
                         'type'        => 'text',
-                        'description' => 'Points towards your instance of BTCPyment, should be IP or https://SERVER.com'
+                        'description' => 'Points towards your instance of BTCPyment, should be IP or https://SERVER.com',
                     ),
                     'redirect_url' => array(
                         'title'       => 'Redirect URL',
                         'type'        => 'text',
-                        'description' => 'URL the user is redirected to after payment.'
+                        'description' => 'URL the user is redirected to after payment.',
                     ),
             		'testmode' => array(
             			'title'       => 'Test mode',
@@ -183,7 +184,7 @@ function btcpyment_init_gateway_class() {
             	// 	'publishableKey' => $this->publishable_key
             	// ) );
 
-            	wp_enqueue_script( 'woocommerce_btcpyment' );
+            	// wp_enqueue_script( 'woocommerce_btcpyment' );
 
 	 	}
 

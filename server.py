@@ -59,11 +59,10 @@ def make_payment(payload):
         return
 
     # Return if label missing
-    if 'id' not in payload.keys():
-        return
-    #     label = payload['label']
-    # else:
-    #     label = "undefined"
+    if 'id' in payload.keys():
+        label = payload['label']
+    else:
+        label = "undefined"
 
     # Initialise this payment
     payment = create_invoice(amount, "USD", payload['id'])
