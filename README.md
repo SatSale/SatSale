@@ -3,9 +3,11 @@ Existing non-custodial Bitcoin payment processors are bloated, difficult to inst
 
 [![demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/)
 
-Currently, BTCPyment only provides donation buttons, but we plan to soon extend BTCPyment to handle payments from common webstores (shopify, woocommerce, etc).
+BTCPyment currently serves as
+1. Donation button for your website
+2. A Bitcoin payment gateway, including a Woocommerce plugin that easily turns your Wordpress site into a Bitcoin accepting store.
 
- BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. Soon, we hope to support lightning payments as well as function as a payment processor for a variety of web shops (woocommerce, shopify).
+BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain.
 
 # Features
 * Lightweight, Python and Javascript talk to your own Bitcoin node via websockets and SSH.
@@ -52,7 +54,7 @@ Now embed the donation button into your website:
 ```
 
 ## Using HTTPS
-Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can likely see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. See [HTTPS instructions](docs/HTTPS.md).
+Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you will be able to see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 # Developers
 ### You only need a little python!
