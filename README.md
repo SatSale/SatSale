@@ -10,15 +10,16 @@ BTCPyment currently serves as
 BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain.
 
 # Features
-* Lightweight, Python and Javascript talk to your own Bitcoin node via websockets and SSH.
-* Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
+* Talk to your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
+* Lightweight - Python and Javascript websockets.
+* Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
 * Natively supports all bitcoind node features (e.g. segwit) through RPC.
 * QR codes, user chooses the minimum payment confirmations and payment expiry duration.
 * Highly extendable, just take a look at the code! Optional code execution upon payment.
 * No shitcoin bloat. Bitcoin only.
 
 # Installation (short!)
-BTCPyment requires you to have a server host on, and a connection to a Bitcoin node. If you don't have one, you should [install one](https://bitcoincore.org/en/download/).
+You require a server to host an instance of BTCPyment on, and a connection to a Bitcoin node. If you don't have a Bitcoin node, you should [install one](https://bitcoincore.org/en/download/).
 ### Install
 Clone and install dependencies
 ```
@@ -52,9 +53,13 @@ Now embed the donation button into your website:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:320px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
+Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment through. Optionally, you can redirect a domain to that IP and use that instead.
 
-## Using HTTPS
-Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you will be able to see your donation button at `http://YOUR_SERVER_IP:8000/` but not in the embeded iframe. See [HTTPS instructions](docs/HTTPS.md).
+## Security
+For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
+
+## Using HTTPS & Domains
+Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 # Developers
 ### You only need a little python!
