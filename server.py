@@ -65,7 +65,7 @@ def make_payment(payload):
         label = "undefined"
 
     # Initialise this payment
-    payment = create_invoice(amount, "USD", payload['id'])
+    payment = create_invoice(amount, "USD", label)
 
     process_payment(payment)
 
