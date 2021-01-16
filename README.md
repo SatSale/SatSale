@@ -1,17 +1,19 @@
 # BTCPyment
-Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node.
+Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node or Lightning network node.
 
+## Demo
 [![demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/)
 
-Currently, BTCPyment only provides donation buttons, but we plan to soon extend BTCPyment to handle payments from common webstores (shopify, woocommerce, etc).
+BTCPyment is early in development and currently only provides donation buttons, but we plan to soon extend BTCPyment to handle payments from common webstores (shopify, woocommerce, etc).
 
- BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. Soon, we hope to support lightning payments as well as function as a payment processor for a variety of web shops (woocommerce, shopify).
+ BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain. We now support lightning payments also, with a woocommerce plugin under development.
 
 # Features
 * Lightweight, Python and Javascript talk to your own Bitcoin node via websockets and SSH.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems with reused Bitcoin addresses.
+* Recently added support for Lightning network (lnd)!
 * Natively supports all bitcoind node features (e.g. segwit) through RPC.
-* QR codes, user chooses the minimum payment confirmations and payment expiry duration.
+* QR codes, you choose the minimum payment confirmations and payment expiry duration.
 * Highly extendable, just take a look at the code! Optional code execution upon payment.
 * No shitcoin bloat. Bitcoin only.
 
@@ -32,7 +34,7 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPCPASSWORD"
 ```
-(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`.
+(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`. If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)]
 
 ### Run BTCPyment
 Run BTCPyment with
@@ -45,7 +47,7 @@ nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt
 tail -f log.txt
 ```
 
-## Embed Donation Button
+## Embed a Donation Button
 Now embed the donation button into your website:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:320px;border:none;overflow:hidden;" scrolling="no"></iframe>

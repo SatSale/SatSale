@@ -7,3 +7,4 @@ requests==2.25.0
 gunicorn==20.0.4
 eventlet==0.30.0
 Pillow==8.0.1
+lndgrpc==0.2.0
