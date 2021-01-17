@@ -2,7 +2,6 @@ from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
-import timestamp
 import os
 import requests
 import hmac
@@ -81,13 +80,14 @@ def make_payment(payload):
         update_status(payment)
 
         # Call webhook
-        if 'w_url' is in payload.keys():
+        if 'w_url' in payload.keys():
             params = {'id' : payload['id'], 'time' : time.time()}
-            message = timestamp.encode('utf-8') + b'.' + body
+            message = time.time().encode('utf-8') + b'.' + body
             hash = hmac.new(app.config['SECRET_KEY'], message, hashlib.sha256)
 
             headers={'Content-Type': 'application/json', 'X-Signature' : hash}
             print(params, headers)
+
             response = requests.get(
                 payload['w_url'], params=params, headers=headers)
 
