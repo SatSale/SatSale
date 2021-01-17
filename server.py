@@ -2,8 +2,11 @@ from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
+import timestamp
 import os
 import requests
+import hmac
+import hashlib
 
 import ssh_tunnel
 import config
@@ -48,7 +51,9 @@ def make_payment(payload):
     try:
         amount = float(amount)
     except:
-        # Give response?
+        payment.status = 'Invalid amount.'
+        payment.response = 'Invalid amount.'
+        update_status(payment)
         amount = None
         return
 
@@ -62,11 +67,12 @@ def make_payment(payload):
     if 'id' in payload.keys():
         label = payload['id']
     else:
-        label = "undefined"
+        label = "noid"
 
     # Initialise this payment
     payment = create_invoice(amount, "USD", label)
 
+    # Wait for amount to be sent to the address
     process_payment(payment)
 
     if payment.paid:
@@ -75,11 +81,16 @@ def make_payment(payload):
         update_status(payment)
 
         # Call webhook
-        if config.gateway is not None and config.gateway:
+        if 'w_url' is in payload.keys():
+            params = {'id' : payload['id'], 'time' : time.time()}
+            message = timestamp.encode('utf-8') + b'.' + body
+            hash = hmac.new(app.config['SECRET_KEY'], message, hashlib.sha256)
+
+            headers={'Content-Type': 'application/json', 'X-Signature' : hash}
+            print(params, headers)
             response = requests.get(
-                payload['w_url'], params={'id' : payload['id']},
-                headers={'Content-Type': 'application/json'}
-            )
+                payload['w_url'], params=params, headers=headers)
+
             if response.status_code != 200:
                 print('Failed to confirm payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
                 payment.status = response.text
@@ -91,11 +102,13 @@ def make_payment(payload):
 
             update_status(payment)
 
-        ### DO SOMETHING
-        # Depends on config
-        # Get redirected?
-        # Nothing?
-        # Run custom script?
+            ### DO SOMETHING
+            # Depends on config
+            # Get redirected?
+            # Nothing?
+            # Run custom script?
+
+        return
 
 # Initialise the payment via the payment method (bitcoind / lightningc / etc),
 # create qr code for the payment.
