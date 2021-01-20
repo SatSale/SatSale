@@ -155,7 +155,7 @@ def process_payment(payment):
         print()
         print(payment.__dict__)
 
-        if True: #payment.confirmed_paid > payment.value:
+        if payment.confirmed_paid > payment.value:
             payment.paid = True
             payment.time_left = 0
             payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
