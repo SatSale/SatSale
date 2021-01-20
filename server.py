@@ -3,20 +3,27 @@ from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
 import os
-import requests
-import hmac
-import hashlib
 
 import ssh_tunnel
 import config
 import invoice
 from pay import bitcoind
 from pay import lnd
+from gateways import woo_webhook
 
 # Begin websocket
 async_mode = None
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24).hex()
+
+# Load API key
+if os.path.exists("BTCPyment_API"):
+    with open("BTCPyment.key", 'r') as f:
+        app.config['SECRET_KEY'] = f.read()
+else:
+    with open("BTCPyment.key", 'w') as f:
+        app.config['SECRET_KEY'] = os.urandom(64).hex()
+        f.write(app.config['SECRET_KEY'])
+
 print("Initialised Flask with secret key: {}".format(app.config['SECRET_KEY']))
 socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 
@@ -79,26 +86,18 @@ def make_payment(payload):
         payment.response = 'Payment finalised. Thankyou!'
         update_status(payment)
 
-        # Call webhook
+        # Call webhook if woocommerce
         if 'w_url' in payload.keys():
-            params = {'id' : payload['id'], 'time' : time.time()}
-            message = time.time().encode('utf-8') + b'.' + body
-            hash = hmac.new(app.config['SECRET_KEY'], message, hashlib.sha256)
-
-            headers={'Content-Type': 'application/json', 'X-Signature' : hash}
-            print(params, headers)
-
-            response = requests.get(
-                payload['w_url'], params=params, headers=headers)
+            response = woo_webhook.hook(app.config['SECRET_KEY'], payload)
 
             if response.status_code != 200:
-                print('Failed to confirm payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
+                print('Failed to confirm order payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
                 payment.status = response.text
                 payment.response = response.text
             else:
                 print("Successfully confirmed payment via webhook.")
-                payment.status = 'Payment confirmed.'
-                payment.response = 'Payment confirmed.'
+                payment.status = 'Order confirmed.'
+                payment.response = 'Order confirmed.'
 
             update_status(payment)
 
@@ -156,7 +155,7 @@ def process_payment(payment):
         print()
         print(payment.__dict__)
 
-        if payment.confirmed_paid > payment.value:
+        if True: #payment.confirmed_paid > payment.value:
             payment.paid = True
             payment.time_left = 0
             payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
