@@ -17,17 +17,17 @@
  */
 
 //Debugging helper
- // if (!function_exists('write_log')) {
- //     function write_log($log) {
- //         if (true === WP_DEBUG) {
- //             if (is_array($log) || is_object($log)) {
- //                 error_log(print_r($log, true));
- //             } else {
- //                 error_log($log);
- //             }
- //         }
- //     }
- // }
+ if (!function_exists('write_log')) {
+     function write_log($log) {
+         if (true) {
+             if (is_array($log) || is_object($log)) {
+                 error_log(print_r($log, true));
+             } else {
+                 error_log($log);
+             }
+         }
+     }
+ }
 
 // BTCPyment class
 add_filter( 'woocommerce_payment_gateways', 'btcpyment_add_gateway_class' );
@@ -228,10 +228,11 @@ function btcpyment_init_gateway_class() {
 			$signature = $headers['X-Signature'];
 
 			$now = time(); // current unix timestamp
-			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $this->publishable_key);
 			$json = json_encode($_GET, JSON_FORCE_OBJECT);
+            $key = hex2bin($this->publishable_key);
+			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
 
-			if (hash_equals($signature, $valid_signature) and (abs($now - $_GET['time']) < 60) {
+			if (hash_equals($signature, $valid_signature) and (abs($now - $_GET['time']) < 5)) {
 	            header( 'HTTP/1.1 200 OK' );
 	         	$order = wc_get_order( $_GET['id'] );
 	         	$order->payment_complete();
@@ -240,6 +241,9 @@ function btcpyment_init_gateway_class() {
 	         	update_option('webhook_debug', $_GET);
 			} else {
 				header( 'HTTP/1.1 403 Forbidden' );
+				// header( 'HTTP/1.1 200 OK' );
+
+				return 1; //$now . ' ' . $json;
 			}
 
          }
