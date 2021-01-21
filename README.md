@@ -3,8 +3,7 @@ Existing non-custodial Bitcoin payment processors are bloated, difficult to inst
 
 Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)
-  |  [![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)
+[![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)  |  [![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)
 
 BTCPyment currently serves as
 1. Donation button for your website
