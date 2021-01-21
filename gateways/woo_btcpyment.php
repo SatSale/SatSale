@@ -16,7 +16,8 @@
  * This action hook registers our PHP class as a WooCommerce payment gateway
  */
 
-//Debugging helper
+// Debugging helper
+// Writes to wp-content/debug.log
  if (!function_exists('write_log')) {
      function write_log($log) {
          if (true) {
@@ -39,7 +40,6 @@ function btcpyment_add_gateway_class( $gateways ) {
 // Extend existing payment gateway
 add_action( 'plugins_loaded', 'btcpyment_init_gateway_class' );
 function btcpyment_init_gateway_class() {
-
 	class WC_Btcpyment_Gateway extends WC_Payment_Gateway {
 
  		/**
@@ -66,10 +66,9 @@ function btcpyment_init_gateway_class() {
            	$this->description = $this->get_option( 'description' );
            	$this->enabled = $this->get_option( 'enabled' );
             $this->btcpyment_server_url = $this->get_option( 'btcpyment_server_url' );
-            $this->redirect_url = $this->get_option( 'redirect_url' );
-           	$this->testmode = 'yes' === $this->get_option( 'testmode' );
-           	$this->private_key = $this->testmode ? $this->get_option( 'test_private_key' ) : $this->get_option( 'private_key' );
-           	$this->publishable_key = $this->testmode ? $this->get_option( 'test_publishable_key' ) : $this->get_option( 'publishable_key' );
+            // $this->redirect_url = $this->get_option( 'redirect_url' );
+           	// $this->testmode = 'yes' === $this->get_option( 'testmode' );
+           	$this->BTCPyment_API_Key = $this->get_option( 'BTCPyment_API_Key' );
 
             $this->callback_URL = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'wc_btcpyment_gateway', home_url( '/' ) ) );
             // $this->callback_URL = home_url( '/' ) . 'wc-api/' . 'WC_Btcpyment_Gateway/';
@@ -115,35 +114,35 @@ function btcpyment_init_gateway_class() {
                         'type'        => 'text',
                         'description' => 'Points towards your instance of BTCPyment, should be IP or https://SERVER.com',
                     ),
-                    'redirect_url' => array(
-                        'title'       => 'Redirect URL',
-                        'type'        => 'text',
-                        'description' => 'URL the user is redirected to after payment.',
-                    ),
-            		'testmode' => array(
-            			'title'       => 'Test mode',
-            			'label'       => 'Enable Test Mode',
-            			'type'        => 'checkbox',
-            			'description' => 'Place the payment gateway in test mode using test API keys.',
-            			'default'     => 'yes',
-            			'desc_tip'    => true,
-            		),
-            		'test_publishable_key' => array(
-            			'title'       => 'Test Publishable Key',
+                    // 'redirect_url' => array(
+                    //     'title'       => 'Redirect URL',
+                    //     'type'        => 'text',
+                    //     'description' => 'URL the user is redirected to after payment.',
+                    // ),
+            		// 'testmode' => array(
+            		// 	'title'       => 'Test mode',
+            		// 	'label'       => 'Enable Test Mode',
+            		// 	'type'        => 'checkbox',
+            		// 	'description' => 'Place the payment gateway in test mode using test API keys.',
+            		// 	'default'     => 'yes',
+            		// 	'desc_tip'    => true,
+            		// ),
+            		// 'test_publishable_key' => array(
+            		// 	'title'       => 'Test Publishable Key',
+            		// 	'type'        => 'text'
+            		// ),
+            		// 'test_private_key' => array(
+            		// 	'title'       => 'Test Private Key',
+            		// 	'type'        => 'password',
+            		// ),
+            		'BTCPyment_API_Key' => array(
+            			'title'       => 'BTCPyment_API_Key',
             			'type'        => 'text'
-            		),
-            		'test_private_key' => array(
-            			'title'       => 'Test Private Key',
-            			'type'        => 'password',
-            		),
-            		'publishable_key' => array(
-            			'title'       => 'Live Publishable Key',
-            			'type'        => 'text'
-            		),
-            		'private_key' => array(
-            			'title'       => 'Live Private Key',
-            			'type'        => 'password'
             		)
+            		// 'private_key' => array(
+            		// 	'title'       => 'Live Private Key',
+            		// 	'type'        => 'password'
+            		// )
             	);
 	 	}
 
@@ -164,25 +163,10 @@ function btcpyment_init_gateway_class() {
             	}
 
             	// no reason to enqueue JavaScript if API keys are not set
-            	if ( empty( $this->private_key ) || empty( $this->publishable_key ) ) {
+            	if ( empty($this->BTCPyment_API_Key) ) {
             		return;
             	}
 
-            	// do not work with card detailes without SSL unless your website is in a test mode
-            	if ( ! $this->testmode && ! is_ssl() ) {
-            		return;
-            	}
-                //
-            	// // let's suppose it is our payment processor JavaScript that allows to obtain a token
-            	// wp_enqueue_script( 'btcpyment_js', 'https://btcpyment.nickfarrow.com' );
-                //
-            	// // and this is our custom JS in your plugin directory that works with token.js
-            	// wp_register_script( 'woocommerce_btcpyment', plugins_url( 'btcpyment.js', __FILE__ ), array( 'jquery', 'btcpyment_js' ) );
-                //
-            	// // in most payment processors you have to use PUBLIC KEY to obtain a token
-            	// wp_localize_script( 'woocommerce_btcpyment', 'btcpyment_params', array(
-            	// 	'publishableKey' => $this->publishable_key
-            	// ) );
 
             	// wp_enqueue_script( 'woocommerce_btcpyment' );
 
@@ -220,30 +204,33 @@ function btcpyment_init_gateway_class() {
             ];
          }
 
-		/*
+		 /*
 		 * Webhook to confirm payment
 		 */
          public function webhook() {
 			$headers = getallheaders();
+            # Get supplied signature
 			$signature = $headers['X-Signature'];
 
 			$now = time(); // current unix timestamp
 			$json = json_encode($_GET, JSON_FORCE_OBJECT);
-            $key = hex2bin($this->publishable_key);
+            $key = hex2bin($this->BTCPyment_API_Key);
+
+            # Calculate expected signature
 			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
 
+            # Compare signature and timestamps
 			if (hash_equals($signature, $valid_signature) and (abs($now - $_GET['time']) < 5)) {
 	            header( 'HTTP/1.1 200 OK' );
+                # Complete order
 	         	$order = wc_get_order( $_GET['id'] );
 	         	$order->payment_complete();
 	         	$order->reduce_order_stock();
-
 	         	update_option('webhook_debug', $_GET);
+
 			} else {
 				header( 'HTTP/1.1 403 Forbidden' );
-				// header( 'HTTP/1.1 200 OK' );
-
-				return 1; //$now . ' ' . $json;
+				return 1;
 			}
 
          }
