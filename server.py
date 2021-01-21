@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
@@ -9,6 +9,7 @@ import config
 import invoice
 from pay import bitcoind
 from pay import lnd
+from gateways import woo_webhook
 
 # Begin websocket
 async_mode = None
@@ -26,28 +27,39 @@ else:
 print("Initialised Flask with secret key: {}".format(app.config['SECRET_KEY']))
 socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 
-# Render html
+# Render index pages
+# To-do, this will be a donation form page that submits to /pay
 @app.route('/')
 def index():
-    return render_template('index.html', async_mode=socket_.async_mode)
+    return render_template('donate.html', async_mode=socket_.async_mode)
+
+@app.route('/pay')
+def payment_page():
+    #
+    # # Label is blank if not supplied
+    # params = {'label':''}
+    # for key, value in dict(request.args).items():
+    #     params[key] = value
+    params = dict(request.args)
+    return render_template('index.html', params=params, async_mode=socket_.async_mode)
 
 # Basic return on initialisation
-@socket_.on('initialise', namespace='/pay')
+@socket_.on('initialise')
 def test_message(message):
     emit('payresponse', {'time_left': -1, 'response': message['data']})
 
 # Main payment method for websocket
 # Recieves form amount and initiates invoice and payment processing.
-@socket_.on('payment', namespace='/pay')
+@socket_.on('make_payment')
 def make_payment(payload):
-    print("Requesting payment for {}".format(payload['amount']))
-
     # Check the amount is a float
     amount = payload['amount']
     try:
         amount = float(amount)
     except:
-        # Give response?
+        payment.status = 'Invalid amount.'
+        payment.response = 'Invalid amount.'
+        update_status(payment)
         amount = None
         return
 
@@ -57,12 +69,16 @@ def make_payment(payload):
         amount = None
         return
 
-    # Need to check this is safe!
-    label = payload['label']
+    # Return if label missing
+    if 'id' in payload.keys():
+        label = payload['id']
+    else:
+        label = "noid"
 
     # Initialise this payment
     payment = create_invoice(amount, "USD", label)
 
+    # Wait for amount to be sent to the address
     process_payment(payment)
 
     if payment.paid:
@@ -70,17 +86,28 @@ def make_payment(payload):
         payment.response = 'Payment finalised. Thankyou!'
         update_status(payment)
 
-        invoice.success.success()
-
         # Call webhook if woocommerce webhook url has been provided.
         if 'w_url' in payload.keys():
             response = woo_webhook.hook(app.config['SECRET_KEY'], payload)
 
-        ### DO SOMETHING
-        # Depends on config
-        # Get redirected?
-        # Nothing?
-        # Run custom script?
+            if response.status_code != 200:
+                print('Failed to confirm order payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
+                payment.status = response.text
+                payment.response = response.text
+            else:
+                print("Successfully confirmed payment via webhook.")
+                payment.status = 'Order confirmed.'
+                payment.response = 'Order confirmed.'
+
+            update_status(payment)
+
+            ### DO SOMETHING
+            # Depends on config
+            # Get redirected?
+            # Nothing?
+            # Run custom script?
+
+        return
 
 # Initialise the payment via the payment method (bitcoind / lightningc / etc),
 # create qr code for the payment.
@@ -116,8 +143,8 @@ def update_status(payment, console_status=True):
 # Payment processing function.
 # Handle payment logic.
 def process_payment(payment):
-    payment.status = 'Awaiting payment.'
-    payment.response = 'Awaiting payment.'
+    payment.status = 'Payment intialised, awaiting payment.'
+    payment.response = 'Payment intialised, awaiting payment.'
     update_status(payment)
 
     # Track start_time for payment timeouts
@@ -145,8 +172,8 @@ def process_payment(payment):
             update_status(payment, console_status=False)
             socket_.sleep(config.pollrate)
         else:
-            payment.status = "Awaiting payment...".format(payment.value)
-            payment.response = "Awaiting payment...".format(payment.value)
+            payment.status = "Waiting for payment...".format(payment.value)
+            payment.response = "Waiting for payment...".format(payment.value)
             update_status(payment)
             socket_.sleep(config.pollrate)
     else:
