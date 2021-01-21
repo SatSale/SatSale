@@ -3,7 +3,8 @@ Existing non-custodial Bitcoin payment processors are bloated, difficult to inst
 
 Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)  |  [![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)
+[![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) <br />(Click for demo)
+  |  [![Donate demo](https://user-images.githubusercontent.com/24557779/105261068-10a6c200-5be3-11eb-85cb-fb459a7694f3.png)](https://node.nickfarrow.com/) <br />(Click for demo)
 
 BTCPyment currently serves as
 1. Donation button for your website
@@ -75,6 +76,7 @@ More documentation will be added in the near future.
 * Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
 * Lightning support
 * **Better UI** with more variety of size and theme.
+* Handle unconfirmed payments. RBF?
 * More readily customisable donation button (text/color/QR code)
 * Database integration for payment invoices
 * Multiple choice of price feeds
