@@ -43,6 +43,8 @@ Run BTCPyment with
 ```
 gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
+Gunicorn is a lightweight python HTTP server, alternatively you can run with just `python server.py` though this is not recommended for production.
+
 That's it! You should now be able to view your BTCPyment server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. You will want to run with nohup so it continues serving in the background:
 ```
 nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt 2>&1 &
@@ -60,20 +62,20 @@ Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPym
 Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 ## Payment Gateway (Woocommerce)
-Currently we only support Woocommerce via Wordpress, with plans to extend to others in the future. BTCPyment acts as a custom payment gateway for Woocommerce via the plugin found in `/gateways`. Please click here for installation instructions.
+Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 ## Security
 For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
 
 # Developers
 ### You only need a little python!
-The main code can be found in `server.py`. The client logic for the donation button sits in `static/server_connection.js`, invoice structure and bitcoind interface in `invoice/`, button appearance in `template/index.html`. Please have ago at implementing some of the things below!
+The main code can be found in [server.py](server.py). The client-side logic for the donation button sits in [static/server_connection.js](static/server_connection.js), invoice structure and bitcoind interface in [invoice/](invoice/), button appearance in [template/index.html](template/index.html), and Woocommerce plugin in [gateways/woo_btcpyment.php](gateways/woo_btcpyment.php). Please have ago at implementing some of the things below!
 
 More documentation will be added in the near future.
 
 # Coming soon:
 * Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
-* Lightning support
+* Lightning support (almost ready!)
 * **Better UI** with more variety of size and theme.
 * Handle unconfirmed payments. RBF?
 * More readily customisable donation button (text/color/QR code)
