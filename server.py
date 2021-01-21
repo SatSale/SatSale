@@ -2,6 +2,7 @@ from flask import Flask, render_template, session
 from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
+import os
 
 import ssh_tunnel
 import config
@@ -12,7 +13,17 @@ from pay import lnd
 # Begin websocket
 async_mode = None
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+
+# Load API key
+if os.path.exists("BTCPyment_API_key"):
+    with open("BTCPyment_API_key", 'r') as f:
+        app.config['SECRET_KEY'] = f.read()
+else:
+    with open("BTCPyment_API_key", 'w') as f:
+        app.config['SECRET_KEY'] = os.urandom(64).hex()
+        f.write(app.config['SECRET_KEY'])
+
+print("Initialised Flask with secret key: {}".format(app.config['SECRET_KEY']))
 socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 
 # Render html
@@ -60,6 +71,10 @@ def make_payment(payload):
         update_status(payment)
 
         invoice.success.success()
+
+        # Call webhook if woocommerce webhook url has been provided.
+        if 'w_url' in payload.keys():
+            response = woo_webhook.hook(app.config['SECRET_KEY'], payload)
 
         ### DO SOMETHING
         # Depends on config
@@ -151,5 +166,4 @@ print("Connection successful.")
 
 
 if __name__ == '__main__':
-    socket_.run(app, debug=True)
     socket_.run(app, debug=False)

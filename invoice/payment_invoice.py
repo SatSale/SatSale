@@ -21,11 +21,11 @@ class invoice:
 
 
     def create_qr(self):
-        if payment.pay_method = 'lnd':
+        if payment.pay_method == 'lnd':
             qr_str = "{}".format(self.address.upper())
         else:
             qr_str = "{}?amount={}&label={}".format(self.address.upper(), self.value, self.label)
-        
+
         img = qrcode.make(qr_str)
         img.save('static/qr_codes/{}.png'.format(self.uuid))
         return

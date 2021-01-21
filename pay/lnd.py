@@ -40,8 +40,8 @@ class lnd(invoice):
                                 macaroon_filepath="admin.macaroon",
                                 cert_filepath="tls.cert")
 
-                print("Getting lnd balance...")
-                info = self.lnd.channel_balance()
+                print("Getting lnd info...")
+                info = self.lnd.get_info()
                 print(info)
 
                 print("Successfully contacted lnd.")
@@ -105,6 +105,9 @@ class lnd(invoice):
             unconf_paid = 0
         else:
             print("WEEEEEEEEEEEEEEEEEEEE")
+        
+        #print(self.lnd.lookup_invoice(r_hash=self.hash))
+        print("Invoice ^")
 
         # print(str(b64decode(self.hash.strip('\\'))))
         # invoice_status = json.loads(MessageToJson(self.lnd.lookup_invoice(self.hash)))
