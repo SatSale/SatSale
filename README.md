@@ -1,21 +1,23 @@
 # BTCPyment
 Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node.
 
-[![demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/)
+Donation Button             |  Bitcoin Payment Gateway
+:-------------------------:|:-------------------------:
+[![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)
+  |  [![Donate demo](https://nickfarrow.com/assets/btcpyment.png)](https://node.nickfarrow.com/) (Click for demo)
 
 BTCPyment currently serves as
 1. Donation button for your website
-2. A Bitcoin payment gateway, including a Woocommerce plugin that easily turns your Wordpress site into a Bitcoin accepting store.
+2. A Bitcoin payment gateway, including a Woocommerce plugin that easily turns ANY Wordpress site into a Bitcoin accepting store.
 
-BTCPyment makes donation buttons simple; using Python and Javascript to talk to your own Bitcoin node, with an easy iframe embed install. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain.
+BTCPyment makes donation buttons simple; with a simple Python backend to talk to your own Bitcoin node. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain.
 
 # Features
-* Talk to your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
-* Lightweight - Python and Javascript websockets.
+* Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
+* Lightweight and highly extendable (for noobs too!)- Python backend with Javascript websockets. Take a [look at the code](server.py)!
 * Natively supports all bitcoind node features (e.g. segwit) through RPC.
-* QR codes, user chooses the minimum payment confirmations and payment expiry duration.
-* Highly extendable, just take a look at the code! Optional code execution upon payment.
+* QR codes, customizable required payment confirmations and payment expiry time.
 * No shitcoin bloat. Bitcoin only.
 
 # Installation (short!)
