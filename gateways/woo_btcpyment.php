@@ -220,6 +220,7 @@ function btcpyment_init_gateway_class() {
 		 * Webhook to confirm payment
 		 */
          public function webhook() {
+            $order = wc_get_order( $_GET['id'] );
 			$headers = getallheaders();
             // Get supplied signature
 			$signature = $headers['X-Signature'];
@@ -244,7 +245,6 @@ function btcpyment_init_gateway_class() {
 			if (hash_equals($signature, $valid_signature) and (abs($now - $_GET['time']) < 5)) {
 	            header( 'HTTP/1.1 200 OK' );
                 // Complete order
-	         	$order = wc_get_order( $_GET['id'] );
 	         	$order->payment_complete();
 	         	$order->reduce_order_stock();
 	         	update_option('webhook_debug', $_GET);
