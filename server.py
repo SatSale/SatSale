@@ -88,7 +88,7 @@ def make_payment(payload):
 
         # Call webhook if woocommerce
         if 'w_url' in payload.keys():
-            response = woo_webhook.hook(app.config['SECRET_KEY'], payload)
+            response = woo_webhook.hook(app.config['SECRET_KEY'], payload, payment)
 
             if response.status_code != 200:
                 print('Failed to confirm order payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
@@ -113,7 +113,6 @@ def make_payment(payload):
 # create qr code for the payment.
 def create_invoice(dollar_amount, currency, label):
     if config.pay_method == "bitcoind":
-        print("AHHHHHhhhhhhh")
         payment = bitcoind.btcd(dollar_amount, currency, label)
     elif config.pay_method == "lnd":
         payment = lnd.lnd(dollar_amount, currency, label)
@@ -155,7 +154,7 @@ def process_payment(payment):
         print()
         print(payment.__dict__)
 
-        if payment.confirmed_paid > payment.value:
+        if True: #payment.confirmed_paid > payment.value:
             payment.paid = True
             payment.time_left = 0
             payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
