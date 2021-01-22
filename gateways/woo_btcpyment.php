@@ -228,6 +228,8 @@ function btcpyment_init_gateway_class() {
 
             // Calculate expected signature
 			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
+            write_log($this->secret);
+            write_log(hex2bin($headers['X-Secret']));
 
             // Order secret must match to ensure inital payment url
             // had not been tampered when leaving the gateway

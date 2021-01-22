@@ -8,7 +8,7 @@ import requests
 def hook(btcpyment_secret, payload, payment):
     # Calculate a secret that is required to send back to the
     # woocommerce gateway, proving we did not modify id nor amount.
-    secret_seed =  payload['amount'] * payload['id']
+    secret_seed =  payload['amount'] * int(payload['id'])
     secret = hmac.new(btcpyment_secret, secret_seed, hashlib.sha256).hexdigest()
 
     # The main signature  which proves we have paid, and very recently!
@@ -24,9 +24,3 @@ def hook(btcpyment_secret, payload, payment):
         payload['w_url'], params=params, headers=headers)
 
     return response
-
-
-
-def calc_order_secret(btcpyment_secret, payload, payment):
-    secret_seed =  bytes([payload['amount'] * payload['id']])
-    secret = hmac.new(btcpyment_secret, secret_seed, hashlib.sha256).hexdigest()
