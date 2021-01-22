@@ -226,16 +226,16 @@ function btcpyment_init_gateway_class() {
 
 			$now = time(); // current unix timestamp
 			$json = json_encode($_GET, JSON_FORCE_OBJECT);
-            $key = hex2bin($this->BTCPyment_API_Key);
+            $key = hex2bin($order->BTCPyment_API_Key);
 
             // Calculate expected signature
 			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
-            write_log($this->secret);
+            write_log($order->secret);
             write_log(hex2bin($headers['X-Secret']));
 
             // Order secret must match to ensure inital payment url
             // had not been tampered when leaving the gateway
-            if (hex2bin($headers['X-Secret']) != $this->secret) {
+            if (hex2bin($headers['X-Secret']) != $order->secret) {
                 header( 'HTTP/1.1 403 Forbidden' );
 				return 1;
             }
