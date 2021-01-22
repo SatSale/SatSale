@@ -154,7 +154,9 @@ def process_payment(payment):
         print()
         print(payment.__dict__)
 
-        if (payment.confirmed_paid > payment.value) or config.free_mode:
+        # Debugging and demo mode which auto confirms payment
+        dbg_free_mode_cond = config.free_mode and (time.time() - payment.start_time > 5)
+        if (payment.confirmed_paid > payment.value) or dbg_free_mode_cond:
             payment.paid = True
             payment.time_left = 0
             payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
