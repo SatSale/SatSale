@@ -58,14 +58,15 @@ Now embed the donation button into your website:
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment through. Optionally, you can redirect a domain to that IP and use that instead.
 
-### Using HTTPS & Domains
-Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
-
-## Payment Gateway (Woocommerce)
-Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 ## Security
 For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
+
+## Using HTTPS & Domains
+Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
+
+# Payment Gateway (Woocommerce)
+Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 # Developers
 ### You only need a little python!
@@ -74,7 +75,6 @@ The main code can be found in [server.py](server.py). The client-side logic for 
 More documentation will be added in the near future.
 
 # Coming soon:
-* Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
 * **Better UI** with more variety of size and theme.
 * Handle unconfirmed payments. RBF?
 * More readily customisable donation button (text/color/QR code)
