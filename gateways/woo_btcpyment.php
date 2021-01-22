@@ -235,6 +235,11 @@ function btcpyment_init_gateway_class() {
 			$json = json_encode($_GET, JSON_FORCE_OBJECT);
             $key = hex2bin($this->BTCPyment_API_Key);
 
+            write_log("Key");
+            write_log($this->BTCPyment_API_Key);
+            write_log("JSON");
+            write_log($json);
+
             // Calculate expected signature
 			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
 
@@ -246,19 +251,23 @@ function btcpyment_init_gateway_class() {
             // had not been tampered when leaving the gateway
             // $secret = self::$secret;
             $order_secret_seed = (int)$order->get_total() * 100.0 * $order->get_id();
+            $order_secret_seed_str = (string)$order_secret_seed;
             $secret = hash_hmac('sha256', $order_secret_seed, $key);
 
-            write_log("Secret seed");
-            write_log($order_secret_seed);
-            write_log("Secret within webhook:");
-            write_log(bin2hex($secret));
-            write_log(bin2hex($headers['X-Secret']));
-            if (hex2bin($headers['X-Secret']) != $secret) {
-                header( 'HTTP/1.1 403 Forbidden' );
-				return 1;
-            }
+            // write_log("Secret seed");
+            // write_log($order_secret_seed);
+            // write_log("Secret within webhook:");
+            // write_log($secret);
+            // write_log($headers['X-Secret']);
+            // if (hex2bin($headers['X-Secret']) != $secret) {
+            //     header( 'HTTP/1.1 403 Forbidden' );
+			// 	return 1;
+            // }
 
             // Compare signature and timestamps
+            write_log("main sigs:");
+            write_log($signature);
+            write_log($valid_signature);
 			if (hash_equals($signature, $valid_signature) and (abs($now - $_GET['time']) < 5)) {
 	            header( 'HTTP/1.1 200 OK' );
                 // Complete order
