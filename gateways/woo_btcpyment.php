@@ -77,9 +77,6 @@ function btcpyment_init_gateway_class() {
            	// This action hook saves the settings
            	add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
-           	// We need custom JavaScript to obtain a token
-           	// add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
-
            	// You can also register a webhook here
            	add_action( 'woocommerce_api_wc_btcpyment_gateway', array( $this, 'webhook' ) );
  		}
@@ -146,33 +143,6 @@ function btcpyment_init_gateway_class() {
             		// )
             	);
 	 	}
-
-
-		/*
-		 * Custom CSS and JS, in most cases required only when you decided to go with a custom credit card form
-		 */
-	 	public function payment_scripts() {
-
-            	// we need JavaScript to process a token only on cart/checkout pages, right?
-            	if ( ! is_cart() && ! is_checkout() && ! isset( $_GET['pay_for_order'] ) ) {
-            		return;
-            	}
-
-            	// if our payment gateway is disabled, we do not have to enqueue JS too
-            	if ( 'no' === $this->enabled ) {
-            		return;
-            	}
-
-            	// no reason to enqueue JavaScript if API keys are not set
-            	if ( empty($this->BTCPyment_API_Key) ) {
-            		return;
-            	}
-
-
-            	// wp_enqueue_script( 'woocommerce_btcpyment' );
-
-	 	}
-
 
 		/*
 		 * Processing the payments
