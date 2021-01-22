@@ -1,5 +1,5 @@
 # BTCPyment
-Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node.
+Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node or Lightning network node.
 
 Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
@@ -36,7 +36,7 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPCPASSWORD"
 ```
-(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`.
+(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`. If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)]
 
 ### Run BTCPyment
 Run BTCPyment with
@@ -51,7 +51,7 @@ nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt
 tail -f log.txt
 ```
 
-## Embed Donation Button
+## Embed a Donation Button
 Now embed the donation button into your website:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:320px;border:none;overflow:hidden;" scrolling="no"></iframe>

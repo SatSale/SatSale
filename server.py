@@ -16,11 +16,11 @@ async_mode = None
 app = Flask(__name__)
 
 # Load API key
-if os.path.exists("BTCPyment_API"):
-    with open("BTCPyment.key", 'r') as f:
+if os.path.exists("BTCPyment_API_key"):
+    with open("BTCPyment_API_key", 'r') as f:
         app.config['SECRET_KEY'] = f.read()
 else:
-    with open("BTCPyment.key", 'w') as f:
+    with open("BTCPyment_API_key", 'w') as f:
         app.config['SECRET_KEY'] = os.urandom(64).hex()
         f.write(app.config['SECRET_KEY'])
 
@@ -86,7 +86,7 @@ def make_payment(payload):
         payment.response = 'Payment finalised. Thankyou!'
         update_status(payment)
 
-        # Call webhook if woocommerce
+        # Call webhook if woocommerce webhook url has been provided.
         if 'w_url' in payload.keys():
             response = woo_webhook.hook(app.config['SECRET_KEY'], payload)
 
