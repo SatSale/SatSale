@@ -1,5 +1,5 @@
 # BTCPyment
-Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node or Lightning network node.
+Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to **your own Bitcoin node or Lightning network node**.
 
 Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
@@ -75,7 +75,6 @@ More documentation will be added in the near future.
 
 # Coming soon:
 * Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
-* Lightning support (almost ready!)
 * **Better UI** with more variety of size and theme.
 * Handle unconfirmed payments. RBF?
 * More readily customisable donation button (text/color/QR code)
