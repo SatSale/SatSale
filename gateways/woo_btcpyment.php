@@ -190,7 +190,7 @@ function btcpyment_init_gateway_class() {
          	$args = array(
                 'amount' => $order->get_total(),
                 'id' => $order->get_id(),
-                'w_url' => $this->callback_URL );
+                'w_url' => $order->callback_URL );
                 // HASH??? FOR SECURE PAYMENTS?
 
             // We calculate a secret seed for the order
@@ -200,13 +200,13 @@ function btcpyment_init_gateway_class() {
             // This probably isn't unique... But will do for now.
             write_log($args);
             // https://stackoverflow.com/questions/3385685/
-            $order_secret_seed = (int) bcmul($args['amount'], 100.0) * $args['id'];
+            $order_secret_seed = (int)$args['amount'] * 100.0 * $args['id'];
             // Calculate expected secret
-            $this->secret = hash_hmac('sha256', $order_secret_seed, $this->BTCPyment_API_Key);
+            $order->secret = hash_hmac('sha256', $order_secret_seed, $order->BTCPyment_API_Key);
 
              $payment_url = add_query_arg(
                 $args,
-                $this->btcpyment_server_url . "/pay"
+                $order->btcpyment_server_url . "/pay"
             );
 
             // Redirect to BTCPyment
