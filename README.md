@@ -1,5 +1,5 @@
 # BTCPyment
-Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to your own Bitcoin node.
+Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to **your own Bitcoin node or Lightning network node**.
 
 Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
@@ -36,7 +36,7 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPCPASSWORD"
 ```
-(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`.
+(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`. If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)]
 
 ### Run BTCPyment
 Run BTCPyment with
@@ -51,21 +51,22 @@ nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt
 tail -f log.txt
 ```
 
-## Embed Donation Button
+## Embed a Donation Button
 Now embed the donation button into your website:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:320px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment through. Optionally, you can redirect a domain to that IP and use that instead.
 
-### Using HTTPS & Domains
-Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
-
-## Payment Gateway (Woocommerce)
-Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 ## Security
 For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
+
+## Using HTTPS & Domains
+Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
+
+# Payment Gateway (Woocommerce)
+Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 # Developers
 ### You only need a little python!
@@ -74,8 +75,6 @@ The main code can be found in [server.py](server.py). The client-side logic for 
 More documentation will be added in the near future.
 
 # Coming soon:
-* Payment API to process payments from any desired point of sale or web shop (woocommerce, shopify)
-* Lightning support (almost ready!)
 * **Better UI** with more variety of size and theme.
 * Handle unconfirmed payments. RBF?
 * More readily customisable donation button (text/color/QR code)
