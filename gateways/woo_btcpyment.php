@@ -228,46 +228,35 @@ function btcpyment_init_gateway_class() {
          public function webhook() {
             $order = wc_get_order( $_GET['id'] );
 			$headers = getallheaders();
-            // Get supplied signature
-			$signature = $headers['X-Signature'];
 
 			$now = time(); // current unix timestamp
 			$json = json_encode($_GET, JSON_FORCE_OBJECT);
             $key = hex2bin($this->BTCPyment_API_Key);
 
-            write_log("Key");
-            write_log($this->BTCPyment_API_Key);
-            write_log("JSON");
-            write_log($json);
-
-            // Calculate expected signature
-			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
-
-            // write_log("Secret within webhook:");
-            // write_log(self::$secret);
-            // write_log($headers['X-Secret']);
-
             // Order secret must match to ensure inital payment url
-            // had not been tampered when leaving the gateway
-            // $secret = self::$secret;
+            // had not been tampered when leaving the gateway.
+            // This secret is generated within the python backend (gateways/woo_webhook.py)
+            // For the payment to succeed, this will be provided in the success request header
+            // once the payment has been confirmed by the python backend.
+            // By confirming it matches the order details (amount * id) we know that
+            // the order has not been tampered with after leaving the php payment gateway.
             $order_secret_seed = (int)$order->get_total() * 100.0 * $order->get_id();
             $order_secret_seed_str = (string)$order_secret_seed;
             $secret = hash_hmac('sha256', $order_secret_seed, $key);
 
-            // write_log("Secret seed");
-            // write_log($order_secret_seed);
-            // write_log("Secret within webhook:");
-            // write_log($secret);
-            // write_log($headers['X-Secret']);
-            // if (hex2bin($headers['X-Secret']) != $secret) {
-            //     header( 'HTTP/1.1 403 Forbidden' );
-			// 	return 1;
-            // }
+            if ($headers['X-Secret'] != $secret) {
+                header( 'HTTP/1.1 403 Forbidden' );
+				return 1;
+            }
+
+            // Main Signature.
+            // Get supplied signature
+            $signature = $headers['X-Signature'];
+
+            // Calculate expected signature
+            $valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
 
             // Compare signature and timestamps
-            write_log("main sigs:");
-            write_log($signature);
-            write_log($valid_signature);
 			if (hash_equals($signature, $valid_signature) and (abs($now - $_GET['time']) < 5)) {
 	            header( 'HTTP/1.1 200 OK' );
                 // Complete order
