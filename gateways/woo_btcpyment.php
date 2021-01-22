@@ -183,6 +183,7 @@ function btcpyment_init_gateway_class() {
          	// we need it to get any order detailes
          	$order = wc_get_order( $order_id );
 
+            // We need to store a signature of the data, and check it later during the webhook to confirm it is the same!
          	/*
           	 * Array with parameters for API interaction
          	 */
@@ -191,6 +192,15 @@ function btcpyment_init_gateway_class() {
                 'id' => $order->get_id(),
                 'w_url' => $this->callback_URL );
                 // HASH??? FOR SECURE PAYMENTS?
+
+            // We calculate a secret seed for the order
+            // to ensure there is no tampering with the /pay url and its arguments
+            // this is confirmed upon calling payment webhook after payment
+            // Ideally this seed would be unique between orders.
+            // This probably isn't unique... But will do for now.
+            $order_secret_seed = $args['amount'] * $args['id'];
+            // Calculate expected secret
+            $this->secret = hash_hmac('sha256', $order_secret_seed, $this->BTCPyment_API_Key);
 
              $payment_url = add_query_arg(
                 $args,
@@ -209,20 +219,27 @@ function btcpyment_init_gateway_class() {
 		 */
          public function webhook() {
 			$headers = getallheaders();
-            # Get supplied signature
+            // Get supplied signature
 			$signature = $headers['X-Signature'];
 
 			$now = time(); // current unix timestamp
 			$json = json_encode($_GET, JSON_FORCE_OBJECT);
             $key = hex2bin($this->BTCPyment_API_Key);
 
-            # Calculate expected signature
+            // Calculate expected signature
 			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
 
-            # Compare signature and timestamps
+            // Order secret must match to ensure inital payment url
+            // had not been tampered when leaving the gateway
+            if (hex2bin($headers['X-Secret']) != $this->secret) {
+                header( 'HTTP/1.1 403 Forbidden' );
+				return 1;
+            }
+
+            // Compare signature and timestamps
 			if (hash_equals($signature, $valid_signature) and (abs($now - $_GET['time']) < 5)) {
 	            header( 'HTTP/1.1 200 OK' );
-                # Complete order
+                // Complete order
 	         	$order = wc_get_order( $_GET['id'] );
 	         	$order->payment_complete();
 	         	$order->reduce_order_stock();
