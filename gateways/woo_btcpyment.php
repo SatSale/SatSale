@@ -199,7 +199,8 @@ function btcpyment_init_gateway_class() {
             // Ideally this seed would be unique between orders.
             // This probably isn't unique... But will do for now.
             write_log($args);
-            $order_secret_seed = round($args['amount'], 2) * $args['id'];
+            // https://stackoverflow.com/questions/3385685/
+            $order_secret_seed = (int) bcmul($args['amount'], 100.0) * $args['id'];
             // Calculate expected secret
             $this->secret = hash_hmac('sha256', $order_secret_seed, $this->BTCPyment_API_Key);
 
