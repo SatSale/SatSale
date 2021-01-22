@@ -18,7 +18,7 @@ app = Flask(__name__)
 # Load API key
 if os.path.exists("BTCPyment_API_key"):
     with open("BTCPyment_API_key", 'r') as f:
-        app.config['SECRET_KEY'] = f.read()
+        app.config['SECRET_KEY'] = f.read().strip()
 else:
     with open("BTCPyment_API_key", 'w') as f:
         app.config['SECRET_KEY'] = os.urandom(64).hex()
