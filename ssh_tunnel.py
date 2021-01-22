@@ -14,7 +14,8 @@ try:
         tunnel_proc = subprocess.Popen(command)
     else:
         tunnel_proc = None
-except Exception:
+except Exception as e:
+    print("FAILED TO OPEN TUNNEL. Exception: {}".format(e))
     tunnel_proc = None
     pass
 
