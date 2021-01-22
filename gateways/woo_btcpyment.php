@@ -42,6 +42,7 @@ add_action( 'plugins_loaded', 'btcpyment_init_gateway_class' );
 function btcpyment_init_gateway_class() {
 	class WC_Btcpyment_Gateway extends WC_Payment_Gateway {
 
+        public static $secret = 0;
  		/**
  		 * Class constructor
  		 */
@@ -190,7 +191,7 @@ function btcpyment_init_gateway_class() {
          	$args = array(
                 'amount' => $order->get_total(),
                 'id' => $order->get_id(),
-                'w_url' => $order->callback_URL );
+                'w_url' => $this->callback_URL );
                 // HASH??? FOR SECURE PAYMENTS?
 
             // We calculate a secret seed for the order
@@ -200,13 +201,18 @@ function btcpyment_init_gateway_class() {
             // This probably isn't unique... But will do for now.
             write_log($args);
             // https://stackoverflow.com/questions/3385685/
-            $order_secret_seed = (int)$args['amount'] * 100.0 * $args['id'];
-            // Calculate expected secret
-            $order->secret = hash_hmac('sha256', $order_secret_seed, $order->BTCPyment_API_Key);
+            // $order_secret_seed = (int)$args['amount'] * 100.0 * $args['id'];
+            // write_log("Order secret seed:");
+            // write_log($order_secret_seed);
 
+            // Calculate expected secret
+            $key = hex2bin($this->BTCPyment_API_Key);
+            // self::$secret = hash_hmac('sha256', $order_secret_seed, $key);
+            // write_log("Secret");
+            // write_log(self::$secret);
              $payment_url = add_query_arg(
                 $args,
-                $order->btcpyment_server_url . "/pay"
+                $this->btcpyment_server_url . "/pay"
             );
 
             // Redirect to BTCPyment
@@ -227,16 +233,27 @@ function btcpyment_init_gateway_class() {
 
 			$now = time(); // current unix timestamp
 			$json = json_encode($_GET, JSON_FORCE_OBJECT);
-            $key = hex2bin($order->BTCPyment_API_Key);
+            $key = hex2bin($this->BTCPyment_API_Key);
 
             // Calculate expected signature
 			$valid_signature = hash_hmac('sha256', $_GET['time'] .'.'.$json, $key);
-            write_log($order->secret);
-            write_log(hex2bin($headers['X-Secret']));
+
+            // write_log("Secret within webhook:");
+            // write_log(self::$secret);
+            // write_log($headers['X-Secret']);
 
             // Order secret must match to ensure inital payment url
             // had not been tampered when leaving the gateway
-            if (hex2bin($headers['X-Secret']) != $order->secret) {
+            // $secret = self::$secret;
+            $order_secret_seed = (int)$order->get_total() * 100.0 * $order->get_id();
+            $secret = hash_hmac('sha256', $order_secret_seed, $key);
+
+            write_log("Secret seed");
+            write_log($order_secret_seed);
+            write_log("Secret within webhook:");
+            write_log(bin2hex($secret));
+            write_log(bin2hex($headers['X-Secret']));
+            if (hex2bin($headers['X-Secret']) != $secret) {
                 header( 'HTTP/1.1 403 Forbidden' );
 				return 1;
             }
