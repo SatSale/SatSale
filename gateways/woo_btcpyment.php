@@ -198,7 +198,8 @@ function btcpyment_init_gateway_class() {
             // this is confirmed upon calling payment webhook after payment
             // Ideally this seed would be unique between orders.
             // This probably isn't unique... But will do for now.
-            $order_secret_seed = $args['amount'] * $args['id'];
+            write_log($args);
+            $order_secret_seed = round($args['amount'], 2) * $args['id'];
             // Calculate expected secret
             $this->secret = hash_hmac('sha256', $order_secret_seed, $this->BTCPyment_API_Key);
 
