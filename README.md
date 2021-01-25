@@ -20,7 +20,7 @@ BTCPyment makes donation buttons simple; with a simple Python backend to talk to
 * No shitcoin bloat. Bitcoin only.
 
 # Installation (short!)
-You require a raspberry pi / server to host an instance of BTCPyment on, and a connection to a Bitcoin node. If you don't have a Bitcoin node, you should [install one](https://bitcoincore.org/en/download/).
+You require a Raspberry Pi / server (VPS) to host an instance of BTCPyment on, and a connection to a Bitcoin node. If you don't have a Bitcoin node, you should [install one](https://bitcoincore.org/en/download/).
 ### Install
 Clone and install dependencies
 ```
