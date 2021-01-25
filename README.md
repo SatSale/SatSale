@@ -1,5 +1,5 @@
 # BTCPyment
-Existing non-custodial Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to **your own Bitcoin node or Lightning network node**.
+Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to **your own Bitcoin node or Lightning network node**.
 
 Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
@@ -58,17 +58,17 @@ Now embed the donation button into your website:
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment through. Optionally, you can redirect a domain to that IP and use that instead.
 
+### Using HTTPS & Domains
+Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
-## Security
+### Security
 For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
 
-## Using HTTPS & Domains
-Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 # Payment Gateway (Woocommerce)
 Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
-# Contribute
+# Contributions welcomed
 ### You only need a little python!
 The main code can be found in [server.py](server.py). The client-side logic for the donation button sits in [static/server_connection.js](static/server_connection.js), invoice structure and bitcoind interface in [invoice/](invoice/), button appearance in [template/index.html](template/index.html), and Woocommerce plugin in [gateways/woo_btcpyment.php](gateways/woo_btcpyment.php). Please have ago at implementing some of the things below!
 
