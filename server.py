@@ -53,9 +53,7 @@ def make_payment(payload):
     try:
         amount = float(amount)
     except:
-        payment.status = 'Invalid amount.'
-        payment.response = 'Invalid amount.'
-        update_status(payment)
+        call_update_status(payment, 'Invalid amount.')
         amount = None
         return
 
@@ -78,9 +76,7 @@ def make_payment(payload):
     process_payment(payment)
 
     if payment.paid:
-        payment.status = 'Payment finalised. Thankyou!'
-        payment.response = 'Payment finalised. Thankyou!'
-        update_status(payment)
+        call_update_status(payment, 'Payment finalised. Thankyou!')
 
         # Call webhook if woocommerce webhook url has been provided.
         if 'w_url' in payload.keys():
@@ -88,14 +84,10 @@ def make_payment(payload):
 
             if response.status_code != 200:
                 print('Failed to confirm order payment via webhook {}, the response is: {}'.format(response.status_code, response.text))
-                payment.status = response.text
-                payment.response = response.text
+                call_update_status(payment, response.text)
             else:
                 print("Successfully confirmed payment via webhook.")
-                payment.status = 'Order confirmed.'
-                payment.response = 'Order confirmed.'
-
-            update_status(payment)
+                call_update_status(payment, 'Order confirmed.')
 
         # Redirect after payment
         if config.redirect is not None:
