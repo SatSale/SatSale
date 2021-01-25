@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO, emit, disconnect
 from markupsafe import escape
 import time
@@ -15,7 +15,7 @@ from gateways import woo_webhook
 async_mode = None
 app = Flask(__name__)
 
-# Load API key
+# Load an API key or create a new one
 if os.path.exists("BTCPyment_API_key"):
     with open("BTCPyment_API_key", 'r') as f:
         app.config['SECRET_KEY'] = f.read().strip()
@@ -27,29 +27,25 @@ else:
 print("Initialised Flask with secret key: {}".format(app.config['SECRET_KEY']))
 socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 
-# Render index pages
-# To-do, this will be a donation form page that submits to /pay
-@app.route('/')
-def index():
-    return render_template('donate.html', async_mode=socket_.async_mode)
-
-@app.route('/pay')
-def payment_page():
-    #
-    # # Label is blank if not supplied
-    # params = {'label':''}
-    # for key, value in dict(request.args).items():
-    #     params[key] = value
-    params = dict(request.args)
-    return render_template('index.html', params=params, async_mode=socket_.async_mode)
-
 # Basic return on initialisation
 @socket_.on('initialise')
 def test_message(message):
     emit('payresponse', {'time_left': -1, 'response': message['data']})
 
-# Main payment method for websocket
-# Recieves form amount and initiates invoice and payment processing.
+# Render index page
+# This is currently a donation page that submits to /pay
+@app.route('/')
+def index():
+    return render_template('donate.html', async_mode=socket_.async_mode)
+
+# /pay is the main payment method for initiating a payment websocket.
+@app.route('/pay')
+def payment_page():
+    params = dict(request.args)
+    return render_template('index.html', params=params, async_mode=socket_.async_mode)
+
+# Main payment method called by the websocket client
+# make_payment recieves form amount and initiates invoice and payment processing.
 @socket_.on('make_payment')
 def make_payment(payload):
     # Check the amount is a float
@@ -101,29 +97,14 @@ def make_payment(payload):
 
             update_status(payment)
 
-            ### DO SOMETHING
-            # Depends on config
-            # Get redirected?
-            # Nothing?
-            # Run custom script?
+        # Redirect after payment
+        if config.redirect is not None:
+            print("Redirecting to {}".format(config.redirect))
+            return redirect(config.redirect)
+        else:
+            print("No redirect, closing.")
 
         return
-
-# Initialise the payment via the payment method (bitcoind / lightningc / etc),
-# create qr code for the payment.
-def create_invoice(dollar_amount, currency, label):
-    if config.pay_method == "bitcoind":
-        payment = bitcoind.btcd(dollar_amount, currency, label)
-    elif config.pay_method == "lnd":
-        payment = lnd.lnd(dollar_amount, currency, label)
-    else:
-        # There probably should be config checking code within main.py
-        print("Invalid payment method")
-        return
-
-    payment.get_address()
-    payment.create_qr()
-    return payment
 
 # Return feedback via the websocket, updating the status and time remaining.
 def update_status(payment, console_status=True):
@@ -139,49 +120,62 @@ def update_status(payment, console_status=True):
         'response': payment.response})
     return
 
+def call_update_status(payment, status, console_status=True):
+    payment.status = status
+    payment.response = status
+    update_status(payment, console_status=console_status)
+
+# Initialise the payment via the payment method (bitcoind / lightningc / etc),
+# create qr code for the payment.
+def create_invoice(dollar_amount, currency, label):
+    if config.pay_method == "bitcoind":
+        payment = bitcoind.btcd(dollar_amount, currency, label)
+    elif config.pay_method == "lnd":
+        payment = lnd.lnd(dollar_amount, currency, label)
+    else:
+        print("Invalid payment method")
+        return
+
+    payment.get_address()
+    payment.create_qr()
+    return payment
+
 # Payment processing function.
 # Handle payment logic.
 def process_payment(payment):
-    payment.status = 'Payment intialised, awaiting payment.'
-    payment.response = 'Payment intialised, awaiting payment.'
-    update_status(payment)
+    call_update_status(payment, 'Payment intialised, awaiting payment.')
 
-    # Track start_time for payment timeouts
+    # Track start_time so we can detect payment timeouts
     payment.start_time = time.time()
     while (config.payment_timeout - (time.time() - payment.start_time)) > 0:
+        # Not using := for compatability reasons..
         payment.time_left = config.payment_timeout - (time.time() - payment.start_time)
+        # Check progress of the payment
         payment.confirmed_paid, payment.unconfirmed_paid = payment.check_payment()
         print()
         print(payment.__dict__)
 
-        # Debugging and demo mode which auto confirms payment
+        # Debugging and demo mode which auto confirms payments after 5 seconds
         dbg_free_mode_cond = config.free_mode and (time.time() - payment.start_time > 5)
+        # If payment is paid
         if (payment.confirmed_paid > payment.value) or dbg_free_mode_cond:
             payment.paid = True
             payment.time_left = 0
-            payment.status = "Payment successful! {} BTC".format(payment.confirmed_paid)
-            payment.response = "Payment successful! {} BTC".format(payment.confirmed_paid)
-            update_status(payment)
+            call_update_status(payment, "Payment successful! {} BTC".format(payment.confirmed_paid))
             break
 
+        # Display unconfirmed transaction info
         elif payment.unconfirmed_paid > 0:
-            payment.status = "Discovered payment. \
-                Waiting for {} confirmations...".format(config.required_confirmations)
-            payment.response = "Discovered payment. \
-                Waiting for {} confirmations...".format(config.required_confirmations)
-            # console_status=False to reduce console spam
-            update_status(payment, console_status=False)
+            call_update_status(payment, "Discovered payment. \
+                Waiting for {} confirmations...".format(config.required_confirmations), console_status=False)
             socket_.sleep(config.pollrate)
+
+        # Continue waiting for transaction...
         else:
-            payment.status = "Waiting for payment...".format(payment.value)
-            payment.response = "Waiting for payment...".format(payment.value)
-            update_status(payment)
+            call_update_status(payment, "Waiting for payment...".format(payment.value))
             socket_.sleep(config.pollrate)
     else:
-        payment.status = "Payment expired."
-        payment.status = "Payment expired."
-        update_status(payment)
-
+        call_update_status(payment, "Payment expired.")
     return
 
 # Test Bitcoind connection on startup:
