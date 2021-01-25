@@ -14,8 +14,8 @@ BTCPyment makes donation buttons simple; with a simple Python backend to talk to
 # Features
 * Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
-* Lightweight and highly extendable (for noobs too!)- Python backend with Javascript websockets. Take a [look at the code](server.py)!
-* Natively supports all bitcoind node features (e.g. segwit) through RPC.
+* Lightweight and highly extendable, basic html and css stying. Modular Python backend, take a [look at the code](server.py)!
+* Natively extendable to all bitcoind node features (e.g. segwit) through RPC.
 * QR codes, customizable required payment confirmations and payment expiry time.
 * No shitcoin bloat. Bitcoin only.
 
@@ -68,7 +68,7 @@ Embedded iframes are easy if your site only uses HTTP. But if your site uses HTT
 # Payment Gateway (Woocommerce)
 Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
-# Developers
+# Contribute
 ### You only need a little python!
 The main code can be found in [server.py](server.py). The client-side logic for the donation button sits in [static/server_connection.js](static/server_connection.js), invoice structure and bitcoind interface in [invoice/](invoice/), button appearance in [template/index.html](template/index.html), and Woocommerce plugin in [gateways/woo_btcpyment.php](gateways/woo_btcpyment.php). Please have ago at implementing some of the things below!
 
@@ -82,7 +82,7 @@ More documentation will be added in the near future.
 * Multiple choice of price feeds
 
 # Disclaimer
-BTCPyment is in very early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise.
+BTCPyment is in very early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise. Always confirm large payments manually.
 
 # Sponsor
 Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of BTCPyment :). Corporate/whale support would greatly assist my ability to give 100% of my attention to BTCPyment and other Bitcoin projects, please email `baseddepartment@nickfarrow.com`.
