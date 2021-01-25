@@ -35,4 +35,4 @@ pay_method = "bitcoind"
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
-config.free_mode = False
+free_mode = False
