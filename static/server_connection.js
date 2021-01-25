@@ -29,9 +29,6 @@ function initiate(payment_data) {
 // Update qr code, and hide timer
 function conditionalPageLogic(msg) {
     if (msg.address != null) {
-        // document.getElementById('logo').classList.add("qr");
-        // document.getElementById('logo').src = "static/qr_codes/" + msg.uuid + ".png";
-        // document.getElementById('logo').style.display = "none";
         document.getElementById('qrImage').style.display = "block";
         document.getElementById('qrClick').href = "/static/qr_codes/" + msg.uuid + ".png";
         document.getElementById('qrImage').src = "/static/qr_codes/" + msg.uuid + ".png";
