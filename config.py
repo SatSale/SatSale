@@ -27,6 +27,9 @@ required_confirmations = 2
 # Global connection attempts
 connection_attempts = 3
 
+# Redirect, not currently working..
+redirect = None
+
 # Payment method
 pay_method = "bitcoind"
 # Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
