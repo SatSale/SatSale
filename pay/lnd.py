@@ -29,12 +29,12 @@ class lnd(invoice):
         else:
             print("Found tls.cert and admin.macaroon.")
 
+        # Conect to lightning node
         connection_str = "{}:{}".format(config.host, config.rpcport)
         print("Attempting to connect to lightning node {}. This may take a few minutes...".format(connection_str))
 
         for i in range(config.connection_attempts):
             try:
-                # Require admin=True for creating invoices
                 print("Attempting to initialise lnd rpc client...")
                 self.lnd = LNDClient("{}:{}".format(config.host, config.rpcport),
                                 macaroon_filepath="admin.macaroon",
@@ -56,6 +56,7 @@ class lnd(invoice):
 
         print("Ready for payments requests.")
 
+    # Create lightning invoice
     def create_lnd_invoice(self, btc_amount):
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(btc_amount*10**8)
@@ -73,6 +74,7 @@ class lnd(invoice):
         self.address = self.create_lnd_invoice(self.value)
         return
 
+    # Check whether the payment has been paid
     def check_payment(self):
         print("Looking up invoice")
 
