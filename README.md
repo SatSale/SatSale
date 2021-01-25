@@ -20,7 +20,7 @@ BTCPyment makes donation buttons simple; with a simple Python backend to talk to
 * No shitcoin bloat. Bitcoin only.
 
 # Installation (short!)
-You require a server to host an instance of BTCPyment on, and a connection to a Bitcoin node. If you don't have a Bitcoin node, you should [install one](https://bitcoincore.org/en/download/).
+You require a raspberry pi / server to host an instance of BTCPyment on, and a connection to a Bitcoin node. If you don't have a Bitcoin node, you should [install one](https://bitcoincore.org/en/download/).
 ### Install
 Clone and install dependencies
 ```
@@ -45,7 +45,9 @@ gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
 Gunicorn is a lightweight python HTTP server, alternatively you can run with just `python server.py` though this is not recommended for production.
 
-That's it! You should now be able to view your BTCPyment server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. You will want to run with nohup so it continues serving in the background:
+That's it! You should now be able to view your BTCPyment server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`. If running on a Raspberry Pi, you will want to [forward port 8000 in your router settings](https://user-images.githubusercontent.com/24557779/105681219-f0f5fd80-5f44-11eb-942d-b574367a161f.png) so that BTCPYment is also visible at your external IP address. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`.
+
+You will want to run with nohup so it continues serving in the background:
 ```
 nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt 2>&1 &
 tail -f log.txt
