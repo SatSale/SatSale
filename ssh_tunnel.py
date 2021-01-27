@@ -1,8 +1,8 @@
+import subprocess
+
 import config
 import invoice
 from pay import bitcoind
-
-import subprocess
 
 
 # If tunnel is required (might make things easier)
