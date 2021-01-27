@@ -33,7 +33,7 @@ socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 @socket_.on('initialise')
 def test_message(message):
     emit('payresponse', {
-        'status' : 'Initialising payment...'
+        'status' : 'Initialising payment...',
         'time_left' : 0,
         'response': 'Initialising payment...'})
 
@@ -104,7 +104,7 @@ def make_payment(payload):
     return
 
 # Return feedback via the websocket, updating the payment status and time remaining.
-def update_status(payment, console_status=True):
+def update_status(payment, status, console_status=True):
     payment.status = status
     payment.response = status
     # Log to python stdout also
