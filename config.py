@@ -1,5 +1,5 @@
 # Bitcoin node connection settings
-# This should point to your bitcoin/lnd node, 
+# This should point to your bitcoin/lnd node,
 # with the correct RPC port as set in your config.
 # Connecting through local host as  i'm running BTCPyment on the node
 host = "127.0.0.1"
@@ -13,7 +13,7 @@ password = "RPAPASSWORD"
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
 # This forwards the ports required to talk to the node via RPC (or gRPC in the case of lightning)
 # Use host = "127.0.0.1" and you will be able to see your node on 8332
-tunnel_host = None #"HOST@IP"
+tunnel_host = None  # "HOST@IP"
 
 # Check for payment every xx seconds
 pollrate = 15

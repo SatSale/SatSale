@@ -28,6 +28,7 @@ print("Initialised Flask with secret key: {}".format(app.config["SECRET_KEY"]))
 # cors_allowed_origins * allows for webhooks to be initiated from iframes.
 socket_ = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 
+
 # Basic return on initialisation
 @socket_.on("initialise")
 def test_message(message):
@@ -65,7 +66,7 @@ def make_payment(payload):
     amount = payload["amount"]
     try:
         amount = float(amount)
-    except:
+    except Exception as e:
         update_status(payment, "Invalid amount.")
         amount = None
         return
@@ -193,7 +194,7 @@ def process_payment(payment):
 
         # Continue waiting for transaction...
         else:
-            update_status(payment, "Waiting for payment...".format(payment.value))
+            update_status(payment, "Waiting for payment...")
             socket_.sleep(config.pollrate)
     else:
         update_status(payment, "Payment expired.")

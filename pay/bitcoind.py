@@ -1,6 +1,4 @@
 import time
-import subprocess
-import time
 import config
 from invoice.payment_invoice import invoice
 
@@ -36,7 +34,8 @@ class btcd(invoice):
                 )
         else:
             raise Exception(
-                "Could not connect to bitcoind. Check your RPC / port tunneling settings and try again."
+                "Could not connect to bitcoind. \
+                Check your RPC / port tunneling settings and try again."
             )
 
     def check_payment(self):

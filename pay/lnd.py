@@ -17,31 +17,7 @@ class lnd(invoice):
         from lndgrpc import LNDClient
 
         # Copy admin macaroon and tls cert to local machine
-        if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
-            print(
-                "Could not find tls.cert or admin.macaroon in BTCPyment folder. Attempting to download from lnd directory."
-            )
-            try:
-                tls_file = os.path.join(config.lnd_dir, "tls.cert")
-                macaroon_file = os.path.join(
-                    config.lnd_dir, "data/chain/bitcoin/mainnet/admin.macaroon"
-                )
-                subprocess.run(
-                    ["scp", "{}:{}".format(config.tunnel_host, tls_file), "."]
-                )
-                subprocess.run(
-                    [
-                        "scp",
-                        "-r",
-                        "{}:{}".format(config.tunnel_host, macaroon_file),
-                        ".",
-                    ]
-                )
-            except Exception as e:
-                print(e)
-                print("Failed to copy tls and macaroon files to local machine.")
-        else:
-            print("Found tls.cert and admin.macaroon.")
+        self.copy_certs()
 
         # Conect to lightning node
         connection_str = "{}:{}".format(config.host, config.rpcport)
@@ -81,6 +57,37 @@ class lnd(invoice):
             )
 
         print("Ready for payments requests.")
+        return
+
+    # Copy tls and macaroon certs from remote machine.
+    def copy_certs():
+        if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
+            print(
+                "Could not find tls.cert or admin.macaroon in BTCPyment folder. \
+                 Attempting to download from lnd directory."
+            )
+            try:
+                tls_file = os.path.join(config.lnd_dir, "tls.cert")
+                macaroon_file = os.path.join(
+                    config.lnd_dir, "data/chain/bitcoin/mainnet/admin.macaroon"
+                )
+                subprocess.run(
+                    ["scp", "{}:{}".format(config.tunnel_host, tls_file), "."]
+                )
+                subprocess.run(
+                    [
+                        "scp",
+                        "-r",
+                        "{}:{}".format(config.tunnel_host, macaroon_file),
+                        ".",
+                    ]
+                )
+            except Exception as e:
+                print(e)
+                print("Failed to copy tls and macaroon files to local machine.")
+        else:
+            print("Found tls.cert and admin.macaroon.")
+        return
 
     # Create lightning invoice
     def create_lnd_invoice(self, btc_amount):
