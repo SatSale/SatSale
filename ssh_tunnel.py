@@ -9,8 +9,15 @@ import subprocess
 # If tunnel is required (might make things easier)
 try:
     if config.tunnel_host is not None:
-        command = ['ssh', config.tunnel_host, '-q', '-N', '-L', '{}:localhost:{}'.format(config.rpcport, config.rpcport)]
-        print("Opening tunnel to {}.".format(' '.join(command)))
+        command = [
+            "ssh",
+            config.tunnel_host,
+            "-q",
+            "-N",
+            "-L",
+            "{}:localhost:{}".format(config.rpcport, config.rpcport),
+        ]
+        print("Opening tunnel to {}.".format(" ".join(command)))
         tunnel_proc = subprocess.Popen(command)
     else:
         tunnel_proc = None
