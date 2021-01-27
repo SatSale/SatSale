@@ -5,16 +5,16 @@ Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
 [![Donate demo](https://user-images.githubusercontent.com/24557779/105266776-69775a00-5be5-11eb-81be-c9b8c2d0014d.png)](https://node.nickfarrow.com/) <br />(Click for embed demo)  |  [![Store demo](https://user-images.githubusercontent.com/24557779/105266808-6b411d80-5be5-11eb-83e6-384c4df4da34.png)](https://store.nickfarrow.com/cart/) <br />(Click for WordPress payments demo)
 
-BTCPyment currently serves as
+BTCPyment currently serves as A
 1. Donation button for your website
 2. A Bitcoin payment gateway, including a Woocommerce plugin that easily turns ANY Wordpress site into a Bitcoin accepting store.
 
-BTCPyment makes donation buttons simple; with a simple Python backend to talk to your own Bitcoin node. BTCPyment uses RPC to generate new addresses from your Bitcoin node, and monitors the payment status with your own copy of the blockchain.
+BTCPyment makes donation buttons simple - easy copy paste the one line HTML iframe into your site. With a simple Python backend to talk to your own Bitcoin node, BTCPyment uses RPC to generate new addresses, and monitors the payment status with your own copy of the blockchain.
 
 # Features
 * Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
-* Lightweight and highly extendable, basic html and css stying. Modular Python backend, take a [look at the code](server.py)!
+* Lightweight and highly extendable, basic html and css stying. Modular Python backend, take a [look at the code](server.py) or [lnd.py](/pay/lnd.py)!
 * Natively extendable to all bitcoind node features (e.g. segwit) through RPC.
 * QR codes, customizable required payment confirmations and payment expiry time.
 * No shitcoin bloat. Bitcoin only.
@@ -36,7 +36,7 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPCPASSWORD"
 ```
-(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your website, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`. If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)]
+(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`. If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)].
 
 ### Run BTCPyment
 Run BTCPyment with
@@ -45,20 +45,22 @@ gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
 Gunicorn is a lightweight python HTTP server, alternatively you can run with just `python server.py` though this is not recommended for production.
 
-That's it! You should now be able to view your BTCPyment server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`. If running on a Raspberry Pi, you will want to [forward port 8000 in your router settings](https://user-images.githubusercontent.com/24557779/105681219-f0f5fd80-5f44-11eb-942d-b574367a161f.png) so that BTCPYment is also visible at your external IP address. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`.
+That's it! You should now be able to view your BTCPyment server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`.
 
-You will want to run with nohup so it continues serving in the background:
+If running on a Raspberry Pi, you will want to [forward port 8000 in your router settings](https://user-images.githubusercontent.com/24557779/105681219-f0f5fd80-5f44-11eb-942d-b574367a161f.png) so that BTCPYment is also visible at your external IP address. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`.
+
+You will want to run gunicorn with nohup so it continues serving in the background:
 ```
 nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt 2>&1 &
 tail -f log.txt
 ```
 
 ## Embed a Donation Button
-Now embed the donation button into your website:
+Now embed the donation button into your website HTML:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:320px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
-Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment through. Optionally, you can redirect a domain to that IP and use that instead.
+Changing `YOUR_SERVER_IP` to the IP address of the machine you're running BTCPyment on. Optionally, you can redirect a domain to that IP and use that instead.
 
 ### Using HTTPS & Domains
 Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
@@ -68,7 +70,7 @@ For maximum security, we recommend hosting on a machine where your node only has
 
 
 # Payment Gateway (Woocommerce)
-Currently we have a plugin for Woocommerce in Wordpress, [please click here for installation instructions](docs/woocommerce.md) (another easy install!). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
+Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webstores extremely easy, [please click here for installation instructions](docs/woocommerce.md). BTCPyment acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 # Contributions welcomed
 ### You only need a little python!
