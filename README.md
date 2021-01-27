@@ -78,10 +78,11 @@ More documentation will be added in the near future.
 
 # Coming soon:
 * **Better UI** with more variety of size and theme.
-* Handle unconfirmed payments. RBF?
+    * Add a currency toggle between BTC/USD on donation html.
+* Handle unconfirmed payments. What is the best course of action?
 * More readily customisable donation button (text/color/QR code)
 * Database integration for payment invoices
-* Multiple choice of price feeds
+* Variety or easily customisable price feeds
 
 # Disclaimer
 BTCPyment is in very early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise. Always confirm large payments manually.
