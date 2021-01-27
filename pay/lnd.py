@@ -60,7 +60,7 @@ class lnd(invoice):
         return
 
     # Copy tls and macaroon certs from remote machine.
-    def copy_certs():
+    def copy_certs(self):
         if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
             print(
                 "Could not find tls.cert or admin.macaroon in BTCPyment folder. \
