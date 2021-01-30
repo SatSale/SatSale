@@ -30,6 +30,7 @@ class lnd(invoice):
         for i in range(config.connection_attempts):
             try:
                 print("Attempting to initialise lnd rpc client...")
+                time.sleep(3)
                 self.lnd = LNDClient(
                     "{}:{}".format(config.host, config.rpcport),
                     macaroon_filepath="admin.macaroon",
