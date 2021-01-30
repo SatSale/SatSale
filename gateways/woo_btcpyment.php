@@ -112,35 +112,10 @@ function btcpyment_init_gateway_class() {
                         'type'        => 'text',
                         'description' => 'Points towards your instance of BTCPyment, should be IP or https://SERVER.com',
                     ),
-                    // 'redirect_url' => array(
-                    //     'title'       => 'Redirect URL',
-                    //     'type'        => 'text',
-                    //     'description' => 'URL the user is redirected to after payment.',
-                    // ),
-            		// 'testmode' => array(
-            		// 	'title'       => 'Test mode',
-            		// 	'label'       => 'Enable Test Mode',
-            		// 	'type'        => 'checkbox',
-            		// 	'description' => 'Place the payment gateway in test mode using test API keys.',
-            		// 	'default'     => 'yes',
-            		// 	'desc_tip'    => true,
-            		// ),
-            		// 'test_publishable_key' => array(
-            		// 	'title'       => 'Test Publishable Key',
-            		// 	'type'        => 'text'
-            		// ),
-            		// 'test_private_key' => array(
-            		// 	'title'       => 'Test Private Key',
-            		// 	'type'        => 'password',
-            		// ),
             		'BTCPyment_API_Key' => array(
             			'title'       => 'BTCPyment_API_Key',
             			'type'        => 'text'
             		)
-            		// 'private_key' => array(
-            		// 	'title'       => 'Live Private Key',
-            		// 	'type'        => 'password'
-            		// )
             	);
 	 	}
 
@@ -162,24 +137,11 @@ function btcpyment_init_gateway_class() {
                 'amount' => $order->get_total(),
                 'id' => $order->get_id(),
                 'w_url' => $this->callback_URL );
-                // HASH??? FOR SECURE PAYMENTS?
 
-            // We calculate a secret seed for the order
-            // to ensure there is no tampering with the /pay url and its arguments
-            // this is confirmed upon calling payment webhook after payment
-            // Ideally this seed would be unique between orders.
-            // This probably isn't unique... But will do for now.
             write_log($args);
-            // https://stackoverflow.com/questions/3385685/
-            // $order_secret_seed = (int)$args['amount'] * 100.0 * $args['id'];
-            // write_log("Order secret seed:");
-            // write_log($order_secret_seed);
 
-            // Calculate expected secret
             $key = hex2bin($this->BTCPyment_API_Key);
-            // self::$secret = hash_hmac('sha256', $order_secret_seed, $key);
-            // write_log("Secret");
-            // write_log(self::$secret);
+
              $payment_url = add_query_arg(
                 $args,
                 $this->btcpyment_server_url . "/pay"
