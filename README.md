@@ -5,8 +5,8 @@ Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
 [![Donate demo](https://user-images.githubusercontent.com/24557779/105266776-69775a00-5be5-11eb-81be-c9b8c2d0014d.png)](https://node.nickfarrow.com/) <br />(Click for embed demo)  |  [![Store demo](https://user-images.githubusercontent.com/24557779/105266808-6b411d80-5be5-11eb-83e6-384c4df4da34.png)](https://store.nickfarrow.com/cart/) <br />(Click for WordPress payments demo)
 
-BTCPyment currently serves as A
-1. Donation button for your website
+BTCPyment currently serves as
+1. Donation button for your website that you can easily embed/link to anywhere.
 2. A Bitcoin payment gateway, including a Woocommerce plugin that easily turns ANY Wordpress site into a Bitcoin accepting store.
 
 BTCPyment makes donation buttons simple - easy copy paste the one line HTML iframe into your site. With a simple Python backend to talk to your own Bitcoin node, BTCPyment uses RPC to generate new addresses, and monitors the payment status with your own copy of the blockchain.
