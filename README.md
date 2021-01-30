@@ -1,5 +1,5 @@
 # BTCPyment
-Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that keeps your coins with your keys by connecting to **your own Bitcoin node or Lightning network node**.
+Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that connects to **your own Bitcoin node or Lightning network node**.
 
 Donation Button             |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
