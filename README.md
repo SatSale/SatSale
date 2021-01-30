@@ -76,7 +76,7 @@ Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webst
 ### You only need a little python!
 The main code can be found in [server.py](server.py). The client-side logic for the donation button sits in [static/server_connection.js](static/server_connection.js), invoice structure and bitcoind interface in [invoice/](invoice/), button appearance in [template/index.html](template/index.html), and Woocommerce plugin in [gateways/woo_btcpyment.php](gateways/woo_btcpyment.php). Please have ago at implementing some of the things below!
 
-More documentation will be added in the near future.
+![docs/diagram.png](docs/diagram.png)
 
 # Coming soon:
 * **Better UI** with more variety of size and theme.
