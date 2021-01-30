@@ -50,6 +50,9 @@ function conditionalPageLogic(msg) {
     if (msg.time_left == 0) {
         document.getElementById('timerContainer').style.visibility = "hidden";
     }
+    else {
+        document.getElementById('timerContainer').style.visibility = "visible";
+    }
 }
 
 // Payment timer, can't go below zero, update every second
