@@ -115,7 +115,7 @@
                 <!-- Alternate between offering lightning or on chain payment switch -->
                 {% if params.lnd_enabled %}
                     {% if params.method != "bitcoind"%}
-                        <button onclick="replaceUrlParam(window.location, 'method', 'btcd');">On-chain Payment</button>
+                        <button onclick="replaceUrlParam(window.location, 'method', 'bitcoind');">On-chain Payment</button>
                     {% else %}
                         <button onclick="replaceUrlParam(window.location, 'method', 'lnd');">Lightning Payment</button>
                     {% endif %}
