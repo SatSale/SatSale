@@ -80,10 +80,7 @@ def make_payment(payload):
 
     # Get payment method, use one specified in query string if provided
     if "method" in payload.keys():
-        if payload['method'] == 'lnd':
             payment_method = payload['method']
-        else:
-            raise Exception("Invalid payment method supplied to query string: {}".format(payload['method']))
     else:
         payment_method = config.pay_method
 
