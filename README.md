@@ -1,9 +1,9 @@
 # BTCPyment
 Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable. BTCPyment strives to serve as an easily deployable, lightweight Bitcoin payment processor that connects to **your own Bitcoin node or Lightning network node**.
 
-Donation Button             |  Bitcoin Payment Gateway
+Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://user-images.githubusercontent.com/24557779/105266776-69775a00-5be5-11eb-81be-c9b8c2d0014d.png)](https://node.nickfarrow.com/) <br />(Click for embed demo)  |  [![Store demo](https://user-images.githubusercontent.com/24557779/105266808-6b411d80-5be5-11eb-83e6-384c4df4da34.png)](https://store.nickfarrow.com/cart/) <br />(Click for WordPress payments demo)
+[![Donate demo](https://user-images.githubusercontent.com/24557779/105266776-69775a00-5be5-11eb-81be-c9b8c2d0014d.png)](https://node.nickfarrow.com/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/106901665-291eec80-674c-11eb-878f-c6f91a8e485c.png)](https://store.nickfarrow.com/cart/) <br />(Click for WordPress payments demo)
 
 BTCPyment currently serves as
 1. Donation button for your website that you can easily embed/link to anywhere.
