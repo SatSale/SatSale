@@ -54,6 +54,7 @@ def index():
 @app.route("/pay")
 def payment_page():
     params = dict(request.args)
+    params['lnd_enabled'] = (config.pay_method == "lnd")
     # Render payment page with the request arguments (?amount= etc.)
     return render_template("index.html", params=params, async_mode=socket_.async_mode)
 
@@ -77,8 +78,17 @@ def make_payment(payload):
     else:
         label = "donation"
 
+    # Get payment method, use one specified in query string if provided
+    if "method" in payload.keys():
+        if payload['method'] == 'lnd':
+            payment_method = payload['method']
+        else:
+            raise Exception("Invalid payment method supplied to query string: {}".format(payload['method']))
+    else:
+        payment_method = config.pay_method
+
     # Initialise the payment invoice
-    payment = create_invoice(amount, "USD", label)
+    payment = create_invoice(amount, "USD", label, payment_method)
 
     # Wait for the amount to be sent to the address
     process_payment(payment)
@@ -139,10 +149,10 @@ def update_status(payment, status, console_status=True):
 
 
 # Initialise the payment via the payment method (bitcoind / lightningc / etc),
-def create_invoice(dollar_amount, currency, label):
-    if config.pay_method == "bitcoind":
+def create_invoice(dollar_amount, currency, label, payment_method=config.pay_method):
+    if payment_method == "bitcoind":
         payment = bitcoind.btcd(dollar_amount, currency, label)
-    elif config.pay_method == "lnd":
+    elif payment_method == "lnd":
         payment = lnd.lnd(dollar_amount, currency, label)
     else:
         print("Invalid payment method")
