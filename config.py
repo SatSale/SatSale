@@ -35,6 +35,7 @@ pay_method = "bitcoind"
 # Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
 #pay_method = "lnd"
 #lnd_dir = "~/.lnd/"
+#lnd_rpcport = "10009"
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
