@@ -114,10 +114,10 @@
             <div id="left" style="text-align: left; padding: 0;">
                 <!-- Alternate between offering lightning or on chain payment switch -->
                 {% if params.lnd_enabled %}
-                    {% if params.method != "lnd"%}
-                        <button onclick="replaceUrlParam(window.location, 'method', 'lnd');">Lightning Payment</button>
-                    {% else %}
+                    {% if params.method == "lnd"%}
                         <button onclick="replaceUrlParam(window.location, 'method', 'btcd');">On-chain Payment</button>
+                    {% else %}
+                        <button onclick="replaceUrlParam(window.location, 'method', 'lnd');">Lightning Payment</button>
                     {% endif %}
                 {% endif %}
             </div>

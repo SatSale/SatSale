@@ -5,6 +5,7 @@ You will need to install the additional dependency lndgrpc:
 ```
 pip3 install lndgrpc==0.2.0
 ```
+If it fails to build or is taking a while, see this [solution](https://stackoverflow.com/questions/56357794/unable-to-install-grpcio-using-pip-install-grpcio#comment113013007_62500932).
 
 To use lightning, you need to change your `pay_method` in `config.py`, and set your lightning directory on your node.
 ```python
