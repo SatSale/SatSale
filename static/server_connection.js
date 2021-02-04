@@ -55,6 +55,15 @@ function conditionalPageLogic(msg) {
     }
 }
 
+function replaceUrlParam(url, paramName, paramValue)
+{
+    console.log(url);
+    var href = new URL(url);
+    href.searchParams.set(paramName, paramValue);
+    window.location = href;
+    return
+}
+
 // Payment timer, can't go below zero, update every second
 intervalTimer = setInterval(function () {
     var currentTime = document.getElementById('timer').innerHTML;
