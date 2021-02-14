@@ -8,86 +8,14 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
     <script src="{{ url_for('static', filename='server_connection.js') }}"></script>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <!-- Initate the payment websocket -->
     <script type="text/javascript">
         payment_data = {{ params|tojson }};
         console.log(payment_data);
         initiate(payment_data);
     </script>
-
-
-    <style>
-        html, body {
-            display: flex;
-            /* height:auto;
-            width:260px; */
-        }
-        body{
-            background-color: inherit;
-            overflow: hidden;
-        }
-        p {
-            /* display: inline-block; */
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            margin: 0;
-            padding: 5px;
-        }
-        h1 {
-            font-size: 2em;
-        }
-        #paybox {
-            background-color: #f7931a;
-            border-radius: 25px;
-            padding-left: 30px;
-            padding-right: 30px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            font-size: 16px
-
-            /* height:auto; */
-            height: 275px;
-            /* width:220px; */
-            width:360px;
-
-
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-
-        }
-        #row {
-            display: flex;
-        }
-         #left {
-          width: 60%;
-          padding: 0 10px 0 0;
-          float: left;
-        }
-        #right {
-          width: 40%;
-          padding: 0 10px 0 0;
-          float: right;
-        }
-        #address {
-            overflow-wrap: break-word;
-            text-align: right;
-        }
-        #about {
-            color:#000;
-        }
-        .qr {
-            transition: transform .2s;
-            object-fit: cover;
-        }
-        .qr:hover {
-            -ms-transform: scale(2.5); /* IE 9 */
-            -webkit-transform: scale(2.5); /* Safari 3-8 */
-            transform: scale(3);
-        }
-    </style>
 
 </head>
 
@@ -112,20 +40,22 @@
             <p id="timerContainer" style="padding:0;"><span id="timer"></span> seconds remaining.</p>
         </div>
 
+        </br>
+
         <div id="row">
             <div id="left" style="text-align: left; padding: 0;">
                 <!-- Alternate between offering lightning or on chain payment switch -->
                 {% if params.lnd_enabled %}
                     {% if params.method != "bitcoind"%}
-                        <button onclick="replaceUrlParam(window.location, 'method', 'bitcoind');">Onchain Payment</button>
+                        <button class="button button1" onclick="replaceUrlParam(window.location, 'method', 'bitcoind');">Onchain Payment</button>
                     {% else %}
-                        <button onclick="replaceUrlParam(window.location, 'method', 'lnd');">Lightning Payment</button>
+                        <button class="button button1" onclick="replaceUrlParam(window.location, 'method', 'lnd');">Lightning Payment</button>
                     {% endif %}
                 {% endif %}
             </div>
 
-            <div id="right" style="text-align: right; padding: 0;">
-                <small><a id="about" href="https://github.com/nickfarrow/BTCPyment" target="_blank">BTCPyment</a></small>
+            <div id="right" style="text-align: right; padding: 10px 10px;">
+                <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/BTCPyment" target="_blank">BTCPyment</a></small>
             </div>
         </div>
     </div>
