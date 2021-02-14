@@ -20,5 +20,5 @@ Your node will require sufficient liquidity and connection to receive payments.
 
 You may also need a taller iframe for the longer address:
 ```
-<iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;height:460px;border:none;overflow:hidden;" scrolling="no"></iframe>
+<iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:420px;height:360px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
