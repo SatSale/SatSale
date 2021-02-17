@@ -3,7 +3,7 @@ Existing self-custody Bitcoin payment processors are bloated, difficult to insta
 
 Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://user-images.githubusercontent.com/24557779/105266776-69775a00-5be5-11eb-81be-c9b8c2d0014d.png)](https://node.nickfarrow.com/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/106902397-e7db0c80-674c-11eb-9427-91683c2fa45f.png)](https://store.nickfarrow.com/cart/) <br />(Click for WordPress payments demo)
+[![Donate demo](https://user-images.githubusercontent.com/24557779/108210832-22e33400-7180-11eb-884a-5dbad3cd8f5f.png)](https://node.nickfarrow.com/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/108210961-43ab8980-7180-11eb-88e6-cc90d313076d.png)](https://store.nickfarrow.com/cart/) <br />(Click for WordPress payments demo)
 
 BTCPyment currently serves as
 1. Donation button for your website that you can easily embed/link to anywhere.
