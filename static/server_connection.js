@@ -42,7 +42,8 @@ function initiate(payment_data) {
 function conditionalPageLogic(msg) {
     // Display QR code
     if (msg.address != null) {
-        document.getElementById('qrImage').style.display = "block";
+        document.getElementById('qrImage').className = "qr";
+        // document.getElementById('qrImage').style.display = "block";
         document.getElementById('qrClick').href = "/static/qr_codes/" + msg.uuid + ".png";
         document.getElementById('qrImage').src = "/static/qr_codes/" + msg.uuid + ".png";
     }

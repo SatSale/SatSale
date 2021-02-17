@@ -31,6 +31,7 @@ h1 {
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
   font-family: "Lucida Console", "Courier New", monospace;
+  border-radius: 12px;
 }
 
 .button1 {
@@ -59,26 +60,13 @@ h1 {
   transform: translate(-50%, -50%);
 
 }
-#row {
-    display: flex;
+
+.logo {
+    padding-top:25px;
+    padding-left:30px;
+    float:right;
 }
- #left {
-  width: 60%;
-  padding: 0 10px 0 0;
-  float: left;
-}
-#right {
-  width: 40%;
-  padding: 0 10px 0 0;
-  float: right;
-}
-#address {
-    overflow-wrap: break-word;
-    text-align: right;
-}
-#about {
-    color:#000;
-}
+
 .qr {
     transition: transform .2s;
     object-fit: cover;
@@ -87,4 +75,32 @@ h1 {
     -ms-transform: scale(2.5); /* IE 9 */
     -webkit-transform: scale(2.5); /* Safari 3-8 */
     transform: scale(3);
+}
+
+#qrImage {
+    float: right;
+    /* margin: auto; */
+    padding-right:15px;
+    padding-top:25px;
+}
+
+#row {
+    display: flex;
+}
+ #left {
+  width: 60%;
+  padding: 0 0 0 0;
+  float: left;
+}
+#right {
+  width: 40%;
+  padding: 0 0 0 0;
+  float: right;
+}
+#address {
+    overflow-wrap: break-word;
+    text-align: right;
+}
+#about {
+    color:#000;
 }
