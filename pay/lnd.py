@@ -10,8 +10,8 @@ from invoice.payment_invoice import invoice
 
 
 class lnd(invoice):
-    def __init__(self, dollar_value, currency, label):
-        super().__init__(dollar_value, currency, label)
+    def __init__(self, dollar_value, currency, label, test):
+        super().__init__(dollar_value, currency, label, test)
         print(self.__dict__)
 
         from lndgrpc import LNDClient
@@ -37,9 +37,10 @@ class lnd(invoice):
                     cert_filepath="tls.cert",
                 )
 
-                print("Getting lnd info...")
-                info = self.lnd.get_info()
-                print(info)
+                if test:
+                    print("Getting lnd info...")
+                    info = self.lnd.get_info()
+                    print(info)
 
                 print("Successfully contacted lnd.")
                 break

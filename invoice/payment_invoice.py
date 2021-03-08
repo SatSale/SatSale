@@ -6,7 +6,7 @@ from .price_feed import get_btc_value
 
 
 class invoice:
-    def __init__(self, dollar_value, currency, label):
+    def __init__(self, dollar_value, currency, label, test=False):
         self.dollar_value = dollar_value
         self.currency = currency
         self.value = round(get_btc_value(dollar_value, currency), 8)
@@ -19,6 +19,7 @@ class invoice:
         self.unconfirmed_paid = 0
         self.paid = False
         self.txid = ""
+        self.test = test
 
     def create_qr(self):
         if config.pay_method == "lnd":

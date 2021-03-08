@@ -4,8 +4,8 @@ from invoice.payment_invoice import invoice
 
 
 class btcd(invoice):
-    def __init__(self, dollar_value, currency, label):
-        super().__init__(dollar_value, currency, label)
+    def __init__(self, dollar_value, currency, label, test):
+        super().__init__(dollar_value, currency, label, test)
         print(self.__dict__)
         # self.__dict__ = invoice.__dict__.copy()
 
@@ -19,8 +19,11 @@ class btcd(invoice):
         for i in range(config.connection_attempts):
             try:
                 self.rpc = AuthServiceProxy(connection_str)
-                info = self.rpc.getblockchaininfo()
-                print(info)
+
+                if test:
+                    info = self.rpc.getblockchaininfo()
+                    print(info)
+
                 print("Successfully contacted bitcoind.")
                 break
 
