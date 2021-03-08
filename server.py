@@ -211,9 +211,9 @@ def process_payment(payment):
 # Test Bitcoind connection on startup:
 print("Checking node connectivity...")
 if config.pay_method == "bitcoind":
-    bitcoind.btcd(1, "USD", "Init test.")
+    bitcoind.btcd(1, "USD", "Init test.", test=True)
 elif config.pay_method == "lnd":
-    lnd.lnd(1, "USD", "Init test")
+    lnd.lnd(1, "USD", "Init test", test=True))
 print("Connection successful.")
 
 
