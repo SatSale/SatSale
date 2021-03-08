@@ -10,7 +10,7 @@ from invoice.payment_invoice import invoice
 
 
 class lnd(invoice):
-    def __init__(self, dollar_value, currency, label, test):
+    def __init__(self, dollar_value, currency, label, test=False):
         super().__init__(dollar_value, currency, label, test)
         print(self.__dict__)
 
