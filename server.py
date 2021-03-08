@@ -213,7 +213,7 @@ print("Checking node connectivity...")
 if config.pay_method == "bitcoind":
     bitcoind.btcd(1, "USD", "Init test.", test=True)
 elif config.pay_method == "lnd":
-    lnd.lnd(1, "USD", "Init test", test=True))
+    lnd.lnd(1, "USD", "Init test", test=True)
 print("Connection successful.")
 
 
