@@ -65,10 +65,6 @@ class lnd(invoice):
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
         if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
-            print(
-                "Could not find tls.cert or admin.macaroon in BTCPyment folder. \
-                 Attempting to download from lnd directory."
-            )
             try:
                 tls_file = os.path.join(config.lnd_dir, "tls.cert")
                 macaroon_file = os.path.join(
@@ -77,6 +73,11 @@ class lnd(invoice):
 
                 # SSH copy
                 if config.tunnel_host is not None:
+                    print(
+                        "Could not find tls.cert or admin.macaroon in BTCPyment folder. \
+                         Attempting to download from remote lnd directory."
+                    )
+
                     subprocess.run(
                         ["scp", "{}:{}".format(config.tunnel_host, tls_file), "."]
                     )
@@ -92,7 +93,8 @@ class lnd(invoice):
                     self.certs = {'tls' : 'tls.cert', 'macaroon' : 'admin.macaroon'}
 
                 else:
-                    self.certs = {'tls' : tls_file, 'macaroon' : macaroon_file}
+                    self.certs = {'tls' : os.path.expanduser(tls_file),
+                                    'macaroon' : os.path.expanduser(macaroon_file)}
 
             except Exception as e:
                 print(e)
