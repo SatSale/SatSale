@@ -1,4 +1,5 @@
 import subprocess
+import pathlib
 import time
 import os
 import json
@@ -90,11 +91,11 @@ class lnd(invoice):
                 else:
                     subprocess.run(
                         ["ln", "-s", "{}".format(tls_file), "."],
-                        cwd=subprocess.pathlib.Path.home()
+                        cwd=pathlib.Path.home()
                     )
                     subprocess.run(
                         ["ln", "-s", "{}".format(macaroon_file), "."],
-                        cwd=subprocess.pathlib.Path.home()
+                        cwd=pathlib.Path.home()
                     )
 
             except Exception as e:
