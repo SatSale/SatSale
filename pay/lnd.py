@@ -34,8 +34,8 @@ class lnd(invoice):
                 time.sleep(3)
                 self.lnd = LNDClient(
                     "{}:{}".format(config.host, config.lnd_rpcport),
-                    macaroon_filepath="admin.macaroon",
-                    cert_filepath="tls.cert",
+                    macaroon_filepath=self.certs['macaroon'],
+                    cert_filepath=self.certs['tls'],
                 )
 
                 if test:
@@ -92,15 +92,6 @@ class lnd(invoice):
                     self.certs = {'tls' : 'tls.cert', 'macaroon' : 'admin.macaroon'}
 
                 else:
-                    subprocess.run(
-                        ["ln", "-s", "{}".format(tls_file), "."],
-                        cwd=pathlib.Path.home()
-                    )
-                    subprocess.run(
-                        ["ln", "-s", "{}".format(macaroon_file), "."],
-                        cwd=pathlib.Path.home()
-                    )
-
                     self.certs = {'tls' : tls_file, 'macaroon' : macaroon_file}
 
             except Exception as e:
