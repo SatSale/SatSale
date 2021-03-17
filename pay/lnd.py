@@ -89,10 +89,12 @@ class lnd(invoice):
                     )
                 else:
                     subprocess.run(
-                        ["ln", "-s", "{}".format(tls_file), "."]
+                        ["ln", "-s", "{}".format(tls_file), "."],
+                        cwd=pathlib.Path.home()
                     )
                     subprocess.run(
-                        ["ln", "-s", "{}".format(macaroon_file), "."]
+                        ["ln", "-s", "{}".format(macaroon_file), "."],
+                        cwd=pathlib.Path.home()
                     )
 
             except Exception as e:
