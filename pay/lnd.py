@@ -1,4 +1,3 @@
-import config
 import subprocess
 import time
 import os
@@ -6,6 +5,7 @@ import json
 from base64 import b64decode
 from google.protobuf.json_format import MessageToJson
 
+import config
 from invoice.payment_invoice import invoice
 
 
@@ -73,17 +73,28 @@ class lnd(invoice):
                 macaroon_file = os.path.join(
                     config.lnd_dir, "data/chain/bitcoin/mainnet/admin.macaroon"
                 )
-                subprocess.run(
-                    ["scp", "{}:{}".format(config.tunnel_host, tls_file), "."]
-                )
-                subprocess.run(
-                    [
-                        "scp",
-                        "-r",
-                        "{}:{}".format(config.tunnel_host, macaroon_file),
-                        ".",
-                    ]
-                )
+
+                # SSH copy
+                if config.tunnel_host is not None:
+                    subprocess.run(
+                        ["scp", "{}:{}".format(config.tunnel_host, tls_file), "."]
+                    )
+                    subprocess.run(
+                        [
+                            "scp",
+                            "-r",
+                            "{}:{}".format(config.tunnel_host, macaroon_file),
+                            ".",
+                        ]
+                    )
+                else:
+                    subprocess.run(
+                        ["cp", "{}".format(tls_file), "."]
+                    )
+                    subprocess.run(
+                        ["cp", "{}".format(macaroon_file), "."]
+                    )
+
             except Exception as e:
                 print(e)
                 print("Failed to copy tls and macaroon files to local machine.")
