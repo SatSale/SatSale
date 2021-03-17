@@ -64,6 +64,8 @@ class lnd(invoice):
 
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
+        self.certs = {'tls' : 'tls.cert', 'macaroon' : 'admin.macaroon'}
+
         if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
             try:
                 tls_file = os.path.join(config.lnd_dir, "tls.cert")
@@ -89,8 +91,6 @@ class lnd(invoice):
                             ".",
                         ]
                     )
-
-                    self.certs = {'tls' : 'tls.cert', 'macaroon' : 'admin.macaroon'}
 
                 else:
                     self.certs = {'tls' : os.path.expanduser(tls_file),
