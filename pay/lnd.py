@@ -88,6 +88,9 @@ class lnd(invoice):
                             ".",
                         ]
                     )
+
+                    self.certs = {'tls' : 'tls.cert', 'macaroon' : 'admin.macaroon'}
+
                 else:
                     subprocess.run(
                         ["ln", "-s", "{}".format(tls_file), "."],
@@ -97,6 +100,8 @@ class lnd(invoice):
                         ["ln", "-s", "{}".format(macaroon_file), "."],
                         cwd=pathlib.Path.home()
                     )
+
+                    self.certs = {'tls' : tls_file, 'macaroon' : macaroon_file}
 
             except Exception as e:
                 print(e)
