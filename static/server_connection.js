@@ -27,6 +27,19 @@ function initiate(payment_data) {
         // on the contents and status of the payment.
         conditionalPageLogic(msg)
 
+        console.log(msg);
+
+        // Actions if paid
+        if (msg.paid == true) {
+
+            // Redirect if paid
+            if (msg.redirect != null) {
+                sleep(5);
+                window.location.replace(msg.redirect);
+            }
+        }
+
+
         // If close? I forget..
         if (cb)
             cb();
