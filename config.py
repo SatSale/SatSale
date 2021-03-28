@@ -9,6 +9,9 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPAPASSWORD"
 
+# File in which API key will be stored
+api_key_path = "BTCPyment_API_key"
+
 # SSH tunnel to node (raspberry pi!)
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
 # This forwards the ports required to talk to the node via RPC (or gRPC in the case of lightning)
@@ -34,8 +37,11 @@ redirect = None
 pay_method = "bitcoind"
 # Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
 #pay_method = "lnd"
+# lnd_dir is only needed if you want to copy macaroon and TLS cert locally
 #lnd_dir = "~/.lnd/"
 #lnd_rpcport = "10009"
+#lnd_macaroon = "invoice.macaroon"
+#lnd_cert = "tls.cert"
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
