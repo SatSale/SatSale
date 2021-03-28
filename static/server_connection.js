@@ -34,8 +34,7 @@ function initiate(payment_data) {
 
             // Redirect if paid
             if (msg.redirect != null) {
-                sleep(5);
-                window.location.replace(msg.redirect);
+                setTimeout(() => {  window.location.replace(msg.redirect);  }, 5000);
             }
         }
 
