@@ -53,6 +53,7 @@ def index():
 # /pay is the main payment method for initiating a payment websocket.
 @app.route("/pay")
 def payment_page():
+    # Arguments passed to HTML and also server_connection.js
     params = dict(request.args)
     params['lnd_enabled'] = (config.pay_method == "lnd")
     # Render payment page with the request arguments (?amount= etc.)
@@ -111,14 +112,6 @@ def make_payment(payload):
                 print("Successfully confirmed payment via webhook.")
                 update_status(payment, "Order confirmed.")
 
-        # Redirect after payment
-        # TODO: add a delay here. Test.
-        if config.redirect is not None:
-            print("Redirecting to {}".format(config.redirect))
-            return redirect(config.redirect)
-        else:
-            print("No redirect, closing.")
-
     return
 
 
@@ -140,6 +133,8 @@ def update_status(payment, status, console_status=True):
             "time_left": payment.time_left,
             "uuid": payment.uuid,
             "response": payment.response,
+            "paid": payment.paid,
+            "redirect": config.redirect # Can later expand to invoice specific redirects.
         },
     )
     return

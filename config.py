@@ -30,8 +30,8 @@ required_confirmations = 2
 # Global connection attempts
 connection_attempts = 3
 
-# Redirect, not currently working..
-redirect = None
+# Generic redirect url after payment
+redirect = "https://github.com/nickfarrow/btcpyment"
 
 # Payment method
 pay_method = "bitcoind"
