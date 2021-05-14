@@ -1,3 +1,8 @@
 *.macaroon
 *.cert
 config.py
+__pycache__/
+gateways/__pycache__/
+invoice/__pycache__/
+pay/__pycache__/
+BTCPyment_API_key
