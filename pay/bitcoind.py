@@ -11,8 +11,8 @@ class btcd(invoice):
 
         from bitcoinrpc.authproxy import AuthServiceProxy
 
-        connection_str = "http://{}:{}@{}:{}".format(
-            config.username, config.password, config.host, config.rpcport
+        connection_str = "http://{}:{}@{}:{}/wallet/{}".format(
+            config.username, config.password, config.host, config.rpcport, config.wallet
         )
         print("Attempting to connect to {}.".format(connection_str))
 

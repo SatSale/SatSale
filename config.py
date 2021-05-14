@@ -9,6 +9,9 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPAPASSWORD"
 
+# Wallet ("" if single-wallet node, OR wallet name/path as shown in `biitcoin-cli listwallets`)
+wallet = ""
+
 # SSH tunnel to node (raspberry pi!)
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
 # This forwards the ports required to talk to the node via RPC (or gRPC in the case of lightning)
