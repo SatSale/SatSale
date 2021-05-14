@@ -17,7 +17,7 @@ class lnd(invoice):
 
         from lndgrpc import LNDClient
 
-        # Copy admin macaroon and tls cert to local machine
+        # Copy invoice macaroon and tls cert to local machine
         self.copy_certs()
 
         # Conect to lightning node
@@ -40,8 +40,7 @@ class lnd(invoice):
 
                 if test:
                     print("Getting lnd info...")
-                    info = self.lnd.get_info()
-                    print(info)
+                    self.lnd.list_invoices()
 
                 print("Successfully contacted lnd.")
                 break
@@ -64,20 +63,22 @@ class lnd(invoice):
 
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
-        self.certs = {'tls' : 'tls.cert', 'macaroon' : 'admin.macaroon'}
+        self.certs = {'tls' : config.lnd_cert, 'macaroon' : config.lnd_macaroon}
 
-        if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
+        if (not os.path.isfile(config.lnd_cert)) or (not os.path.isfile(config.lnd_macaroon)):
             try:
                 tls_file = os.path.join(config.lnd_dir, "tls.cert")
                 macaroon_file = os.path.join(
-                    config.lnd_dir, "data/chain/bitcoin/mainnet/admin.macaroon"
+                    config.lnd_dir, "data/chain/bitcoin/mainnet/invoice.macaroon"
                 )
 
                 # SSH copy
                 if config.tunnel_host is not None:
                     print(
-                        "Could not find tls.cert or admin.macaroon in BTCPyment folder. \
-                         Attempting to download from remote lnd directory."
+                        "Could not find {} or {} \
+                         Attempting to download from remote lnd directory.".format(
+                             config.lnd_cert, config.lnd_macaroon
+                         )
                     )
 
                     subprocess.run(
@@ -100,7 +101,7 @@ class lnd(invoice):
                 print(e)
                 print("Failed to copy tls and macaroon files to local machine.")
         else:
-            print("Found tls.cert and admin.macaroon.")
+            print("Found tls.cert and invoice.macaroon.")
         return
 
     # Create lightning invoice
