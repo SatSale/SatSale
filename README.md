@@ -60,7 +60,7 @@ tail -f log.txt
 ## Embed a Donation Button
 Now embed the donation button into your website HTML:
 ```html
-<iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:420px;height:460px;border:none;overflow:hidden;" scrolling="no"></iframe>
+<iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:600px;height:480px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSale on, node or otherwise. Additionally, you could redirect a domain to that IP and use that instead.
 
