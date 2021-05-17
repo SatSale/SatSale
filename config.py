@@ -6,7 +6,7 @@ host = "127.0.0.1"
 rpcport = "28256"
 
 # From ~/.bitcoin/bitcoin.conf
-username = "bitcoinrpc"
+username = "RPCUSERNAME"
 password = "RPCPASSWORD"
 
 # Wallet ("" if single-wallet node, OR wallet name/path as shown in `biitcoin-cli listwallets`)
@@ -34,7 +34,7 @@ required_confirmations = 2
 connection_attempts = 3
 
 # Generic redirect url after payment
-redirect = "https://github.com/nickfarrow/btcpyment"
+#redirect = "https://github.com/nickfarrow/btcpyment"
 
 # Payment method
 pay_method = "bitcoind"
