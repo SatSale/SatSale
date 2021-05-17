@@ -5,11 +5,11 @@
 # Bitcoin Lightning Node    1.1.1.1     8332, 10009, 22 (bitcoind, lnd, SSH)
 # SatSale                   2.2.2.2           
 
-# In this config we will tell SatSale to connect to our node
-# and tunnel the required ports over SSH.
-# SatSale can then talk to our node on localhost 127.0.0.1
+# In this config we will tell SatSale to connect to our node,
+# tunneling the required ports over SSH.
+# SatSale can then talk to our node via localhost on 127.0.0.1
 host = "127.0.0.1"
-rpcport = "8332"
+rpcport = "8332" # port for bitcoind
 # If connections get kicked back, you may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`.
 
 # From ~/.bitcoin/bitcoin.conf
