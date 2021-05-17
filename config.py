@@ -3,7 +3,7 @@
 # with the correct RPC port as set in your config.
 # Connecting through local host as  i'm running SatSale on my node
 host = "127.0.0.1"
-rpcport = "8332"
+rpcport = "28256"
 
 # From ~/.bitcoin/bitcoin.conf
 username = "bitcoinrpc"
@@ -16,9 +16,9 @@ wallet = ""
 api_key_path = "SatSale_API_key"
 
 # SSH tunnel to node (raspberry pi!)
-# Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
+# Make sure this command works `ssh HOST@IP -q -N -L 28256:localhost:28256`
 # This forwards the ports required to talk to the node via RPC (or gRPC in the case of lightning)
-# Use host = "127.0.0.1" and you will be able to see your node on 8332
+# Use host = "127.0.0.1" and you will be able to see your node on 28256
 tunnel_host = None  # "HOST@IP"
 
 # Check for payment every xx seconds
