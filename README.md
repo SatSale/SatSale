@@ -38,7 +38,7 @@ rpcport = "8332"
 username = "bitcoinrpc"
 password = "RPCPASSWORD"
 ```
-(You can find these in `~/.bitcoin/bitcoin.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/.bitcoin/bitcoin.conf`. If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)].
+(You can find these in `~/.bitcoin/bitcoin.conf`). Example configs, for enabling lightning or hosting SatSale on a remote machine can be found in [docs/](docs/). If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)].
 
 ### Run SatSale
 Run SatSale with
@@ -62,8 +62,7 @@ Now embed the donation button into your website HTML:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:420px;height:240px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
-(change height to 380 if using LND to account for longer addresses)
-Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSale on. Optionally, you can redirect a domain to that IP and use that instead.
+Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSale on, node or otherwise. Additionally, you could redirect a domain to that IP and use that instead.
 
 ### Using HTTPS & Domains
 Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
