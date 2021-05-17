@@ -62,6 +62,7 @@ Now embed the donation button into your website HTML:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:420px;height:240px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
+(change height to 380 if using LND to account for longer addresses)
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSale on. Optionally, you can redirect a domain to that IP and use that instead.
 
 ### Using HTTPS & Domains
