@@ -90,7 +90,7 @@ sudo apt install python3-pip
 ##### Clone and install dependencies
 ```
 git clone https://github.com/secretestsquirrel/BTCPyment-DV
-cd BTCPyment/
+cd BTCPyment-DV/
 pip3 install -r requirements.txt
 ```
 
