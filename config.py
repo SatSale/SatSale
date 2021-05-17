@@ -1,7 +1,7 @@
 # Bitcoin node connection settings
 # This should point to your bitcoin/lnd node,
 # with the correct RPC port as set in your config.
-# Connecting through local host as  i'm running BTCPyment on the node
+# Connecting through local host as  i'm running SatSale on my node
 host = "127.0.0.1"
 rpcport = "8332"
 
