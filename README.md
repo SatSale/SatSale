@@ -1,5 +1,5 @@
 # SatSale
-## (previously called BTCPyment)
+## (previously BTCPyment)
 <!---Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable.--->
 SatSale is a simple, easily deployable, lightweight Bitcoin payment processor that connects to your own Bitcoin node or Lightning network node.
 
