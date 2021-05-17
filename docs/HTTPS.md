@@ -14,6 +14,10 @@ server {
     }
 }
 ```
-we can now point our domain `satsale.YOURWEBSITE.com` DNS to our server IP and create HTTPS certificates by runnining the `certbot` command (or whatever else you use).
-
-You could also try provide Gunicorn with your website's HTTPS certificate with the flags `--certfile=cert.pem --keyfile=key.key`. If you use certbot for SSL, your keys are probably in `/etc/letsencrypt/live/`.
+We can now point our domain `satsale.YOURWEBSITE.com` DNS to our server IP, then create HTTPS certificates using Certbot and Nginx. If you haven't already, can go ahead and install Certbot and run this same command on your primary domain address as well, just change `satsale.your.domain` to `your.domain` in the command.
+Complete the interactive script and you should receive SSL certificates as long as your DNS records are proper.
+```
+sudo apt-get update
+sudo apt install python3-certbot-nginx
+sudo certbot --nginx -d satsale.your.domain
+```
