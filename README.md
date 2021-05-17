@@ -89,8 +89,8 @@ sudo apt install python3-pip
 ```
 ##### Clone and install dependencies
 ```
-git clone https://github.com/nickfarrow/SatSale
-cd SatSale/
+git clone https://github.com/secretestsquirrel/BTCPyment-DV
+cd BTCPyment/
 pip3 install -r requirements.txt
 ```
 
