@@ -14,7 +14,7 @@ lnd_dir = "~/.lnd/"
 lnd_rpcport = "10009"
 ```
 
-Your lnd directory is used to find your `.tls` and `.macaroon` files that are required to talk to your lightning node. They are copied over SSH into your BTCPyment folder. If this copy fails, perhaps copy them manually and they will be identified on start up.
+Your lnd directory is used to find your `.tls` and `.macaroon` files that are required to talk to your lightning node. They are copied over SSH into your SatSale folder. If this copy fails, perhaps copy them manually and they will be identified on start up.
 
 Your node will require sufficient liquidity and connection to receive payments.
 

@@ -6,8 +6,8 @@ import time
 import requests
 
 
-def hook(btcpyment_secret, payload, payment):
-    key = codecs.decode(btcpyment_secret, "hex")
+def hook(satsale_secret, payload, payment):
+    key = codecs.decode(satsale_secret, "hex")
 
     # Calculate a secret that is required to send back to the
     # woocommerce gateway, proving we did not modify id nor amount.
@@ -21,7 +21,7 @@ def hook(btcpyment_secret, payload, payment):
     # The main signature  which proves we have paid, and very recently!
     paid_time = int(time.time())
     params = {
-        "wc-api": "wc_btcpyment_gateway",
+        "wc-api": "wc_satsale_gateway",
         "id": payload["id"],
         "time": str(paid_time),
     }
