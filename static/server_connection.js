@@ -20,6 +20,7 @@ function initiate(payment_data) {
         $('#address').text(msg.address).html();
         // Display payment amount
         $('#amount').text(msg.amount).html();
+        $('#amount_sats').text(round(msg.amount * 10**8)).html();
         // Display payment time left
         $('#timer').text(Math.round(msg.time_left)).html();
 
