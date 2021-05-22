@@ -11,10 +11,7 @@ from invoice.payment_invoice import invoice
 
 
 class lnd(invoice):
-    def __init__(self, dollar_value, currency, label, test=False):
-        super().__init__(dollar_value, currency, label, test)
-        print(self.__dict__)
-
+    def __init__(self):
         from lndgrpc import LNDClient
 
         # Copy admin macaroon and tls cert to local machine
@@ -38,10 +35,10 @@ class lnd(invoice):
                     cert_filepath=self.certs['tls'],
                 )
 
-                if test:
-                    print("Getting lnd info...")
-                    info = self.lnd.get_info()
-                    print(info)
+
+                print("Getting lnd info...")
+                info = self.lnd.get_info()
+                print(info)
 
                 print("Successfully contacted lnd.")
                 break
@@ -60,6 +57,11 @@ class lnd(invoice):
             )
 
         print("Ready for payments requests.")
+        return
+
+    def invoice(self, dollar_value, currency, label, test=False):
+        super().__init__(dollar_value, currency, label, test)
+        print(self.__dict__)
         return
 
     # Copy tls and macaroon certs from remote machine.
