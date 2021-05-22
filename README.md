@@ -5,7 +5,7 @@ SatSale is a simple, easily deployable, lightweight Bitcoin payment processor th
 
 Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://user-images.githubusercontent.com/24557779/108210832-22e33400-7180-11eb-884a-5dbad3cd8f5f.png)](https://try.btcpyment.com/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/108210961-43ab8980-7180-11eb-88e6-cc90d313076d.png)](https://store.btcpyment.com/) <br />(Click for WordPress payments demo)
+[![Donate demo](https://user-images.githubusercontent.com/24557779/119219951-5345c000-bb2b-11eb-8753-bf6fd80263df.png)](https://try.satsale.com/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/119220001-8b4d0300-bb2b-11eb-9a2d-0b8ba24ca8b1.png) <br />(Click for WordPress payments demo)
 
 SatSale currently serves as
 1. Donation button for your website that you can easily embed/link to anywhere.
@@ -43,7 +43,7 @@ password = "RPCPASSWORD"
 ### Run SatSale
 Run SatSale with
 ```
-gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 satsale:app
+gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
 Gunicorn is a lightweight python HTTP server, alternatively you can run with just `python satsale.py` though this is not recommended for production.
 
@@ -53,7 +53,7 @@ If running on a Raspberry Pi, you will want to [forward port 8000 in your router
 
 You will want to run gunicorn with nohup so it continues serving in the background:
 ```
-nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
+nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app > log.txt 2>&1 &
 tail -f log.txt
 ```
 
