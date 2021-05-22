@@ -5,7 +5,7 @@ SatSale is a simple, easily deployable, lightweight Bitcoin payment processor th
 
 Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://user-images.githubusercontent.com/24557779/119219951-5345c000-bb2b-11eb-8753-bf6fd80263df.png)](https://try.satsale.com/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/119220001-8b4d0300-bb2b-11eb-9a2d-0b8ba24ca8b1.png) <br />(Click for WordPress payments demo)
+[![Donate demo](https://user-images.githubusercontent.com/24557779/119219951-5345c000-bb2b-11eb-8753-bf6fd80263df.png)](https://try.btcpyment.com/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/119220001-8b4d0300-bb2b-11eb-9a2d-0b8ba24ca8b1.png)](https://store.btcpyment.com/) <br />(Click for WordPress payments demo)
 
 SatSale currently serves as
 1. Donation button for your website that you can easily embed/link to anywhere.
