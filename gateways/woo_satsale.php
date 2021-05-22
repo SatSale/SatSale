@@ -66,7 +66,7 @@ function satsale_init_gateway_class() {
            	$this->title = $this->get_option( 'title' );
            	$this->description = $this->get_option( 'description' );
            	$this->enabled = $this->get_option( 'enabled' );
-            $this->SatSale_server_url = $this->get_option( 'satsale_server_url' );
+            $this->satsale_server_url = $this->get_option( 'satsale_server_url' );
             // $this->redirect_url = $this->get_option( 'redirect_url' );
            	// $this->testmode = 'yes' === $this->get_option( 'testmode' );
            	$this->SatSale_API_Key = $this->get_option( 'SatSale_API_Key' );
@@ -144,7 +144,7 @@ function satsale_init_gateway_class() {
 
              $payment_url = add_query_arg(
                 $args,
-                $this->satsale_server_url . "/pay"
+                $this->satsale_server_url . '/pay'
             );
 
             // Redirect to SatSale
