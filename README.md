@@ -16,7 +16,7 @@ SatSale makes donation buttons simple - easy copy paste the one line HTML iframe
 # Features
 * Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
-* Lightweight and highly extendable, basic html and css stying. Modular Python backend, take a [look at the code](server.py) or [lnd.py](/pay/lnd.py)!
+* Lightweight and highly extendable, basic html and css stying. Modular Python backend, take a [look at the code](satsale.py) or [lnd.py](/pay/lnd.py)!
 * Natively extendable to all bitcoind node features (e.g. segwit) through RPC.
 * QR codes, customizable required payment confirmations and payment expiry time.
 * No shitcoin bloat. Bitcoin only.
@@ -45,7 +45,7 @@ Run SatSale with
 ```
 gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 ```
-Gunicorn is a lightweight python HTTP server, alternatively you can run with just `python server.py` though this is not recommended for production.
+Gunicorn is a lightweight python HTTP server, alternatively you can run with just `python satsale.py` though this is not recommended for production.
 
 That's it! You should now be able to view your SatSale server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`.
 
@@ -76,7 +76,7 @@ Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webst
 
 # Contributions welcomed
 ### You only need a little python!
-The main code can be found in [server.py](server.py). The client-side logic for the donation button sits in [static/server_connection.js](static/server_connection.js), invoice structure and bitcoind interface in [invoice/](invoice/), button appearance in [template/index.html](template/index.html), and Woocommerce plugin in [gateways/woo_satsale.php](gateways/woo_satsale.php). Please have ago at implementing some of the things below!
+The main code can be found in [satsale.py](satsale.py). The client-side logic for the donation button sits in [static/server_connection.js](static/server_connection.js), invoice structure and bitcoind interface in [invoice/](invoice/), button appearance in [template/index.html](template/index.html), and Woocommerce plugin in [gateways/woo_satsale.php](gateways/woo_satsale.php). Please have ago at implementing some of the things below!
 
 ![docs/diagram.png](docs/diagram.png)
 

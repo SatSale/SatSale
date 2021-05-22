@@ -1,4 +1,4 @@
-// Websocket logic, talks to server.py /pay
+// Websocket logic, talks to satsale.py /pay
 
 // Initiate is called in the <head> of index.html with the payload provided
 // by the flask request. The data can not be passed straight from flask to this js
