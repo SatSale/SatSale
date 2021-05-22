@@ -102,7 +102,7 @@ def initiate_payment(payload):
 
             if response.status_code != 200:
                 print(
-                    "Failed to confirm order payment via webhook {}, the response is: {}".format(
+                    "Failed to confirm order payment via webhook {}, please contact the store to ensure the order has been confirmed, error response is: {}".format(
                         response.status_code, response.text
                     )
                 )
