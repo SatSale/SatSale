@@ -4,9 +4,9 @@ from invoice.payment_invoice import invoice
 
 
 class btcd(invoice):
-    def __init__(self, dollar_value, currency, label, test=False):
-        super().__init__(dollar_value, currency, label, test)
-        print(self.__dict__)
+    def __init__(self):
+        # super().__init__(dollar_value, currency, label, test)
+        # print(self.__dict__)
         # self.__dict__ = invoice.__dict__.copy()
 
         from bitcoinrpc.authproxy import AuthServiceProxy
@@ -20,9 +20,9 @@ class btcd(invoice):
             try:
                 self.rpc = AuthServiceProxy(connection_str)
 
-                if test:
-                    info = self.rpc.getblockchaininfo()
-                    print(info)
+                # if test:
+                info = self.rpc.getblockchaininfo()
+                print(info)
 
                 print("Successfully contacted bitcoind.")
                 break
@@ -40,6 +40,11 @@ class btcd(invoice):
                 "Could not connect to bitcoind. \
                 Check your RPC / port tunneling settings and try again."
             )
+
+    def invoice(self, dollar_value, currency, label, test=False):
+        super().__init__(dollar_value, currency, label, test)
+        print(self.__dict__)
+        return
 
     def check_payment(self):
         transactions = self.rpc.listtransactions()
@@ -60,6 +65,7 @@ class btcd(invoice):
         for i in range(config.connection_attempts):
             try:
                 self.address = self.rpc.getnewaddress(self.label)
+                return
             except Exception as e:
                 print(e)
                 print(
@@ -67,4 +73,7 @@ class btcd(invoice):
                         i + 1, config.connection_attempts
                     )
                 )
+            if config.connection_attempts - i == 1:
+                print("Reconnecting...")
+                self.__init__()
         return
