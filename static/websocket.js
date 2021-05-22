@@ -1,8 +1,9 @@
 // Websocket logic, talks to server.py /pay
+
 // Initiate is called in the <head> of index.html with the payload provided
 // by the flask request. The data can not be passed straight from flask to this js
 // Hence we {{ load }} it in the index head and call this function.
-function initiate(payment_data) {
+function open_websocket(payment_data) {
     namespace = '/';
     var socket = io(namespace);
 
@@ -12,7 +13,7 @@ function initiate(payment_data) {
     });
 
     // Recieving payment status from flask
-    socket.on('payresponse', function(msg, cb) {
+    socket.on('payresponse', function(msg) {
         console.log(msg.response);
         // Display payment status
         $('#status').text(msg.status).html();
@@ -38,15 +39,10 @@ function initiate(payment_data) {
                 setTimeout(() => {  window.location.replace(msg.redirect);  }, 5000);
             }
         }
-
-
-        // If close? I forget..
-        if (cb)
-            cb();
     });
 
-    // Initiate the payment websocket
-    socket.emit('make_payment', payment_data);
+    // Initiate the payment websocket with the server
+    socket.emit('initiate_payment', payment_data);
     return false
 }
 
@@ -55,8 +51,9 @@ function initiate(payment_data) {
 function conditionalPageLogic(msg) {
     // Display QR code
     if (msg.address != null) {
+        // Change image id to qr id
         document.getElementById('qrImage').className = "qr";
-        // document.getElementById('qrImage').style.display = "block";
+        // Insert image and link
         document.getElementById('qrClick').href = "/static/qr_codes/" + msg.uuid + ".png";
         document.getElementById('qrImage').src = "/static/qr_codes/" + msg.uuid + ".png";
     }

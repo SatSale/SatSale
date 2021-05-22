@@ -60,9 +60,9 @@ def payment_page():
 
 
 # Websocket payment processing method called by client
-# make_payment recieves amount and initiates invoice and payment processing.
-@socket_.on("make_payment")
-def make_payment(payload):
+# initiate_payment recieves amount and initiates invoice and payment processing.
+@socket_.on("initiate_payment")
+def initiate_payment(payload):
     # Check the amount is a float
     amount = payload["amount"]
     try:

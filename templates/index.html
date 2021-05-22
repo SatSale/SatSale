@@ -6,7 +6,7 @@
 
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
-    <script src="{{ url_for('static', filename='server_connection.js') }}"></script>
+    <script src="{{ url_for('static', filename='websocket.js') }}"></script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
@@ -14,7 +14,7 @@
     <script type="text/javascript">
         payment_data = {{ params|tojson }};
         console.log(payment_data);
-        initiate(payment_data);
+        open_websocket(payment_data);
     </script>
 
 </head>
