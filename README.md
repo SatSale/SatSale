@@ -71,7 +71,7 @@ cd ~/dojo/samourai-dojo-vX.X/docker/my-dojo
 ./dojo.sh stop
 ./dojo.sh upgrade --nocache
 ```
-This will not actually upgrade your Dojo, as you should see a message asking if you are sure you want to upgrade to Dojo v1.9, which is already the current version. Choose `y` there and wait for the upgrade script to run its course and rebuild Docker containers with the new variables enacted. Once you see logs for Docker Containers like Tor, Nodejs, and Bitcoind begin appearing in your terminal window, you can `CTRL+C` to exit the process. Dojo will continue running.
+This will not actually upgrade your Dojo, as you should see a message asking if you are sure you want to upgrade to Dojo vX.X, which is already the current version you are running. Choose `y` there and wait for the upgrade script to run its course and rebuild Docker containers with the new variables enacted. Once you see logs for Docker Containers like Tor, Nodejs, and Bitcoind begin appearing in your terminal window, you can `CTRL+C` to exit the process. Dojo will continue running.
 
 ##### Next create and load a wallet.
 ```
@@ -103,11 +103,11 @@ pip3 install -r requirements.txt
 ```
 host = "127.0.0.1"
 rpcport = "28256"
-username = "bitcoinrpc"
-password = "RPCPASSWORD"
+username = "RPC_USER"
+password = "RPC_PASSWORD"
 wallet = "satsale"
 ```
-(You can find these in `~/dojo/samourai-dojo-v1.9/docker/my-dojo/conf/docker-bitcoind.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/dojo/samourai-dojo-v1.9/docker/my-dojo/bitcoin/restart.sh`. If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)].
+(You can find these in `~/dojo/samourai-dojo-v1.9/docker/my-dojo/conf/docker-bitcoind.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/dojo/samourai-dojo-v1.9/docker/my-dojo/bitcoin/restart.sh`.
 
 ### Run satsale
 ##### Run satsale with
@@ -117,14 +117,14 @@ gunicorn -w 1 -b 0.0.0.0:8000 satsale:app
 
 That's it! You should now be able to view your SatSale server at `http://YOUR_SERVER_IP:8000/`. If running locally, this will be `127.0.0.1:8000`.
 
-If running on a Raspberry Pi, you will want to [forward port 8000 in your router settings](https://user-images.githubusercontent.com/24557779/105681219-f0f5fd80-5f44-11eb-942d-b574367a161f.png) so that SatSale is also visible at your external IP address. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`.
+If running on a local server, you will want to forward port 8000 in your router settings so that satsale is also visible at your external IP address. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. If running satsale on a remote server and using SSH tunnel to call to your local Dojo, may also need to open SSH Port 22 with `sudo ufw allow 22`. _If you are going this route be sure to at least use a strong Root password on your local device. You will need to input this Root password when you start gunicorn and attempt to connect to Dojo through your SSH tunnel.
 
-- To run BTCPyment so it continues serving in the background, in the terminal window currently running BTCPyment first `CTRL+C`, then:
+- To run BTCPyment so it continues serving in the background on a local server, in the terminal window currently running BTCPyment first `CTRL+C`, then:
 ```
 nohup gunicorn -w 1 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
 tail -f log.txt
 ```
-Once started, do `Ctrl+C` again to regain your terminal.
+Once started, do `Ctrl+C` again to regain your terminal. _Remote servers will not be able to exercise this command, since you will need to input your Root password to open the SSH tunnel. This cannot be done if you run gunicorn with nohup._
 
 ### Embed a Donation Button
 Now embed the donation button into your website HTML:
