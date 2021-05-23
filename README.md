@@ -5,7 +5,7 @@ satsale is a simple, easily deployable, lightweight Bitcoin payment processor th
 
 Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://user-images.githubusercontent.com/24557779/119219951-5345c000-bb2b-11eb-8753-bf6fd80263df.png)](https://try.satsale.org/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/119220001-8b4d0300-bb2b-11eb-9a2d-0b8ba24ca8b1.png)](https://store.satsale.com/) <br />(Click for WordPress payments demo)
+[![Donate demo](https://user-images.githubusercontent.com/24557779/108210832-22e33400-7180-11eb-884a-5dbad3cd8f5f.png)](https://btcpyment.diverter.tools/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/108210961-43ab8980-7180-11eb-88e6-cc90d313076d.png)](https://store.btcpyment.com/) <br />(Click for WordPress payments demo)
 
 SatSale currently serves as
 1. Donation button for your website that you can easily embed/link to anywhere.
@@ -124,7 +124,7 @@ If running on a local server, you will want to forward port 8000 in your router 
 nohup gunicorn -w 1 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
 tail -f log.txt
 ```
-Once started, do `Ctrl+C` again to regain your terminal. _Remote servers will not be able to exercise this command, since you will need to input your Root password to open the SSH tunnel. This cannot be done if you run gunicorn with nohup._
+Once started, do `Ctrl+C` again to regain your terminal. _Remote servers will not be able to exercise this command, since you will need to input your Root password to open the SSH tunnel. This cannot be done if you run gunicorn with nohup.
 
 ### Embed a Donation Button
 Now embed the donation button into your website HTML:
