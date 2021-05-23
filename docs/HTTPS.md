@@ -14,7 +14,7 @@ server {
     }
 }
 ```
-We can now point our domain `satsale.YOURWEBSITE.com` DNS to our server IP, then create HTTPS certificates using Certbot and Nginx. If you haven't already, can go ahead and install Certbot and run this same command on your primary domain address as well, just change `satsale.your.domain` to `your.domain` in the command.
+You can now point your domain `btcpyment.YOUR.DOMAIN` DNS A Record to your server IP, then create HTTPS certificates using Certbot and Nginx. If you haven't already, can go ahead and install Certbot and run this same command on your primary domain address as well, just change `btcpyment.your.domain` to `your.domain` in the command.
 Complete the interactive script and you should receive SSL certificates as long as your DNS records are proper.
 ```
 sudo apt-get update
