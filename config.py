@@ -13,7 +13,7 @@ password = "RPAPASSWORD"
 wallet = ""
 
 # File in which API key will be stored
-api_key_path = "BTCPyment_API_key"
+api_key_path = "SatSale_API_key"
 
 # SSH tunnel to node (raspberry pi!)
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
