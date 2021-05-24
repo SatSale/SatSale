@@ -107,7 +107,7 @@ username = "RPC_USER"
 password = "RPC_PASSWORD"
 wallet = "satsale"
 ```
-(You can find these in `~/dojo/samourai-dojo-v1.9/docker/my-dojo/conf/docker-bitcoind.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "pi@192.168.0.252"` that will forward `rpcport`. You may also need to set `rpcallowip=YOUR_SERVER_IP` in your `~/dojo/samourai-dojo-v1.9/docker/my-dojo/bitcoin/restart.sh`.
+(You can find these in `~/dojo/samourai-dojo-v1.9/docker/my-dojo/conf/docker-bitcoind.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "hostname@local_computer_IP"` that will forward `rpcport`. You may also need to set `rpcallowip=REMOTE_SERVER_IP` in your `~/dojo/samourai-dojo-v1.9/docker/my-dojo/bitcoin/restart.sh`.
 
 ### Run satsale
 ##### Run satsale with
