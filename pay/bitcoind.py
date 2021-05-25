@@ -1,14 +1,15 @@
 import time
+import uuid
+import qrcode
+
 import config
-from invoice.payment_invoice import invoice
+from invoice.price_feed import get_btc_value
 
 
-class btcd(invoice):
+
+
+class btcd():
     def __init__(self):
-        # super().__init__(dollar_value, currency, label, test)
-        # print(self.__dict__)
-        # self.__dict__ = invoice.__dict__.copy()
-
         from bitcoinrpc.authproxy import AuthServiceProxy
 
         connection_str = "http://{}:{}@{}:{}/wallet/{}".format(
@@ -20,7 +21,6 @@ class btcd(invoice):
             try:
                 self.rpc = AuthServiceProxy(connection_str)
 
-                # if test:
                 info = self.rpc.getblockchaininfo()
                 print(info)
 
@@ -41,9 +41,28 @@ class btcd(invoice):
                 Check your RPC / port tunneling settings and try again."
             )
 
-    def invoice(self, dollar_value, currency, label, test=False):
-        super().__init__(dollar_value, currency, label, test)
-        print(self.__dict__)
+    def invoice(self, dollar_value, currency, label):
+        self.dollar_value = dollar_value
+        self.currency = currency
+        self.value = round(get_btc_value(dollar_value, currency), 8)
+        self.uuid = str(uuid.uuid4())
+        self.label = self.uuid
+        self.status = "Payment initialised."
+        self.response = ""
+        self.time_left = config.payment_timeout
+        self.confirmed_paid = 0
+        self.unconfirmed_paid = 0
+        self.paid = False
+        self.txid = ""
+        return
+
+    def create_qr(self):
+        qr_str = "{}?amount={}&label={}".format(
+            self.address.upper(), self.value, self.label
+        )
+
+        img = qrcode.make(qr_str)
+        img.save("static/qr_codes/{}.png".format(self.uuid))
         return
 
     def check_payment(self):
