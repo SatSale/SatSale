@@ -19,10 +19,15 @@ def get_opt(name, default):
     else:
         return default
 
-host = get_opt("host", "127.0.0.1")
-rpcport = get_opt("rpcport", "8332")
-username = get_opt("username", "bitcoinrpc")
-password = get_opt("password", "rpcpassword")
+host = os.getenv("BITCOIND_HOST")
+rpcport = os.getenv("BITCOIND_PORT")
+username = os.getenv("BITCOIND_USER")
+password = os.getenv("BITCOIND_PASS")
+
+# host = get_opt("host", "127.0.0.1")
+# rpcport = get_opt("rpcport", "8332")
+# username = get_opt("username", "bitcoinrpc")
+# password = get_opt("password", "rpcpassword")
 wallet = get_opt("wallet", "")
 api_key_path = get_opt("api_key_path", "SatSale_API_key")
 tunnel_host = get_opt("tunnel_host", None)
