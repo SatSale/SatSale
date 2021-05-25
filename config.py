@@ -7,7 +7,7 @@ rpcport = "8332"
 
 # From ~/.bitcoin/bitcoin.conf
 username = "bitcoinrpc"
-password = "RPAPASSWORD"
+password = "RPCPASSWORD"
 
 # Wallet ("" if single-wallet node, OR wallet name/path as shown in `biitcoin-cli listwallets`)
 wallet = ""
