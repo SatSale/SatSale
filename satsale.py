@@ -158,9 +158,6 @@ def create_invoice(dollar_amount, currency, label, payment_method=config.pay_met
     # Load invoice information
     payment.invoice(dollar_amount, currency, label)
 
-    # Get payment address and generate qr code.
-    payment.get_address()
-    payment.create_qr()
     return payment
 
 

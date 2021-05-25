@@ -74,6 +74,8 @@ class lnd():
         self.unconfirmed_paid = 0
         self.paid = False
         self.txid = ""
+        self.get_address()
+        self.create_qr()
         return
 
     def create_qr(self):
