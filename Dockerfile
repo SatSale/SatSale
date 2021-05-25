@@ -1,18 +1,21 @@
-FROM python:3.8 
+FROM python:3.8
 
 WORKDIR /build
-COPY requirements.txt .
+#COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+ADD requirements.txt /build
+RUN pip3 install -r requirements.txt
 
-COPY . .
 #USER 1000
 #WORKDIR /build
 #COPY --from=builder /build .
 #EXPOSE 3002
 
-
-CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:8000", "satsale:app"]
+#USER 1000
 
 EXPOSE 8000
-EXPOSE 22
+
+#CMD ["ping", "172.17.0.1"]
+#CMD ["curl", "--data-binary", "{'jsonrpc':'1.0','id':'curltext','method':'getblockchaininfo','params':[]}", "-H", "content-type:text/plain;", "http://bitcoinrpc:16Lrxm3npTeJAAAA2pd6d9uFjgHVYzwQg4@172.17.0.1:7332/"]
+ENV PYTHONUNBUFFERED 1
+CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:8000", "satsale:app"]
