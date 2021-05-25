@@ -155,7 +155,7 @@ def create_invoice(dollar_amount, currency, label, payment_method=config.pay_met
         print("Invalid payment method")
         return
 
-    # Load invoice
+    # Load invoice information
     payment.invoice(dollar_amount, currency, label)
 
     # Get payment address and generate qr code.
