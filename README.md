@@ -107,7 +107,7 @@ username = "RPC_USER"
 password = "RPC_PASSWORD"
 wallet = "satsale"
 ```
-(You can find these in `~/dojo/samourai-dojo-v1.9/docker/my-dojo/conf/docker-bitcoind.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "hostname@local_computer_IP"` that will forward `rpcport`. You may also need to set `rpcallowip=REMOTE_SERVER_IP` in your `~/dojo/samourai-dojo-v1.9/docker/my-dojo/bitcoin/restart.sh`.
+(You can find these in `~/dojo/samourai-dojo-v1.10/docker/my-dojo/conf/docker-bitcoind.conf`). If your node is remote to your server, you can specify an SSH `tunnel_host = "hostname@local_computer_IP"` that will forward `rpcport`. You may also need to set `rpcallowip=REMOTE_SERVER_IP` in your `~/dojo/samourai-dojo-v1.10/docker/my-dojo/bitcoin/restart.sh`.
 
 ### Run satsale
 ##### Run satsale with
@@ -126,7 +126,13 @@ tail -f log.txt
 ```
 Once started, do `Ctrl+C` again to regain your terminal. _Remote servers will not be able to exercise this command, since you will need to input your Root password to open the SSH tunnel. This cannot be done if you run gunicorn with nohup.
 
-- To run BTCPyment so it continues serving in the background on a _remote_ server, in the SSH terminal window currently running BTCPyment first `Ctrl+C`, then:
+- To run BTCPyment so it continues serving in the background on a _remote_ server, first you will need to adjust SSH configuration to allow for the tunnel to remain open. Open a terminal window in your **local** server first, and enter the following command:
+```
+$ echo -e "Host *\n\tServerAliveInterval 60" >> $HOME/.ssh/config
+```
+Repeat the process on in your **remote** server SSH terminal window as well. This will keep the SSH tunnel from being closed due to inactivity.
+   
+Next, in the SSH terminal window currently running BTCPyment first `Ctrl+C`, then:
 ```
 $ screen
 $ gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
@@ -134,7 +140,7 @@ $ gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 $ Ctrl+A
 $ Ctrl+D
 ```
-This will detach from the terminal while keeping BTCPyment running in the background. To get back into the running process, enter `screen -r`.
+This will detach from the terminal while keeping BTCPyment running in the background. To get back into the running process, enter `screen -r`. Now that you are detached from the running terminal process and you have configured the SSH tunnel to remain open, you can simply `exit` the SSH tunnel and terminal window completely.
 
 ### Embed a Donation Button
 Now embed the donation button into your website HTML:
