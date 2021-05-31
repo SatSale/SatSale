@@ -5,7 +5,7 @@ COPY . .
 
 RUN pip3 install -r requirements.txt
 
-#USER 1000
+USER 1000
 
 EXPOSE 8000
 EXPOSE 5000
