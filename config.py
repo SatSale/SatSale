@@ -24,7 +24,8 @@ rpcport = os.getenv("BITCOIND_PORT")
 username = os.getenv("BITCOIND_USER")
 password = os.getenv("BITCOIND_PASS")
 
-lnd_rpcport = os.getenv("LND_PORT")
+lnd_dir = os.getenv("LND_DATA_DIR")
+lnd_rpcport = os.getenv("LND_GRPC_PORT")
 lnd_macaroon = os.getenv("MACAROON_DIR")
 lnd_cert = os.getenv("TLS_FILE")
 
