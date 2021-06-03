@@ -212,7 +212,7 @@ def process_payment(payment):
 print("Checking node connectivity...")
 bitcoin_node = bitcoind.btcd()
 print("Connection successful.")
-if config.py_method == "lnd":
+if config.pay_method == "lnd":
     lightning_node = lnd.lnd()
     print("Connection to lightning node successful")
 
