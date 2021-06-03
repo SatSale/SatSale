@@ -12,6 +12,8 @@ import qrcode
 from invoice.price_feed import get_btc_value
 import config
 
+import config
+from invoice.price_feed import get_btc_value
 
 class lnd:
     def __init__(self):
