@@ -10,7 +10,7 @@ username = "RPCUSERNAME"
 password = "RPCPASSWORD"
 
 # Wallet ("" if single-wallet node, OR wallet name/path as shown in `biitcoin-cli listwallets`)
-wallet = ""
+wallet = "btcpyment"
 
 # File in which API key will be stored
 api_key_path = "SatSale_API_key"
