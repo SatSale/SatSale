@@ -53,7 +53,6 @@ def index():
 # /pay is the main payment method for initiating a payment websocket.
 @app.route("/pay")
 def payment_page():
-    # Arguments passed to HTML and also server_connection.js
     params = dict(request.args)
     params['lnd_enabled'] = (config.pay_method == "lnd")
     # Render payment page with the request arguments (?amount= etc.)
@@ -62,8 +61,8 @@ def payment_page():
 
 # Websocket payment processing method called by client
 # make_payment recieves amount and initiates invoice and payment processing.
-@socket_.on("make_payment")
-def make_payment(payload):
+@socket_.on("initiate_payment")
+def initiate_payment(payload):
     # Check the amount is a float
     amount = payload["amount"]
     try:
@@ -112,6 +111,14 @@ def make_payment(payload):
                 print("Successfully confirmed payment via webhook.")
                 update_status(payment, "Order confirmed.")
 
+       # Redirect after payment
+        # TODO: add a delay here. Test.
+        if config.redirect is not None:
+            print("Redirecting to {}".format(config.redirect))
+            return redirect(config.redirect)
+        else:
+            print("No redirect, closing.")
+            
     return
 
 
@@ -133,8 +140,6 @@ def update_status(payment, status, console_status=True):
             "time_left": payment.time_left,
             "uuid": payment.uuid,
             "response": payment.response,
-            "paid": payment.paid,
-            "redirect": config.redirect # Can later expand to invoice specific redirects.
         },
     )
     return
@@ -149,14 +154,12 @@ def create_invoice(dollar_amount, currency, label, payment_method=config.pay_met
     else:
         print("Invalid payment method")
         return
-
-    # Get payment address and generate qr code.
-    payment.get_address()
-    payment.create_qr()
-    return payment
-
+    
     # Load invoice
     payment.invoice(dollar_amount, currency, label)
+    
+    return payment
+
     
 # Payment processing function.
 # Handle payment logic.
