@@ -1,7 +1,8 @@
 FROM python:3.8
 
 WORKDIR /build
-COPY . .
+RUN mkdir /build/lnd
+COPY --chown=1000:1000 . .
 
 RUN pip3 install -r requirements.txt
 

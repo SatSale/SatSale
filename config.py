@@ -1,6 +1,6 @@
 import sys
 import toml
-
+import os
 
 for i, arg in enumerate(sys.argv):
     if arg == "--conf":

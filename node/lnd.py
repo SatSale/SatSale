@@ -75,10 +75,14 @@ class lnd:
 
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
-        self.certs = {'tls' : os.path.expanduser(config.lnd_cert),
-                      'macaroon' : os.path.expanduser(config.lnd_macaroon)}
-        print(os.listdir(os.path.dirname(os.path.expanduser(config.lnd_cert))))
-        print("Found tls.cert and admin.macaroon.")
+        # self.certs = {'tls' : os.path.expanduser(config.lnd_cert),
+        #               'macaroon' : os.path.expanduser(config.lnd_macaroon)}
+        self.certs = {'tls' : config.lnd_cert,
+                      'macaroon' : config.lnd_macaroon}
+        # print(os.listdir(os.path.dirname(os.path.expanduser(config.lnd_cert))))
+        # print("Found tls.cert and admin.macaroon.")
+        print(self.certs)
+        print(os.listdir("/"))
         return
 
     # Create lightning invoice
