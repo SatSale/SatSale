@@ -8,6 +8,44 @@ body{
     overflow: hidden;
     font-family: "Lucida Console", "Courier New", monospace;
 }
+
+#paybox {
+    background-color: #f7931a;
+    border-radius: 25px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px
+
+    /* height:auto; */
+    height: 275px;
+    /* width:220px; */
+    width:360px;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+/* Smartphones */
+@media only screen and (min-width : 0px) and (max-width : 700px){
+    #paybox {
+        width: 80%;
+        height: auto;
+    }
+}
+/* Desktop */
+@media only screen and (min-width: 700px){
+    #paybox {
+        width: 360px;
+        height: auto;
+    }
+}
+
+
 p {
     /* display: inline-block; */
     overflow-wrap: break-word;
@@ -38,28 +76,6 @@ h1 {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-#paybox {
-    background-color: #f7931a;
-    border-radius: 25px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 16px
-
-    /* height:auto; */
-    height: 275px;
-    /* width:220px; */
-    width:360px;
-
-
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-
-}
 
 .logo {
     padding-top:25px;
