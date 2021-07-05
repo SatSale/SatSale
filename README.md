@@ -53,7 +53,7 @@ If running on a Raspberry Pi, you will want to [forward port 8000 in your router
 
 You will want to run gunicorn with nohup so it continues serving in the background:
 ```
-nohup gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
+nohup gunicorn -w 1 -b 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
 tail -f log.txt
 ```
 
