@@ -199,7 +199,7 @@ class check_payment(Resource):
             code = 200
         else:
             code = 201
-        
+
         return {'status': response}, code
 
 
