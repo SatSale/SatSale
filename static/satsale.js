@@ -23,7 +23,8 @@ function payment(payment_data) {
 }
 
 function check_payment(payment_uuid, checkinterval, payment_data) {
-    $.get("/api/checkpayment", {uuid: payment_uuid}).then(function(payment_status) {
+    $.get("/api/checkpayment", {uuid: payment_uuid}).then(function(payment_data) {
+        payment_status = payment_data.status;
         console.log(payment_status);
         if (payment_status.expired == 1) {
             $('#status').text("Payment expired.").html();
