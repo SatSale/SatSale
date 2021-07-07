@@ -189,32 +189,18 @@ class check_payment(Resource):
         }
 
         if status["time_left"] <= 0:
-            return response.update({"expired": 1}), 202
-
-        if status["payment_complete"] == 1:
-            return (
-                response.update(
-                    {
-                        "payment_complete": 1,
-                        "confirmed_paid": status["confirmed_paid"],
-                        "unconfirmed_paid": status["unconfirmed_paid"],
-                        "expired": 0,
-                    }
-                ),
-                200,
-            )
+            response.update({"expired": 1})
+            code = 202
         else:
-            return (
-                response.update(
-                    {
-                        "payment_complete": 0,
-                        "confirmed_paid": status["confirmed_paid"],
-                        "unconfirmed_paid": status["unconfirmed_paid"],
-                        "expired": 0,
-                    }
-                ),
-                201,
-            )
+            # Don't send paid amounts if payment is expired.
+            response.update(status)
+
+        if status['payment_complete'] == 1:
+            code = 200
+        else:
+            code = 201
+        
+        return {'status': response}, code
 
 
 @api.doc(params={"uuid": "A payment uuid. Received from /createpayment."})
