@@ -4,10 +4,10 @@
     <title>SatSale</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    
+
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
-    <script src="{{ url_for('static', filename='websocket.js') }}"></script>
+    <script src="{{ url_for('static', filename='satsale.js') }}"></script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
@@ -15,7 +15,22 @@
     <script type="text/javascript">
         payment_data = {{ params|tojson }};
         console.log(payment_data);
-        open_websocket(payment_data);
+        payment(payment_data);
+
+        // Create invoice
+            // returns qr code etc
+        // While true
+        //      check payment -> returns status and time left
+        // show if paid
+        // * webhook after if in params
+
+        // SatSale.py now requires a few functions,
+        // * create the invoice (bitcoind or lnd)
+        // * lookup txn
+        // * process webhook
+
+
+
     </script>
 
 </head>
@@ -40,7 +55,7 @@
             <p style="padding:0;">&nbsp&nbsp&nbsp&nbsp&nbsp(<b><span id="amount"></span></b> BTC)</p>
             <p style="padding:0;">To: </p><b><p id="address" onclick="copyTextFromElement('address')"></p></b>
             <p style="padding:0;"><span id="status"></span></p>
-            <p id="timerContainer" style="padding:0;"><span id="timer"></span> seconds remaining.</p>
+            <p id="timerContainer" style="padding:0;visibility:hidden;"><span id="timer"></span> seconds remaining.</p>
         </div>
 
         </br>
