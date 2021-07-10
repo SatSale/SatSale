@@ -43,7 +43,7 @@ password = "RPCPASSWORD"
 ### Run SatSale
 Run SatSale with
 ```
-gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 satsale:app
+gunicorn --preload --worker-class eventlet -w 4 -b 0.0.0.0:8000 satsale:app
 ```
 Gunicorn is a lightweight python HTTP server, alternatively you can run with just `python satsale.py` though this is not recommended for production.
 
@@ -53,14 +53,14 @@ If running on a Raspberry Pi, you will want to [forward port 8000 in your router
 
 You will want to run gunicorn with nohup so it continues serving in the background:
 ```
-nohup gunicorn -w 1 -b 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
+nohup gunicorn --preload --worker-class eventlet -w 4 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
 tail -f log.txt
 ```
 
 ## Embed a Donation Button
 Now embed the donation button into your website HTML:
 ```html
-<iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:420px;height:400px;border:none;overflow:hidden;" scrolling="no"></iframe>
+<iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:420px;height:460px;border:none;overflow:hidden;" scrolling="no"></iframe>
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSale on, node or otherwise. Additionally, you could redirect a domain to that IP and use that instead.
 
