@@ -93,6 +93,13 @@ h1 {
     transform: scale(3);
 }
 
+#amountenter {
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    border-radius:5px;
+}
+
 #qrImage {
     float: right;
     /* margin: auto; */
