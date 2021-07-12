@@ -122,7 +122,9 @@ class create_payment(Resource):
         if payment_method is None:
             payment_method = config.pay_method
         webhook = request.args.get("w_url")
+        print(webhook)
         if webhook is None:
+            print("NO WEBHOOK SUPPLIED")
             webhook = None
 
         # Create the payment using one of the connected nodes as a base
@@ -212,16 +214,19 @@ class complete_payment(Resource):
         "Complete Payment"
         """Run post-payment processing such as any webhooks."""
         uuid = request.args.get("uuid")
+        order_id = request.args.get("id")
 
         invoice = load_invoice_from_db(uuid)
         status = check_payment_status(uuid)
 
         if status["time_left"] < 0:
-            return {"expired"}, 400
+            return {"message": "Expired."}, 400
+
+        print(invoice)
 
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
-            # Call webhook
-            response = woo_webhook.hook(app.config["SECRET_KEY"], invoice)
+            print("Calling webhook {}".format(invoice["webhook"]))
+            response = woo_webhook.hook(app.config["SECRET_KEY"], invoice, order_id)
 
             if response.status_code != 200:
                 err = "Failed to confirm order payment via webhook {}, please contact the store to ensure the order has been confirmed, error response is: {}".format(
