@@ -6,12 +6,12 @@ import time
 import requests
 
 
-def hook(satsale_secret, invoice):
+def hook(satsale_secret, invoice, order_id):
     key = codecs.decode(satsale_secret, "hex")
 
     # Calculate a secret that is required to send back to the
     # woocommerce gateway, proving we did not modify id nor amount.
-    secret_seed = str(int(100 * float(invoice["amount"]))).encode(
+    secret_seed = str(int(100 * float(invoice["dollar_value"]))).encode(
         "utf-8"
     )
     print("Secret seed: {}".format(secret_seed))
@@ -23,6 +23,7 @@ def hook(satsale_secret, invoice):
     params = {
         "wc-api": "wc_satsale_gateway",
         "time": str(paid_time),
+        "id": order_id
     }
     message = (str(paid_time) + "." + json.dumps(params, separators=(",", ":"))).encode(
         "utf-8"
@@ -37,6 +38,6 @@ def hook(satsale_secret, invoice):
     }
 
     # Send the webhook response, confirming the payment with woocommerce.
-    response = requests.get(invoice["w_url"], params=params, headers=headers)
+    response = requests.get(invoice["webhook"], params=params, headers=headers)
 
     return response
