@@ -2,7 +2,14 @@
 function payment(payment_data) {
     $('document').ready(function(){
         var payment_uuid;
-        $.get("/api/createpayment", {amount: payment_data.amount, method: payment_data.method}).then(function(data) {
+        var invoiceData = {amount: payment_data.amount, method: payment_data.method};
+
+        // If a webhook URL is provided (woocommerce)
+        if (payment_data.w_url) {
+            invoiceData['w_url'] = payment_data.w_url
+        }
+
+        $.get("/api/createpayment", invoiceData).then(function(data) {
             invoice = data.invoice;
             payment_uuid = invoice.uuid;
 
@@ -23,8 +30,8 @@ function payment(payment_data) {
 }
 
 function check_payment(payment_uuid, checkinterval, payment_data) {
-    $.get("/api/checkpayment", {uuid: payment_uuid}).then(function(payment_data) {
-        payment_status = payment_data.status;
+    $.get("/api/checkpayment", {uuid: payment_uuid}).then(function(checkpayment_data) {
+        payment_status = checkpayment_data.status;
         console.log(payment_status);
         if (payment_status.expired == 1) {
             $('#status').text("Payment expired.").html();
@@ -36,8 +43,8 @@ function check_payment(payment_uuid, checkinterval, payment_data) {
         if (payment_status.payment_complete == 1) {
             $('#status').text("Payment confirmed.").html();
             document.getElementById('timerContainer').style.visibility = "hidden";
-            clearInterval(checkinterval);
             complete_payment(payment_uuid, payment_data);
+            // clearInterval(checkinterval);
             return 1;
         }
         else {
@@ -54,11 +61,12 @@ function check_payment(payment_uuid, checkinterval, payment_data) {
 }
 
 function complete_payment(payment_uuid, payment_data) {
-    setTimeout(() => {  window.location.replace(payment_data.redirect);  }, 5000);
-    $.get("/api/completepayment", {uuid: payment_uuid}).then(function(payment_completion) {
+    var order_id = location.search.split('id=')[1];
+    $.get("/api/completepayment", {uuid: payment_uuid, id: order_id}).then(function(payment_completion) {
         console.log(payment_completion);
         $('#status').text(payment_completion.message).html();
     });
+    setTimeout(() => {  window.location.replace(payment_data.redirect);  }, 5000);
 }
 
 function load_qr(payment_uuid) {

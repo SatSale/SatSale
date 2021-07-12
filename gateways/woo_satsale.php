@@ -126,7 +126,7 @@ function satsale_init_gateway_class() {
 
          	global $woocommerce;
 
-         	// we need it to get any order detailes
+         	// we need it to get any order details
          	$order = wc_get_order( $order_id );
 
             // We need to store a signature of the data, and check it later during the webhook to confirm it is the same!
@@ -135,7 +135,8 @@ function satsale_init_gateway_class() {
          	 */
          	$args = array(
                 'amount' => $order->get_total(),
-                'w_url' => $this->callback_URL );
+                'w_url' => $this->callback_URL,
+                'id' => $order_id)
 
             write_log($args);
 
