@@ -197,7 +197,7 @@ class check_payment(Resource):
             # Don't send paid amounts if payment is expired.
             response.update(status)
 
-        if status['payment_complete'] == 1:
+        if response['payment_complete'] == 1:
             code = 200
         else:
             code = 201
