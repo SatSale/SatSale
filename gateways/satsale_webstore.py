@@ -58,7 +58,7 @@ def add_webstore_decorators(app, file="static/store.csv"):
                 print(params)
                 app.items.append([params['itemName'], params['itemPrice'], params['itemURL']])
                 save_items(app.items)
-                return redirect_url("/")
+                return redirect("/store")
 
 
     @app.route('/uploader', methods = ['POST'])
@@ -72,7 +72,7 @@ def add_webstore_decorators(app, file="static/store.csv"):
                 f = request.files['file']
                 f.save(file)
                 app.items = load_items()
-                return redirect_url("/")
+                return redirect("/admin")
 
 
     return app
