@@ -26,6 +26,8 @@ from node import lnd
 from node import clightning
 
 from gateways import woo_webhook
+from invoice.price_feed import get_btc_value
+from gateways import satsale_webstore
 
 logging.basicConfig(
     format="[%(asctime)s] [%(levelname)s] %(message)s",
@@ -35,7 +37,10 @@ logging.basicConfig(
 
 app = Flask(__name__)
 
-# Load a SatSale API key or create a new one
+if config.webstore:
+    app = satsale_webstore.add_webstore_decorators(app)
+
+# Load an API key or create a new one
 if os.path.exists("SatSale_API_key"):
     with open("SatSale_API_key", "r") as f:
         app.config["SECRET_KEY"] = f.read().strip()
