@@ -6,7 +6,6 @@ function clearSearch() {
         if (index !== 0) {
             $row = $(this);
             $row.show();
-            console.log("SEEE")
         }
     }
     );
@@ -67,8 +66,7 @@ function update_receipt(){
     // receiptresult = receiptresult + "<tr><td>" + "</td><td>" + "</td><td><b>$" + total + "</b></td></tr>\n"
     receiptresult = receiptresult + "</table>";
 
-    var receiptTable = document.getElementById('receipttablediv');
-    receiptTable = receiptresult;
+    document.getElementById("receipttablediv").innerHTML = receiptresult;
 
     // From calc.js
     resetCalculator(zero=false);
