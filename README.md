@@ -5,7 +5,7 @@ satsale is a simple, easily deployable, lightweight Bitcoin payment processor th
 
 Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://user-images.githubusercontent.com/24557779/108210832-22e33400-7180-11eb-884a-5dbad3cd8f5f.png)](https://btcpyment.diverter.tools/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/108210961-43ab8980-7180-11eb-88e6-cc90d313076d.png)](https://store.btcpyment.com/) <br />(Click for WordPress payments demo)
+[![Donate demo](https://user-images.githubusercontent.com/24557779/108210832-22e33400-7180-11eb-884a-5dbad3cd8f5f.png)](https://satsale.diverter.tools/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/108210961-43ab8980-7180-11eb-88e6-cc90d313076d.png)](https://store.satsale.com/) <br />(Click for WordPress payments demo)
 
 SatSale currently serves as
 1. Donation button for your website that you can easily embed/link to anywhere.
@@ -79,7 +79,7 @@ This will not actually upgrade your Dojo, as you should see a message asking if 
 ```
 - Note: If you want to create more than one wallet (i.e. one for regular use and a separate wallet for donations) that is fine. You would simply create another wallet with a different specified name, as in `./dojo.sh bitcoin-cli createwallet "personal"`, which just distinguishes which wallet satsale will look for later when you adjust configuration.
 ```
-./dojo.sh bitcoin-cli createwallet "btcpyment" true
+./dojo.sh bitcoin-cli createwallet "satsale" true
 ```
 - This will create and load a Watch-Only wallet, so no private keys being held on your node for increased security.
 
@@ -93,8 +93,8 @@ $ sudo apt install python3-pip
 ```
 ##### Clone and install dependencies
 ```
-$ git clone https://github.com/secretestsquirrel/BTCPyment-DV
-$ cd BTCPyment-DV/
+$ git clone https://github.com/secretestsquirrel/satsale-DV
+$ cd satsale-DV/
 $ pip3 install -r requirements.txt
 ```
 
@@ -119,20 +119,20 @@ That's it! You should now be able to view your SatSale server at `http://YOUR_SE
 
 If running on a local server, you will want to forward port 8000 in your router settings so that satsale is also visible at your external IP address. You might have to allow gunicorn through your firewall with `sudo ufw allow 8000`. If running satsale on a remote server and using SSH tunnel to call to your local Dojo, may also need to open SSH Port 22 with `sudo ufw allow 22`. _If you are going this route be sure to at least use a strong Root password on your local device. You will need to input this Root password when you start gunicorn and attempt to connect to Dojo through your SSH tunnel.
 
-- To run BTCPyment so it continues serving in the background on a _local_ server, in the terminal window currently running BTCPyment first `CTRL+C`, then:
+- To run satsale so it continues serving in the background on a _local_ server, in the terminal window currently running satsale first `CTRL+C`, then:
 ```
 nohup gunicorn -w 1 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
 tail -f log.txt
 ```
 Once started, do `Ctrl+C` again to regain your terminal. _Remote servers will not be able to exercise this command, since you will need to input your Root password to open the SSH tunnel. This cannot be done if you run gunicorn with nohup.
 
-- To run BTCPyment so it continues serving in the background on a _remote_ server, first you will need to adjust SSH configuration to allow for the tunnel to remain open. Open a terminal window in your **local** server first, and enter the following command:
+- To run satsale so it continues serving in the background on a _remote_ server, first you will need to adjust SSH configuration to allow for the tunnel to remain open. Open a terminal window in your **local** server first, and enter the following command:
 ```
 $ echo -e "Host *\n\tServerAliveInterval 60" >> $HOME/.ssh/config
 ```
 Repeat the process on in your **remote** server SSH terminal window as well. This will keep the SSH tunnel from being closed due to inactivity.
-   
-Next, in the SSH terminal window currently running BTCPyment first `Ctrl+C`, then:
+
+Next, in the SSH terminal window currently running satsale first `Ctrl+C`, then:
 ```
 $ screen
 $ gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
@@ -140,7 +140,7 @@ $ gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:8000 server:app
 $ Ctrl+A
 $ Ctrl+D
 ```
-This will detach from the terminal while keeping BTCPyment running in the background. To get back into the running process, enter `screen -r`. Now that you are detached from the running terminal process and you have configured the SSH tunnel to remain open, you can simply `exit` the SSH tunnel and terminal window completely.
+This will detach from the terminal while keeping satsale running in the background. To get back into the running process, enter `screen -r`. Now that you are detached from the running terminal process and you have configured the SSH tunnel to remain open, you can simply `exit` the SSH tunnel and terminal window completely.
 
 ### Embed a Donation Button
 Now embed the donation button into your website HTML:
@@ -173,4 +173,4 @@ The main code can be found in [satsale.py](satsale.py). The client-side logic fo
 SatSale is in very early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise. Always confirm large payments manually.
 
 # Sponsor
-Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of SatSale :). Corporate/whale support would greatly assist my ability to give 100% of my attention to SatSale and other Bitcoin projects, please email `baseddepartment@nickfarrow.com`.
+Please consider [supporting me](https://btcpyment.diverter.tools/) via my own instance of SatSale :). Corporate/whale support would greatly assist my ability to give 100% of my attention to SatSale and other Bitcoin projects, please email `baseddepartment@nickfarrow.com`.
