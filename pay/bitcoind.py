@@ -4,8 +4,10 @@ import qrcode
 import json
 
 import config
-from gateways.tor import session
 from invoice.price_feed import get_btc_value
+
+if config.tor_bitcoinrpc_host is not None:
+    from gateways.tor import session
 
 
 def call_tor_bitcoin_rpc(method, params):
