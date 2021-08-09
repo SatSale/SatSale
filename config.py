@@ -20,6 +20,8 @@ api_key_path = "SatSale_API_key"
 # This forwards the ports required to talk to the node via RPC (or gRPC in the case of lightning)
 # Use host = "127.0.0.1" and you will be able to see your node on 8332
 tunnel_host = None  # "HOST@IP"
+# OR TOR HIDDEN SERVICE TO RPC
+tor_bitcoinrpc_host = None
 
 # Check for payment every xx seconds
 pollrate = 15
