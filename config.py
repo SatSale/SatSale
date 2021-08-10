@@ -2,7 +2,7 @@
 # This should point to your bitcoin/lnd node,
 # with the correct RPC port as set in your config.
 # Connecting through local host as  i'm running SatSale on my node
-# host = "127.0.0.1"
+host = "127.0.0.1"
 rpcport = "8332"
 
 # From ~/.bitcoin/bitcoin.conf
@@ -15,14 +15,21 @@ wallet = ""
 # File in which API key will be stored
 api_key_path = "SatSale_API_key"
 
-# SSH tunnel to node (raspberry pi!)
+
+#### Connect To Remote Node ####
+# Can use SSH or TOR
+# to tunnel/relay ports required to talk to the node via RPC (gRPC for lightning)
+
+# SSH tunnel to node
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
-# This forwards the ports required to talk to the node via RPC (or gRPC in the case of lightning)
 # Use host = "127.0.0.1" and you will be able to see your node on 8332
 tunnel_host = None  # "HOST@IP"
-# OR TOR HIDDEN SERVICE TO RPC
+
+# or tor hidden service for RPC (see docs for how to set up), need onion:
 tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
-tor_proxy = None           #"IP:Port"  For Tor Browser, use "127.0.0.1:9150"
+# and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
+tor_proxy = None 
+################################
 
 # Check for payment every xx seconds
 pollrate = 15
