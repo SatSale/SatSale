@@ -139,11 +139,13 @@ class create_payment(Resource):
             "webhook": webhook,
         }
 
+        # Get an address / invoice, and create a QR code
         invoice["address"], invoice["rhash"] = node.get_address(
             invoice["btc_value"], invoice["uuid"]
         )
         node.create_qr(invoice["uuid"], invoice["address"], invoice["btc_value"])
 
+        # Save invoice to database
         database.write_to_database(invoice)
 
         invoice["time_left"] = config.payment_timeout - (time.time() - invoice["time"])
@@ -172,13 +174,15 @@ class check_payment(Resource):
             "expired": 0,
         }
 
+        # If payment is expired
         if status["time_left"] <= 0:
             response.update({"expired": 1})
             code = 202
         else:
-            # Don't send paid amounts if payment is expired.
+            # Update response with confirmed and unconfirmed amounts
             response.update(status)
 
+        # Return whether paid or unpaid
         if response['payment_complete'] == 1:
             code = 200
         else:
@@ -204,8 +208,12 @@ class complete_payment(Resource):
         if status["time_left"] < 0:
             return {"message": "Expired."}, 400
 
+        if status["payment_complete"] != 1:
+            return {"message": "You havent paid you stingy bastard"}
+
         print(invoice)
 
+        # Call webhook to confirm payment with merchant
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
             print("Calling webhook {}".format(invoice["webhook"]))
             response = woo_webhook.hook(app.config["SECRET_KEY"], invoice, order_id)
@@ -224,13 +232,18 @@ class complete_payment(Resource):
 
 
 def check_payment_status(uuid):
-    status = {}
+    status = {
+        "payment_complete": 0,
+        "confirmed_paid": 0,
+        "unconfirmed_paid": 0,
+    }
     invoice = database.load_invoice_from_db(uuid)
     if invoice is None:
         status.update({"time_left": 0, "not_found": 1})
     else:
         status["time_left"] = config.payment_timeout - (time.time() - invoice["time"])
 
+    # If payment has not expired, then we're going to check for any transactions
     if status["time_left"] > 0:
         node = get_node(invoice["method"])
         if invoice["method"] == "lnd":
@@ -240,6 +253,7 @@ def check_payment_status(uuid):
 
         # Debugging and demo mode which auto confirms payments after 5 seconds
         dbg_free_mode_cond = config.free_mode and (time.time() - invoice["time"] > 5)
+
         # If payment is paid
         if (conf_paid > invoice["btc_value"]) or dbg_free_mode_cond:
             status.update(
