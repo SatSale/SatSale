@@ -7,11 +7,11 @@ import config
 
 time.sleep(3)
 
-print("Using tor proxies {}:{}".format("localhost", 9050))
+print("Using tor proxies {}".format(config.tor_proxy))
 session = requests.session()
 session.proxies = {
-    "http": "socks5h://localhost:9050",
-    "https": "socks5h://localhost:9050",
+    "http": "socks5h://{}".format(config.tor_proxy),
+    "https": "socks5h://{}".format(config.tor_proxy)
 }
 
 print(

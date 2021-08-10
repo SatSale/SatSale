@@ -2,7 +2,7 @@
 # This should point to your bitcoin/lnd node,
 # with the correct RPC port as set in your config.
 # Connecting through local host as  i'm running SatSale on my node
-host = "127.0.0.1"
+# host = "127.0.0.1"
 rpcport = "8332"
 
 # From ~/.bitcoin/bitcoin.conf
@@ -21,7 +21,8 @@ api_key_path = "SatSale_API_key"
 # Use host = "127.0.0.1" and you will be able to see your node on 8332
 tunnel_host = None  # "HOST@IP"
 # OR TOR HIDDEN SERVICE TO RPC
-tor_bitcoinrpc_host = None
+tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
+tor_proxy = None           #"IP:Port"  For Tor Browser, use "127.0.0.1:9150"
 
 # Check for payment every xx seconds
 pollrate = 15
