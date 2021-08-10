@@ -4,7 +4,7 @@
 # We will be hosting SatSale on the same machine as our node.
 # SatSale & Bitcoin Lightning Node    1.1.1.1     8332, 10009 (bitcoind, lnd)
 
-# As we are running SatSale on our node, 
+# As we are running SatSale on our node,
 # it can directly talk to our node at localhost 127.0.0.1
 host = "127.0.0.1"
 rpcport = "8332"
@@ -27,7 +27,7 @@ tunnel_host = None
 pollrate = 15
 
 # Payment expires after xx seconds
-payment_timeout = 60*60
+payment_timeout = 60 * 60
 
 # Required confirmations for a payment
 required_confirmations = 2
@@ -39,7 +39,7 @@ connection_attempts = 3
 redirect = "https://github.com/nickfarrow/satsale"
 
 # Payment method has been switched to lnd
-#pay_method = "bitcoind"
+# pay_method = "bitcoind"
 pay_method = "lnd"
 
 # Specify lightning directory and port

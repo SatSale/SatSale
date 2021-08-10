@@ -1,29 +1,62 @@
 import time
 import uuid
 import qrcode
+import json
 
 import config
 from invoice.price_feed import get_btc_value
 
+if config.tor_bitcoinrpc_host is not None:
+    from gateways.tor import session
 
 
+def call_tor_bitcoin_rpc(method, params):
+    url = "{}:{}".format(config.tor_bitcoinrpc_host, config.rpcport)
+    payload = json.dumps({"method": method, "params": params})
+    headers = {"content-type": "application/json", "cache-control": "no-cache"}
+    response = session.request(
+        "POST",
+        url,
+        data=payload,
+        headers=headers,
+        auth=(config.username, config.password),
+    )
+    return json.loads(response.text)
 
-class btcd():
+
+class btcd:
     def __init__(self):
         from bitcoinrpc.authproxy import AuthServiceProxy
 
-        connection_str = "http://{}:{}@{}:{}/wallet/{}".format(
-            config.username, config.password, config.host, config.rpcport, config.wallet
-        )
-        print("Attempting to connect to {}.".format(connection_str))
-
         for i in range(config.connection_attempts):
+            if config.tor_bitcoinrpc_host is None:
+                self.tor = False
+                connection_str = "http://{}:{}@{}:{}/wallet/{}".format(
+                    config.username,
+                    config.password,
+                    config.host,
+                    config.rpcport,
+                    config.wallet,
+                )
+                print("Attempting to connect to {}.".format(connection_str))
+            else:
+                self.tor = True
+                print(
+                    "Attempting to contact bitcoind rpc tor hidden service: {}:{}".format(
+                        config.tor_bitcoinrpc_host, config.rpcport
+                    )
+                )
+
             try:
-                self.rpc = AuthServiceProxy(connection_str)
+                # Normal Connection
+                if config.tor_bitcoinrpc_host is None:
+                    self.rpc = AuthServiceProxy(connection_str)
+                    info = self.rpc.getblockchaininfo()
+                # Tor Connection
+                else:
+                    info = call_tor_bitcoin_rpc("getblockchaininfo", None)
 
-                info = self.rpc.getblockchaininfo()
                 print(info)
-
                 print("Successfully contacted bitcoind.")
                 break
 
@@ -41,40 +74,24 @@ class btcd():
                 Check your RPC / port tunneling settings and try again."
             )
 
-    def invoice(self, dollar_value, currency, label):
-        self.dollar_value = dollar_value
-        self.currency = currency
-        self.value = round(get_btc_value(dollar_value, currency), 8)
-        self.uuid = str(uuid.uuid4())
-        self.label = self.uuid
-        self.status = "Payment initialised."
-        self.response = ""
-        self.time_left = config.payment_timeout
-        self.confirmed_paid = 0
-        self.unconfirmed_paid = 0
-        self.paid = False
-        self.txid = ""
-        self.get_address()
-        self.create_qr()
-        return
-
-    def create_qr(self):
-        qr_str = "{}?amount={}&label={}".format(
-            self.address.upper(), self.value, self.label
-        )
+    def create_qr(self, uuid, address, value):
+        qr_str = "{}?amount={}&label={}".format(address.upper(), value, uuid)
 
         img = qrcode.make(qr_str)
-        img.save("static/qr_codes/{}.png".format(self.uuid))
+        img.save("static/qr_codes/{}.png".format(uuid))
         return
 
-    def check_payment(self):
-        transactions = self.rpc.listtransactions()
-        relevant_txs = [tx for tx in transactions if tx["address"] == self.address]
+    def check_payment(self, address):
+        if not self.tor:
+            transactions = self.rpc.listtransactions()
+        else:
+            transactions = call_tor_bitcoin_rpc("listtransactions", None)["result"]
+
+        relevant_txs = [tx for tx in transactions if tx["address"] == address]
 
         conf_paid = 0
         unconf_paid = 0
         for tx in relevant_txs:
-            self.txid = tx["txid"]
             if tx["confirmations"] >= config.required_confirmations:
                 conf_paid += tx["amount"]
             else:
@@ -82,11 +99,16 @@ class btcd():
 
         return conf_paid, unconf_paid
 
-    def get_address(self):
+    def get_address(self, amount, label):
         for i in range(config.connection_attempts):
             try:
-                self.address = self.rpc.getnewaddress(self.label)
-                return
+                if not self.tor:
+                    address = self.rpc.getnewaddress(label)
+                else:
+                    address = call_tor_bitcoin_rpc("getnewaddress", [label])["result"]
+
+                return address, None
+
             except Exception as e:
                 print(e)
                 print(
@@ -97,4 +119,4 @@ class btcd():
             if config.connection_attempts - i == 1:
                 print("Reconnecting...")
                 self.__init__()
-        return
+        return None

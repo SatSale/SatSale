@@ -12,7 +12,8 @@ import qrcode
 from invoice.price_feed import get_btc_value
 import config
 
-class lnd():
+
+class lnd:
     def __init__(self):
         from lndgrpc import LNDClient
 
@@ -33,10 +34,9 @@ class lnd():
                 time.sleep(3)
                 self.lnd = LNDClient(
                     "{}:{}".format(config.host, config.lnd_rpcport),
-                    macaroon_filepath=self.certs['macaroon'],
-                    cert_filepath=self.certs['tls'],
+                    macaroon_filepath=self.certs["macaroon"],
+                    cert_filepath=self.certs["tls"],
                 )
-
 
                 print("Getting lnd info...")
                 info = self.lnd.get_info()
@@ -61,32 +61,15 @@ class lnd():
         print("Ready for payments requests.")
         return
 
-    def invoice(self, dollar_value, currency, label):
-        self.dollar_value = dollar_value
-        self.currency = currency
-        self.value = round(get_btc_value(dollar_value, currency), 8)
-        self.uuid = str(uuid.uuid4())
-        self.label = self.uuid
-        self.status = "Payment initialised."
-        self.response = ""
-        self.time_left = config.payment_timeout
-        self.confirmed_paid = 0
-        self.unconfirmed_paid = 0
-        self.paid = False
-        self.txid = ""
-        self.get_address()
-        self.create_qr()
-        return
-
-    def create_qr(self):
-        qr_str = "{}".format(self.address.upper())
+    def create_qr(self, uuid, address, value):
+        qr_str = "{}".format(address.upper())
         img = qrcode.make(qr_str)
-        img.save("static/qr_codes/{}.png".format(self.uuid))
+        img.save("static/qr_codes/{}.png".format(uuid))
         return
 
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
-        self.certs = {'tls' : 'tls.cert', 'macaroon' : 'admin.macaroon'}
+        self.certs = {"tls": "tls.cert", "macaroon": "admin.macaroon"}
 
         if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
             try:
@@ -115,8 +98,10 @@ class lnd():
                     )
 
                 else:
-                    self.certs = {'tls' : os.path.expanduser(tls_file),
-                                    'macaroon' : os.path.expanduser(macaroon_file)}
+                    self.certs = {
+                        "tls": os.path.expanduser(tls_file),
+                        "macaroon": os.path.expanduser(macaroon_file),
+                    }
 
             except Exception as e:
                 print(e)
@@ -130,26 +115,21 @@ class lnd():
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(btc_amount * 10 ** 8)
         res = self.lnd.add_invoice(value=sats_amount)
-        self.lnd_invoice = json.loads(MessageToJson(res))
-        self.hash = self.lnd_invoice["r_hash"]
+        lnd_invoice = json.loads(MessageToJson(res))
 
         print("Created lightning invoice:")
-        print(self.lnd_invoice)
+        print(lnd_invoice)
 
-        return self.lnd_invoice["payment_request"]
+        return lnd_invoice["payment_request"], lnd_invoice["r_hash"]
 
-    def get_address(self):
-        self.address = self.create_lnd_invoice(self.value)
-        return
+    def get_address(self, amount, label):
+        address, r_hash = self.create_lnd_invoice(amount)
+        return address, r_hash
 
     # Check whether the payment has been paid
-    def check_payment(self):
-        print("Looking up invoice")
-
+    def check_payment(self, rhash):
         invoice_status = json.loads(
-            MessageToJson(
-                self.lnd.lookup_invoice(r_hash_str=b64decode(self.hash).hex())
-            )
+            MessageToJson(self.lnd.lookup_invoice(r_hash_str=b64decode(rhash).hex()))
         )
 
         if "amt_paid_sat" not in invoice_status.keys():

@@ -126,7 +126,7 @@ function satsale_init_gateway_class() {
 
          	global $woocommerce;
 
-         	// we need it to get any order detailes
+         	// we need it to get any order details
          	$order = wc_get_order( $order_id );
 
             // We need to store a signature of the data, and check it later during the webhook to confirm it is the same!
@@ -135,8 +135,8 @@ function satsale_init_gateway_class() {
          	 */
          	$args = array(
                 'amount' => $order->get_total(),
-                'id' => $order->get_id(),
-                'w_url' => $this->callback_URL );
+                'w_url' => $this->callback_URL,
+                'id' => $order_id)
 
             write_log($args);
 
@@ -172,7 +172,7 @@ function satsale_init_gateway_class() {
             // once the payment has been confirmed by the python backend.
             // By confirming it matches the order details (amount * id) we know that
             // the order has not been tampered with after leaving the php payment gateway.
-            $order_secret_seed = (int)($order->get_total() * 100.0 * $order->get_id());
+            $order_secret_seed = (int)($order->get_total() * 100.0);
             $order_secret_seed_str = (string)$order_secret_seed;
             $secret = hash_hmac('sha256', $order_secret_seed, $key);
 
