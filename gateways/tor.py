@@ -7,6 +7,9 @@ import config
 
 time.sleep(3)
 
+if config.tor_proxy is None:
+    config.tor_proxy = "127.0.0.1:9050"
+
 print("Using tor proxies {}".format(config.tor_proxy))
 session = requests.session()
 session.proxies = {
