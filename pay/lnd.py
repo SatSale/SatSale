@@ -9,7 +9,7 @@ import uuid
 import qrcode
 
 
-from invoice.price_feed import get_btc_value
+from payments.price_feed import get_btc_value
 import config
 
 

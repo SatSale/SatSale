@@ -2,7 +2,6 @@ import subprocess
 import time
 
 import config
-import invoice
 from pay import bitcoind
 
 

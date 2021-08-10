@@ -17,11 +17,11 @@ import json
 
 from gateways import ssh_tunnel
 import config
-import invoice
+from payments import database
+from payments.price_feed import get_btc_value
 from pay import bitcoind
 from pay import lnd
 from gateways import woo_webhook
-from invoice.price_feed import get_btc_value
 
 app = Flask(__name__)
 
@@ -38,11 +38,7 @@ print("Initialised Flask with secret key: {}".format(app.config["SECRET_KEY"]))
 
 # Create payment database if it does not exist
 if not os.path.exists("database.db"):
-    with sqlite3.connect("database.db") as conn:
-        print("Creating new database.db...")
-        conn.execute(
-            "CREATE TABLE payments (uuid TEXT, dollar_value DECIMAL, btc_value DECIMAL, method TEXT, address TEXT, time DECIMAL, webhook TEXT, rhash TEXT)"
-        )
+    database.create_database()
 
 
 # Render index page
@@ -148,21 +144,7 @@ class create_payment(Resource):
         )
         node.create_qr(invoice["uuid"], invoice["address"], invoice["btc_value"])
 
-        with sqlite3.connect("database.db") as conn:
-            cur = conn.cursor()
-            cur.execute(
-                "INSERT INTO payments (uuid,dollar_value,btc_value,method,address,time,webhook,rhash) VALUES (?,?,?,?,?,?,?,?)",
-                (
-                    invoice["uuid"],
-                    invoice["dollar_value"],
-                    invoice["btc_value"],
-                    invoice["method"],
-                    invoice["address"],
-                    invoice["time"],
-                    invoice["webhook"],
-                    invoice["rhash"],
-                ),
-            )
+        database.write_to_database(invoice)
 
         invoice["time_left"] = config.payment_timeout - (time.time() - invoice["time"])
         print("Created invoice:")
@@ -216,7 +198,7 @@ class complete_payment(Resource):
         uuid = request.args.get("uuid")
         order_id = request.args.get("id")
 
-        invoice = load_invoice_from_db(uuid)
+        invoice = database.load_invoice_from_db(uuid)
         status = check_payment_status(uuid)
 
         if status["time_left"] < 0:
@@ -243,7 +225,7 @@ class complete_payment(Resource):
 
 def check_payment_status(uuid):
     status = {}
-    invoice = load_invoice_from_db(uuid)
+    invoice = database.load_invoice_from_db(uuid)
     if invoice is None:
         status.update({"time_left": 0, "not_found": 1})
     else:
@@ -288,19 +270,6 @@ def get_node(payment_method):
     else:
         node = None
     return node
-
-
-def load_invoice_from_db(uuid):
-    with sqlite3.connect("database.db") as conn:
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
-        rows = cur.execute(
-            "select * from payments where uuid='{}'".format(uuid)
-        ).fetchall()
-    if len(rows) > 0:
-        return [dict(ix) for ix in rows][0]
-    else:
-        return None
 
 
 # Add API endpoints
