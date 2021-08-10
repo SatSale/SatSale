@@ -3,7 +3,7 @@ Currently you can use Tor in two ways
 1) Connect SatSale to your Bitcoin node over a tor hidden service
 2) Host SatSale as a Tor onion
 
-# Bitcoin Node RPC Hidden Service
+## Bitcoin Node RPC Hidden Service
 On your Bitcoin node machine install tor and in `/etc/tor/torrc`:
 ```
 HiddenServiceDir /var/lib/tor/node_rpc/
@@ -25,7 +25,7 @@ SocksPolicy reject *
 Now start the tor proxy on your SatSale machine with `sudo tor` and SatSale is now configured to connect to your node over tor.
 
 
-# SatSale Tor .Onion
+## SatSale Tor .Onion
 On your SatSale machine, install tor and in `/etc/tor/torrc`:
 ```
 HiddenServiceDir /var/lib/tor/satsale/
