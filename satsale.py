@@ -183,12 +183,12 @@ class check_payment(Resource):
             response.update(status)
 
         # Return whether paid or unpaid
-        if response['payment_complete'] == 1:
+        if response["payment_complete"] == 1:
             code = 200
         else:
             code = 201
 
-        return {'status': response}, code
+        return {"status": response}, code
 
 
 @api.doc(params={"uuid": "A payment uuid. Received from /createpayment."})

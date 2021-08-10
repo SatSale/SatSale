@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def create_database(name="database.db"):
     with sqlite3.connect("database.db") as conn:
         print("Creating new database.db...")
