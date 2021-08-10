@@ -14,7 +14,7 @@ print("Using tor proxies {}".format(config.tor_proxy))
 session = requests.session()
 session.proxies = {
     "http": "socks5h://{}".format(config.tor_proxy),
-    "https": "socks5h://{}".format(config.tor_proxy)
+    "https": "socks5h://{}".format(config.tor_proxy),
 }
 
 print(
