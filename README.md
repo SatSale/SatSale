@@ -1,28 +1,43 @@
 # SatSale
-## (previously BTCPyment)
 <!---Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable.--->
 SatSale is a simple, easily deployable, lightweight Bitcoin payment processor that connects to your own Bitcoin node or Lightning network node.
 
 Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
-[![Donate demo](https://user-images.githubusercontent.com/24557779/119219951-5345c000-bb2b-11eb-8753-bf6fd80263df.png)](https://try.satsale.org/) <br />(Click for embed demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/119220001-8b4d0300-bb2b-11eb-9a2d-0b8ba24ca8b1.png)](https://store.btcpyment.com/) <br />(Click for WordPress payments demo)
+[![Donate demo](https://user-images.githubusercontent.com/24557779/119219951-5345c000-bb2b-11eb-8753-bf6fd80263df.png)](https://try.satsale.org/) <br />(Click for donation page demo)<br /> Initiates payment -----> |  [![Store demo](https://user-images.githubusercontent.com/24557779/119220001-8b4d0300-bb2b-11eb-9a2d-0b8ba24ca8b1.png)](https://store.btcpyment.com/) <br />(Click for WordPress store payments demo)
 
-SatSale currently serves as
-1. Donation button for your website that you can easily embed/link to anywhere.
-2. A Bitcoin payment gateway, including a Woocommerce plugin that easily turns ANY Wordpress site into a Bitcoin accepting store.
+- [Purpose](#purpose)
+- [Features](#features)
+- [Installation (short!)](#installation--short--)
+    + [Install](#install)
+    + [Connect to your Bitcoin Node](#connect-to-your-bitcoin-node)
+    + [Run SatSale](#run-satsale)
+    + [Embed a Donation Button](#embed-a-donation-button)
+    + [Using HTTPS & Domains](#using-https---domains)
+    + [Security](#security)
+    + [Payment Gateway (Woocommerce)](#payment-gateway--woocommerce-)
+- [Contributions welcomed](#contributions-welcomed)
+- [Coming soon](#coming-soon)
+- [Disclaimer](#disclaimer)
+- [Sponsor](#sponsor)
+
+# Purpose
+SatSale currently serves as a
+1. Donation page and button for your website that you can easily embed/link to anywhere.
+2. Bitcoin payment gateway, including a Woocommerce plugin that easily turns any Wordpress site into a Bitcoin accepting store.
 
 SatSale makes donation buttons simple - easy copy paste the one line HTML iframe into your site. With a simple Python backend to talk to your own Bitcoin node, SatSale uses RPC to generate new addresses, and monitors the payment status with your own copy of the blockchain.
 
 # Features
 * Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
-* Lightweight and highly extendable, basic html and css stying. Modular Python backend, take a [look at the code](satsale.py) or [lnd.py](/pay/lnd.py)!
+* **Lightweight and highly extendable, basic html and css stying. Modular Python backend**, take a [look at the code](satsale.py) or [lnd.py](/pay/lnd.py)!
 * Natively extendable to all bitcoind node features (e.g. segwit) through RPC.
 * QR codes, customizable required payment confirmations and payment expiry time.
 * No shitcoin bloat. Bitcoin only.
 
 # Installation (short!)
-You require a Raspberry Pi / server (VPS) to host an instance of SatSale on, and a connection to a Bitcoin node. If you don't have a Bitcoin node, you should [install one](https://bitcoincore.org/en/download/).
+You require a Bitcoin node, if you don't one you should [install one](https://bitcoincore.org/en/download/) preferably on a Raspberry Pi / server (VPS). While you can run SatSale on this same machine, a separate VPS is recommended.
 ### Install
 Clone and install dependencies
 ```
@@ -35,10 +50,11 @@ Edit the `config.py` configuration and point to your Bitcoin node:
 ```python
 host = "127.0.0.1"
 rpcport = "8332"
-username = "bitcoinrpc"
+username = "RPCUSERNAME"
 password = "RPCPASSWORD"
 ```
-(You can find these in `~/.bitcoin/bitcoin.conf`). Example configs, for enabling lightning or hosting SatSale on a remote machine can be found in [docs/](docs/). If you want to use lightning network payments, see [Lightning instructions](docs/lightning.md)].
+(You can find these in `~/.bitcoin/bitcoin.conf`).
+When connecting to a remote node, also edit either the SSH `tunnel_host` (or see [tor hidden service](/docs/tor.md)). If you havlightning node (lnd) and want to use lightning network payments, see [Lightning instructions](docs/lightning.md). More [example configs](docs/).
 
 ### Run SatSale
 Run SatSale with
@@ -57,7 +73,7 @@ nohup gunicorn -w 1 0.0.0.0:8000 satsale:app > log.txt 2>&1 &
 tail -f log.txt
 ```
 
-## Embed a Donation Button
+### Embed a Donation Button
 Now embed the donation button into your website HTML:
 ```html
 <iframe src="http://YOUR_SERVER_IP:8000/" style="margin: 0 auto;display:block;width:420px;height:460px;border:none;overflow:hidden;" scrolling="no"></iframe>
@@ -70,26 +86,24 @@ Embedded iframes are easy if your site only uses HTTP. But if your site uses HTT
 ### Security
 For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
 
-
-# Payment Gateway (Woocommerce)
+### Payment Gateway (Woocommerce)
 Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webstores extremely easy, [please click here for installation instructions](docs/woocommerce.md). SatSale acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 # Contributions welcomed
 ### You only need a little python!
-The main code can be found in [satsale.py](satsale.py). The client-side logic for the donation button sits in [static/server_connection.js](static/server_connection.js), invoice structure and bitcoind interface in [invoice/](invoice/), button appearance in [templates/index.html](templates/index.html), and Woocommerce plugin in [gateways/woo_satsale.php](gateways/woo_satsale.php). Please have ago at implementing some of the things below!
+The main code can be found in [satsale.py](satsale.py). The client-side logic for initiating the payment and querying the API sits in [static/satsale.js](static/satsale.js), button appearance in [templates/index.html](templates/index.html), and Woocommerce plugin in [gateways/woo_satsale.php](gateways/woo_satsale.php). Please have ago at implementing some of the things below or in the issues!
 
 ![docs/diagram.png](docs/diagram.png)
 
-# Coming soon:
+# Coming soon
 * **Better UI** with more variety of size and theme.
-    * Add a currency toggle between BTC/USD on donation html.
-* Handle unconfirmed payments. What is the best course of action?
+    * Currency toggle between BTC/USD on donation html.
+* Late payment recourse.
 * More readily customisable donation button (text/color/QR code)
-* Database integration for payment invoices
-* Variety or easily customisable price feeds
+* Different price feeds with various currencies
 
 # Disclaimer
-SatSale is in very early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise. Always confirm large payments manually.
+SatSale is in early development. As such, we are not responsible for any loss of funds, vulnerabilities with software, or any other grievances which may arise. Always confirm large payments manually and use cold storage as much as possible.
 
-# Sponsor
-Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of SatSale :). Corporate/whale support would greatly assist my ability to give 100% of my attention to SatSale and other Bitcoin projects, please email `baseddepartment@nickfarrow.com`.
+# Support
+Please consider [supporting me](https://btcpyment.nickfarrow.com) via my own instance of SatSale :). This is my first FOSS project, any support would greatly assist my ability to prioritize SatSale and other areas of Bitcoin. And most importantly, **help us bring non-custodial bitcoin payments to the world**. Please email `baseddepartment@nickfarrow.com`.
