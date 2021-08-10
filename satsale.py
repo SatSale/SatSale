@@ -15,7 +15,7 @@ import sqlite3
 from pprint import pprint
 import json
 
-import ssh_tunnel
+from gateways import ssh_tunnel
 import config
 import invoice
 from pay import bitcoind
