@@ -23,7 +23,7 @@ class lnd:
         # Conect to lightning node
         connection_str = "{}:{}".format(config.host, config.lnd_rpcport)
         print(
-            "Attempting to connect to lightning node {}. This may take a few minutes...".format(
+            "Attempting to connect to lightning node {}. This may take a few seconds...".format(
                 connection_str
             )
         )
