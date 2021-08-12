@@ -38,7 +38,7 @@ class btcd:
                     config.rpcport,
                     config.wallet,
                 )
-                print("Attempting to connect to {}.".format(connection_str))
+                print("Attempting to connect to Bitcoin node RPC with user {}.".format(config.username))
             else:
                 self.tor = True
                 print(
