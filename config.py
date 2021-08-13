@@ -28,7 +28,7 @@ tunnel_host = None  # "HOST@IP"
 # or tor hidden service for RPC (see docs for how to set up), need onion:
 tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
 # and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
-tor_proxy = None 
+tor_proxy = None
 ################################
 
 # Check for payment every xx seconds
@@ -44,7 +44,7 @@ required_confirmations = 2
 connection_attempts = 3
 
 # Generic redirect url after payment
-redirect = "https://github.com/nickfarrow/btcpyment"
+redirect = "https://github.com/nickfarrow/satsale"
 
 # Payment method
 pay_method = "bitcoind"
