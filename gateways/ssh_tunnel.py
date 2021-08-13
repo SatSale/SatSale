@@ -45,6 +45,6 @@ if config.tunnel_host is not None:
     if "lnd_rpcport" in config.__dict__.keys():
         open_tunnel(config.tunnel_host, config.lnd_rpcport)
 
-    time.sleep(1)
+    time.sleep(2)
 else:
     tunnel_proc = None
