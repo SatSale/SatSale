@@ -117,9 +117,6 @@ class lnd:
         res = self.lnd.add_invoice(value=sats_amount)
         lnd_invoice = json.loads(MessageToJson(res))
 
-        print("Created lightning invoice:")
-        print(lnd_invoice)
-
         return lnd_invoice["payment_request"], lnd_invoice["r_hash"]
 
     def get_address(self, amount, label):
