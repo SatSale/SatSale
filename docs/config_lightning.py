@@ -17,11 +17,26 @@ password = "RPAPASSWORD"
 wallet = ""
 
 # File in which API key will be stored
-api_key_path = "BTCPyment_API_key"
+api_key_path = "SatSale_API_key"
+
 
 # As we are running SatSale on our node
 # we do not require any remote tunnel
-tunnel_host = None
+
+#### Connect To Remote Node ####
+# Can use SSH or TOR
+# to tunnel/relay ports required to talk to the node via RPC (gRPC for lightning)
+
+# SSH tunnel to node
+# Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
+# Use host = "127.0.0.1" and you will be able to see your node on 8332
+tunnel_host = None  # "HOST@IP"
+
+# or tor hidden service for RPC (see docs for how to set up), need onion:
+tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
+# and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
+tor_proxy = None
+################################
 
 # Check for payment every xx seconds
 pollrate = 15
