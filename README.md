@@ -16,6 +16,7 @@ Donation Button     ----->  |  Bitcoin Payment Gateway
     + [Using HTTPS & Domains](#using-https---domains)
     + [Security](#security)
     + [Payment Gateway (Woocommerce)](#payment-gateway--woocommerce-)
+- [Docs](#Docs)
 - [Contributions welcomed](#contributions-welcomed)
 - [Coming soon](#coming-soon)
 - [Disclaimer](#disclaimer)
@@ -33,11 +34,12 @@ SatSale makes donation buttons simple - easy copy paste the one line HTML iframe
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
 * **Lightweight and highly extendable, basic html and css stying. Modular Python backend**, take a [look at the code](satsale.py) or [lnd.py](/pay/lnd.py)!
 * Natively extendable to all bitcoind node features (e.g. segwit) through RPC.
-* QR codes, customizable required payment confirmations and payment expiry time.
+* Reusable and extendable [API](https://satsale.org/docs.html).
 * No shitcoin bloat. Bitcoin only.
 
+
 # Installation (short!)
-You require a Bitcoin node, if you don't one you should [install one](https://bitcoincore.org/en/download/) preferably on a Raspberry Pi / server (VPS). While you can run SatSale on this same machine, a separate VPS is recommended.
+You require a Bitcoin node, if you don't one you should [install one](https://bitcoincore.org/en/download/) preferably on a [Raspberry Pi](https://github.com/kdmukai/raspi4_bitcoin_node_tutorial) / server (VPS). While you can run SatSale on this same machine, a separate VPS is recommended.
 ### Install
 Clone and install dependencies
 ```
@@ -54,7 +56,7 @@ username = "RPCUSERNAME"
 password = "RPCPASSWORD"
 ```
 (You can find these in `~/.bitcoin/bitcoin.conf`).
-When connecting to a remote node, also edit either the SSH `tunnel_host` (or see [tor hidden service](/docs/tor.md)). If you havlightning node (lnd) and want to use lightning network payments, see [Lightning instructions](docs/lightning.md). More [example configs](docs/).
+When connecting to a remote node, also edit either the SSH `tunnel_host` (or see [tor hidden service](/docs/tor.md)). If you have a lightning node (lnd) and want to use lightning network payments, see [Lightning instructions](docs/lightning.md). More [example configs](docs/).
 
 ### Run SatSale
 Run SatSale with
@@ -88,6 +90,10 @@ For maximum security, we recommend hosting on a machine where your node only has
 
 ### Payment Gateway (Woocommerce)
 Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webstores extremely easy, [please click here for installation instructions](docs/woocommerce.md). SatSale acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
+
+# Docs
+* Basic [API docs](https://satsale.org/docs.html)
+* Example [configs, Tor, HTTPS, nginx, etc](docs/)
 
 # Contributions welcomed
 ### You only need a little python!
