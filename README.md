@@ -1,6 +1,6 @@
 # SatSale
 <!---Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable.--->
-SatSale is a simple, easily deployable, lightweight Bitcoin payment processor that connects to your own Bitcoin node or Lightning network node.
+SatSale is a lightweight Bitcoin payment processor that connects to your own Bitcoin node or Lightning network node.
 
 Donation Button     ----->  |  Bitcoin Payment Gateway
 :-------------------------:|:-------------------------:
@@ -26,6 +26,9 @@ Donation Button     ----->  |  Bitcoin Payment Gateway
 SatSale currently serves as a
 1. Donation page and button for your website that you can easily embed/link to anywhere.
 2. Bitcoin payment gateway, including a Woocommerce plugin that easily turns any Wordpress site into a Bitcoin accepting store.
+3. Versatile API and payments platform.
+
+Other Bitcoin payment processors are known for being difficult to install and self-host.
 
 SatSale makes donation buttons simple - easy copy paste the one line HTML iframe into your site. With a simple Python backend to talk to your own Bitcoin node, SatSale uses RPC to generate new addresses, and monitors the payment status with your own copy of the blockchain.
 
@@ -35,7 +38,7 @@ SatSale makes donation buttons simple - easy copy paste the one line HTML iframe
 * **Lightweight and highly extendable, basic html and css stying. Modular Python backend**, take a [look at the code](satsale.py) or [lnd.py](/pay/lnd.py)!
 * Natively extendable to all bitcoind node features (e.g. segwit) through RPC.
 * Reusable and extendable [API](https://satsale.org/docs.html).
-* No shitcoin bloat. Bitcoin only.
+* No shitcoins. Bitcoin only.
 
 
 # Installation (short!)
