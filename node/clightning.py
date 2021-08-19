@@ -16,11 +16,17 @@ if config.tor_clightningrpc_host is not None:
     from gateways.tor import session
 else:
     import requests
+
     session = None
 
 
 def call_clightning_rpc(method, params):
-    url = "http://{}:{}@{}:{}".format(config.clightning_username, config.clightning_password, config.clightning_host, config.clightning_rpcport)
+    url = "http://{}:{}@{}:{}".format(
+        config.clightning_username,
+        config.clightning_password,
+        config.clightning_host,
+        config.clightning_rpcport,
+    )
     payload = json.dumps({"id": "satsale", "method": method, "params": params})
     if session is None:
         response = requests.request(
@@ -38,6 +44,7 @@ def call_clightning_rpc(method, params):
         )
     return json.loads(response.text)
 
+
 class clightning:
     def __init__(self):
 
@@ -46,7 +53,7 @@ class clightning:
                 print("Attempting to connect to clightning...")
 
                 print("Getting clightning info...")
-                info = call_clightning_rpc("getinfo", [])['result']
+                info = call_clightning_rpc("getinfo", [])["result"]
                 print(info)
 
                 print("Successfully clightning lnd.")
@@ -78,8 +85,10 @@ class clightning:
     def create_clightning_invoice(self, btc_amount, label):
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(btc_amount * 10 ** 8)
-        res = call_clightning_rpc('invoice', [sats_amount, label, "SatSale-{}".format(label)])
-        lnd_invoice = res['result']
+        res = call_clightning_rpc(
+            "invoice", [sats_amount, label, "SatSale-{}".format(label)]
+        )
+        lnd_invoice = res["result"]
 
         return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
 
@@ -89,15 +98,15 @@ class clightning:
 
     # Check whether the payment has been paid
     def check_payment(self, rhash):
-        res = call_clightning_rpc('listinvoices', [rhash])
-        invoice_status = res['result']['invoices'][0]
+        res = call_clightning_rpc("listinvoices", [rhash])
+        invoice_status = res["result"]["invoices"][0]
 
-        if invoice_status["status"] == "unpaid":
+        if invoice_status["status"] != "paid":
             conf_paid = 0
             unconf_paid = 0
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = int(invoice_status["msatoshi"]) / 10**3 / 10 ** 8
+            conf_paid = int(invoice_status["msatoshi"]) / 10 ** 3 / 10 ** 8
             unconf_paid = 0
 
         return conf_paid, unconf_paid
