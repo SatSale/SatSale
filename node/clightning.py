@@ -12,7 +12,7 @@ import qrcode
 from payments.price_feed import get_btc_value
 import config
 
-if config.tor_clightningrpc_host is not None:
+if False:  # config.tor_clightningrpc_host is not None:
     from gateways.tor import session
 else:
     import requests
@@ -33,6 +33,7 @@ def call_clightning_rpc(method, params):
             "POST",
             url,
             data=payload,
+            auth=(config.clightning_username, config.clightning_password),
         )
     else:
         response = session.request(
@@ -53,7 +54,7 @@ class clightning:
                 print("Attempting to connect to clightning...")
 
                 print("Getting clightning info...")
-                info = call_clightning_rpc("getinfo", [])["result"]
+                info = call_clightning_rpc("getinfo", [])
                 print(info)
 
                 print("Successfully clightning lnd.")
@@ -97,8 +98,14 @@ class clightning:
         return address, r_hash
 
     # Check whether the payment has been paid
-    def check_payment(self, rhash):
-        res = call_clightning_rpc("listinvoices", [rhash])
+    def check_payment(self, uuid):
+        res = call_clightning_rpc("listinvoices", [uuid])
+
+        if len(res["result"]["invoices"]) == 0:
+            print("Could not look up invoice on node")
+            print(res)
+            return 0, 0
+
         invoice_status = res["result"]["invoices"][0]
 
         if invoice_status["status"] != "paid":
@@ -106,7 +113,7 @@ class clightning:
             unconf_paid = 0
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = int(invoice_status["msatoshi"]) / 10 ** 3 / 10 ** 8
+            conf_paid = (int(invoice_status["msatoshi"]) / 10 ** 3) / (10 ** 8)
             unconf_paid = 0
 
         return conf_paid, unconf_paid
