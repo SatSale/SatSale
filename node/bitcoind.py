@@ -7,7 +7,7 @@ from google.protobuf.json_format import MessageToJson
 
 
 import config
-from invoice.price_feed import get_btc_value
+from payments.price_feed import get_btc_value
 from pay.lnd import lnd
 
 if config.tor_bitcoinrpc_host is not None:
