@@ -11,11 +11,11 @@ EXPOSE 5000
 
 ENV PYTHONUNBUFFERED 1
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "-w", "1", "satsale:app"]
-
+#CMD ["gunicorn", "--worker-class", "eventlet", "--bind", "0.0.0.0:5000", "-w", "1", "satsale:app"]
 
 
 #### need
 # Probably need a volume to store the API key file into
 # Probably need webstore branch (needs rebase) by default?
 # Versioning?
-# 
+#
