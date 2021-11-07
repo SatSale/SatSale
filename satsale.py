@@ -19,8 +19,8 @@ from gateways import ssh_tunnel
 import config
 from payments import database
 from payments.price_feed import get_btc_value
-from pay import bitcoind
-from pay import lnd
+from node import bitcoind
+from node import lnd
 from gateways import woo_webhook
 
 app = Flask(__name__)
