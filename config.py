@@ -71,7 +71,7 @@ pay_method = "bitcoind"
 #lnd_macaroon = "invoice.macaroon"
 #lnd_cert = "tls.cert"
 
-# Or clightning 
+# Or clightning
 #pay_method = "clightning"
 
 # If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
