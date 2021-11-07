@@ -67,6 +67,8 @@ function update_receipt(){
     receiptresult = receiptresult + "</table>";
 
     document.getElementById("receipttablediv").innerHTML = receiptresult;
+    //var receiptTable = document.getElementById('receipttablediv');
+    //receiptTable = receiptresult;
 
     // From calc.js
     resetCalculator(zero=false);
