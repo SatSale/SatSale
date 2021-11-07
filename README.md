@@ -34,7 +34,7 @@ Other Bitcoin payment processors are known for being difficult to install and se
 
 SatSale makes donation buttons simple - easy copy paste the one line HTML iframe into your site. With a simple Python backend to talk to your own Bitcoin node, SatSale uses RPC to generate new addresses, and monitors the payment status with your own copy of the blockchain.
 
-Our objective is to bring the power of self-custody bitcoin payments with the world.
+Our objective is to share the power of self-custody bitcoin payments with the world.
 
 # Features
 * Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
