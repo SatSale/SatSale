@@ -22,6 +22,8 @@ Donation Button     ----->  |  Bitcoin Payment Gateway
 - [Disclaimer](#disclaimer)
 - [Sponsor](#sponsor)
 
+![logo](static/logo.svg)
+
 # Purpose
 SatSale currently serves as a
 1. Donation page and button for your website that you can easily embed/link to anywhere.
@@ -31,6 +33,8 @@ SatSale currently serves as a
 Other Bitcoin payment processors are known for being difficult to install and self-host.
 
 SatSale makes donation buttons simple - easy copy paste the one line HTML iframe into your site. With a simple Python backend to talk to your own Bitcoin node, SatSale uses RPC to generate new addresses, and monitors the payment status with your own copy of the blockchain.
+
+Our objective is to bring the power of self-custody bitcoin payments with the world.
 
 # Features
 * Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
