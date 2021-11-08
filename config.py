@@ -80,3 +80,7 @@ liquid_address = None
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
 free_mode = False
+
+#Currency and exchange rate provider
+base_currency = "USD"
+currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO

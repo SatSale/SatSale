@@ -102,7 +102,7 @@ status_model = api.model(
 
 @api.doc(
     params={
-        "amount": "An amount in USD.",
+        "amount": "An amount in `base_currency`.",
         "method": "(Optional) Specify a payment method: `bitcoind` for onchain, `lnd` for lightning).",
         "w_url": "(Optional) Specify a webhook url to call after successful payment. Currently only supports WooCommerce plugin.",
     }
@@ -112,9 +112,9 @@ class create_payment(Resource):
     @api.response(400, "Invalid payment method")
     def get(self):
         "Create Payment"
-        """Initiate a new payment with an `amount` in USD."""
-        dollar_amount = request.args.get("amount")
-        currency = "USD"
+        """Initiate a new payment with an `amount` in config.base_currency."""
+        fiat_amount = request.args.get("amount")
+        currency = config.base_currency
         label = ""  # request.args.get('label')
         payment_method = request.args.get("method")
         if payment_method is None:
@@ -134,8 +134,8 @@ class create_payment(Resource):
 
         invoice = {
             "uuid": str(uuid.uuid4().hex),
-            "dollar_value": dollar_amount,
-            "btc_value": round(get_btc_value(dollar_amount, currency), 8),
+            "fiat_value": fiat_amount,
+            "btc_value": round(get_btc_value(fiat_value, currency), 8),
             "method": payment_method,
             "time": time.time(),
             "webhook": webhook,
