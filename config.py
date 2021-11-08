@@ -1,15 +1,15 @@
-# Bitcoin node connection settings
-# This should point to your bitcoin/lnd node,
-# with the correct RPC port as set in your config.
-# Connecting through local host as  i'm running SatSale on my node
+# SatSale needs to connect to your bitcoin/lnd node,
+# with the correct RPC port(s) as set in this config.
+
+# Connecting through local host (see below if connecting to remote node):
 host = "127.0.0.1"
 rpcport = "8332"
 
 # From ~/.bitcoin/bitcoin.conf
 username = "bitcoinrpc"
-password = "RPCPASSWORD"
+password = "rpcpassword"
 
-# Wallet ("" if single-wallet node, OR wallet name/path as shown in `biitcoin-cli listwallets`)
+# Wallet (empty "" if your node has a single wallet, OR wallet name/path as shown in `biitcoin-cli listwallets`)
 wallet = ""
 
 # File in which API key will be stored
@@ -29,7 +29,20 @@ tunnel_host = None  # "HOST@IP"
 tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
 # and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
 tor_proxy = None
-################################
+
+#### Payment method ####
+pay_method = "bitcoind"
+
+#### Lightning ####
+# Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
+#pay_method = "lnd"
+
+# To find (or copy from remote nodes) the macaroon and TLS certs
+#lnd_dir = "~/.lnd/"
+
+# lnd RPC port (uncomment)
+#lnd_rpcport = "10009"
+
 
 # Check for payment every xx seconds
 pollrate = 15
@@ -45,16 +58,6 @@ connection_attempts = 3
 
 # Generic redirect url after payment
 redirect = "https://github.com/nickfarrow/satsale"
-
-# Payment method
-pay_method = "bitcoind"
-# Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
-#pay_method = "lnd"
-# lnd_dir is only needed if you want to copy macaroon and TLS cert locally
-#lnd_dir = "~/.lnd/"
-#lnd_rpcport = "10009"
-#lnd_macaroon = "invoice.macaroon"
-#lnd_cert = "tls.cert"
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
