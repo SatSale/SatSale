@@ -23,7 +23,7 @@ def get_coindesk_price(currency):
         raise ("Failed to reach {}.".format(price_feed))
 
     try:
-        price = prices[currency]["rate"].replace(",", "")
+        price = prices[currency.upper()]["rate_float"]
         return price
 
     except:
