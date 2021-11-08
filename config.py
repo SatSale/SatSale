@@ -84,6 +84,11 @@ lightning_address = None
 lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
 
+# Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
+# https://blockstream.com/liquid/
+# NOTE: You will also need to be able to spend with your lnd certificates, so change `lnd_macaroon` to admin.macaroon
+liquid_address = None
+
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
 free_mode = False
