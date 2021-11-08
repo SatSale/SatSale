@@ -69,20 +69,20 @@ class lnd:
 
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
-        self.certs = {"tls": "tls.cert", "macaroon": "admin.macaroon"}
+        self.certs = {"tls": "tls.cert", "macaroon": config.lnd_macaroon}
 
-        if (not os.path.isfile("tls.cert")) or (not os.path.isfile("admin.macaroon")):
+        if (not os.path.isfile("tls.cert")) or (not os.path.isfile(config.lnd_macaroon)):
             try:
                 tls_file = os.path.join(config.lnd_dir, "tls.cert")
                 macaroon_file = os.path.join(
-                    config.lnd_dir, "data/chain/bitcoin/mainnet/admin.macaroon"
+                    config.lnd_dir, "data/chain/bitcoin/mainnet/{}".format(config.lnd_macaroon)
                 )
 
                 # SSH copy
                 if config.tunnel_host is not None:
                     print(
-                        "Could not find tls.cert or admin.macaroon in SatSale folder. \
-                         Attempting to download from remote lnd directory."
+                        "Could not find tls.cert or {} in SatSale folder. \
+                         Attempting to download from remote lnd directory.".format(config.lnd_macaroon)
                     )
 
                     subprocess.run(
