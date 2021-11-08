@@ -40,8 +40,9 @@ pay_method = "bitcoind"
 # To find (or copy from remote nodes) the macaroon and TLS certs
 #lnd_dir = "~/.lnd/"
 
-# lnd RPC port (uncomment)
+# lnd RPC port and lnd macaroon (uncomment)
 #lnd_rpcport = "10009"
+#lnd_macaroon = "invoice.macaroon"
 
 
 # Check for payment every xx seconds
