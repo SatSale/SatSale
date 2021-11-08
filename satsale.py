@@ -121,7 +121,7 @@ class create_payment(Resource):
         if webhook is None:
             webhook = None
         else:
-            print("Webhook payment: {}",format(webhook))
+            print("Webhook payment: {}".format(webhook))
 
         # Create the payment using one of the connected nodes as a base
         # ready to recieve the invoice.
