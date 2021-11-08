@@ -123,6 +123,14 @@ class lnd:
         address, r_hash = self.create_lnd_invoice(amount, memo=label)
         return address, r_hash
 
+    def pay_invoice(self, invoice):
+        ret = json.loads(
+                MessageToJson(self.lnd.send_payment(invoice))
+            )
+        print(ret)
+        return
+
+
     # Check whether the payment has been paid
     def check_payment(self, rhash):
         invoice_status = json.loads(
