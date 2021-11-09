@@ -12,7 +12,7 @@ def add_ln_address_decorators(app, api, node):
                 "metadata": "[[\"text/plain\", \"Thanks for donating!\"]]",
                 "tag": "payRequest"
                 }
-            return resp, 200
+            return resp
 
 
 
@@ -29,6 +29,6 @@ def add_ln_address_decorators(app, api, node):
                 	"routes": []
                 }, 200
 
-    api.add_resource(get_ln_address, "/.well-known/lnurlp/{}".format(config.lightning_address))
+    api.add_resource(get_ln_address, "/.well-known/lnurlp/{}".format(config.lightning_address.split("@")[0]))
     api.add_resource(init_ln_addr_payment, "/lnaddr")
     return
