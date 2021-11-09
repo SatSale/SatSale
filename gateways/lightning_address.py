@@ -1,8 +1,9 @@
 from flask import request
 from flask_restplus import Resource, Api, Namespace, fields
 import config
+import hashlib
 
-memo = "ty for donations"
+description = "ty for donations"
 
 def add_ln_address_decorators(app, api, node):
     class get_ln_address(Resource):
@@ -25,7 +26,9 @@ def add_ln_address_decorators(app, api, node):
             amount_btc = amount_msats / 10**(3+8)
             print("Received payment request from ln address for {} msats...".format(amount_msats))
 
-            invoice, _ = node.create_lnd_invoice(amount_btc, memo=memo)
+            description_hash = hashlib.sha256(description.encode()).digest()
+
+            invoice, _ = node.create_lnd_invoice(amount_btc, memo="lightning address payment", description_hash=description_hash)
             print("Responding with invoice {}".format(invoice))
             return {
                 	"pr": invoice,
