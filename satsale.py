@@ -211,8 +211,6 @@ class complete_payment(Resource):
         if status["payment_complete"] != 1:
             return {"message": "You havent paid you stingy bastard"}
 
-        print(invoice)
-
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
             print("Calling webhook {}".format(invoice["webhook"]))
