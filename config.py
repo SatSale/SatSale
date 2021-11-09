@@ -60,6 +60,9 @@ connection_attempts = 3
 # Generic redirect url after payment
 redirect = "https://github.com/nickfarrow/satsale"
 
+# Lightning Address
+lightning_address = None
+
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
 free_mode = False
