@@ -7,10 +7,10 @@ def add_ln_address_decorators(app, api, node):
         def get(self):
             print("Someone requested our ln address: {}!".format(config.lightning_address))
             resp = {
-                "callback": "{}/lnaddr".format(config.lightning_address.split("@")[1]),
+                "callback": "http://{}/lnaddr".format(config.lightning_address.split("@")[1]),
                 "maxSendable": 10**(3+7),
                 "minSendable": 1000*10**2,
-                "metadata": "[[\"text/plain\", \"Thanks for donating!\"]]",
+                "metadata": '[["text/identifier", "{}"]]'.format(config.lightning_address),
                 "tag": "payRequest"
                 }
             return resp
