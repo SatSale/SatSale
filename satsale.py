@@ -301,5 +301,10 @@ if config.pay_method == "lnd":
     print("Connection to lightning node successful.")
 
 
+if config.lightning_address is not None:
+    from gateways import lightning_address
+    lightning_address.add_ln_address_decorators(app, api, lightning_node)
+
+
 if __name__ == "__main__":
     app.run(debug=False)
