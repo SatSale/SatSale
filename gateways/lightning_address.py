@@ -2,6 +2,8 @@ from flask import request
 from flask_restplus import Resource, Api, Namespace, fields
 import config
 
+memo = "ty for donations"
+
 def add_ln_address_decorators(app, api, node):
     class get_ln_address(Resource):
         def get(self):
@@ -10,7 +12,7 @@ def add_ln_address_decorators(app, api, node):
                 "callback": "http://{}/lnaddr".format(config.lightning_address.split("@")[1]),
                 "maxSendable": 10**(3+7),
                 "minSendable": 1000*10**2,
-                "metadata": "[[\"text/plain\", \"ty for donations\"], [\"text/identifier\", \"{}\"]]".format(config.lightning_address),
+                "metadata": "[[\"text/plain\", \"{}\"], [\"text/identifier\", \"{}\"]]".format(memo, config.lightning_address),
                 "tag": "payRequest"
                 }
             return resp
@@ -23,7 +25,7 @@ def add_ln_address_decorators(app, api, node):
             amount_btc = amount_msats / 10**(3+8)
             print("Received payment request from ln address for {} msats...".format(amount_msats))
 
-            invoice, _ = node.create_lnd_invoice(amount_btc)
+            invoice, _ = node.create_lnd_invoice(amount_btc, memo=memo)
             print("Responding with invoice {}".format(invoice))
             return {
                 	"pr": invoice,
