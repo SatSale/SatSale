@@ -1,3 +1,4 @@
+from flask import request
 from flask_restplus import Resource, Api, Namespace, fields
 import config
 
@@ -8,7 +9,7 @@ def add_ln_address_decorators(app, api, node):
             resp = {
                 "callback": "{}/lnaddr".format(config.lightning_address.split("@")[1]),
                 "maxSendable": 10**(3+7),
-                "minSendable": 1000,
+                "minSendable": 1000*10**2,
                 "metadata": "[[\"text/plain\", \"Thanks for donating!\"]]",
                 "tag": "payRequest"
                 }
@@ -27,7 +28,7 @@ def add_ln_address_decorators(app, api, node):
             return {
                 	"pr": invoice,
                 	"routes": []
-                }, 200
+                }
 
     api.add_resource(get_ln_address, "/.well-known/lnurlp/{}".format(config.lightning_address.split("@")[0]))
     api.add_resource(init_ln_addr_payment, "/lnaddr")
