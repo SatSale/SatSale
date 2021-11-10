@@ -44,14 +44,14 @@ if os.path.exists("SatSale_API_key"):
     with open("SatSale_API_key", "r") as f:
         app.config["SECRET_KEY"] = f.read().strip()
 else:
-    with open("SatSale_API_key", "w") as f:
+    with open("/data/SatSale_API_key", "w") as f:
         app.config["SECRET_KEY"] = os.urandom(64).hex()
         f.write(app.config["SECRET_KEY"])
 
 logging.info("Initialised Flask with secret key: {}".format(app.config["SECRET_KEY"]))
 
 # Create payment database if it does not exist
-if not os.path.exists("database.db"):
+if not os.path.exists("/data/database.db"):
     database.create_database()
 
 
