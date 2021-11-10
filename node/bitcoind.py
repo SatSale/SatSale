@@ -8,7 +8,7 @@ from google.protobuf.json_format import MessageToJson
 
 import config
 from payments.price_feed import get_btc_value
-from pay.lnd import lnd
+from node.lnd import lnd
 
 if config.tor_bitcoinrpc_host is not None:
     from gateways.tor import session
