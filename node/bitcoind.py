@@ -60,11 +60,11 @@ class btcd(lnd):
 
             if "num_confirmations" in tx.keys():
                 if tx["num_confirmations"] >= config.required_confirmations:
-                    conf_paid += tx["amount"] * 10**-8
+                    conf_paid += float(tx["amount"]) * 10**-8
                 else:
-                    unconf_paid += tx["amount"] * 10**-8
+                    unconf_paid += float(tx["amount"]) * 10**-8
             else:
-                unconf_paid += tx["amount"] * 10**-8
+                unconf_paid += float(tx["amount"]) * 10**-8
 
         return conf_paid, unconf_paid
 
