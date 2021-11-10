@@ -57,10 +57,12 @@ class btcd(lnd):
         conf_paid = 0
         unconf_paid = 0
         for tx in relevant_txs:
-            print(tx)
-            self.txid = tx["tx_hash"]
-            if tx["confirmations"] >= config.required_confirmations:
-                conf_paid += tx["amount"] * 10**-8
+
+            if "num_confirmations" in tx.keys():
+                if tx["num_confirmations"] >= config.required_confirmations:
+                    conf_paid += tx["amount"] * 10**-8
+                else:
+                    unconf_paid += tx["amount"] * 10**-8
             else:
                 unconf_paid += tx["amount"] * 10**-8
 
