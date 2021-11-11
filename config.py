@@ -42,7 +42,7 @@ pay_method = "bitcoind"
 
 # lnd RPC port and lnd macaroon (uncomment)
 #lnd_rpcport = "10009"
-#lnd_macaroon = "invoice.macaroon"
+#lnd_macaroon = "admin.macaroon"
 
 
 # Check for payment every xx seconds
