@@ -54,7 +54,7 @@ def add_ln_address_decorators(app, api, node):
                     	"pr": invoice,
                     	"routes": []
                     }
-            except Exception a e:
+            except Exception as e:
                 print(e)
                 return {"status": "ERROR", "reason": e}
 
