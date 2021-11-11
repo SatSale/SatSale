@@ -117,7 +117,7 @@ class lnd:
         res = self.lnd.add_invoice(value=sats_amount, memo=memo, description_hash=description_hash)
         lnd_invoice = json.loads(MessageToJson(res))
 
-        return lnd_invoice["payment_request"], lnd_invoice["r_hash"]
+        return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
 
     def get_address(self, amount, label):
         address, r_hash = self.create_lnd_invoice(amount, memo=label)
@@ -129,12 +129,12 @@ class lnd:
             MessageToJson(self.lnd.lookup_invoice(r_hash_str=b64decode(rhash).hex()))
         )
 
-        if "amt_paid_sat" not in invoice_status.keys():
+        if "amtPaidSat" not in invoice_status.keys():
             conf_paid = 0
             unconf_paid = 0
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = int(invoice_status["amt_paid_sat"]) * 10 ** 8
+            conf_paid = int(invoice_status["amtPaidSat"]) * 10 ** 8
             unconf_paid = 0
 
         return conf_paid, unconf_paid
