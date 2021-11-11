@@ -4,6 +4,7 @@ import config
 import hashlib
 
 description = "ty for donations"
+metadata =  "[[\"text/plain\", \"{}\"], [\"text/identifier\", \"{}\"]]".format(description, config.lightning_address.split("@")[0])
 
 def add_ln_address_decorators(app, api, node):
     class get_ln_address(Resource):
@@ -13,7 +14,7 @@ def add_ln_address_decorators(app, api, node):
                 "callback": "http://{}/lnaddr".format(config.lightning_address.split("@")[1]),
                 "maxSendable": 10**(3+7),
                 "minSendable": 1000*10**2,
-                "metadata": "[[\"text/plain\", \"{}\"], [\"text/identifier\", \"{}\"]]".format(memo, config.lightning_address),
+                "metadata": metadata,
                 "tag": "payRequest"
                 }
             return resp
@@ -26,7 +27,7 @@ def add_ln_address_decorators(app, api, node):
             amount_btc = amount_msats / 10**(3+8)
             print("Received payment request from ln address for {} msats...".format(amount_msats))
 
-            description_hash = hashlib.sha256(description.encode()).digest()
+            description_hash = hashlib.sha256(metadata.encode()).digest()
 
             invoice, _ = node.create_lnd_invoice(amount_btc, memo="lightning address payment", description_hash=description_hash)
             print("Responding with invoice {}".format(invoice))
