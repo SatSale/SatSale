@@ -250,7 +250,7 @@ def check_payment_status(uuid):
             conf_paid, unconf_paid = node.check_payment(invoice["rhash"])
         elif invoice["method"] == "clightning":
             # Lookup clightning invoice based on label (uuid)
-            conf_paid, unconf_paid = node.check_payment(uuid)
+            conf_paid, unconf_paid = node.check_payment(invoice["uuid"])
         else:
             conf_paid, unconf_paid = node.check_payment(invoice["address"])
 
@@ -258,7 +258,7 @@ def check_payment_status(uuid):
         dbg_free_mode_cond = config.free_mode and (time.time() - invoice["time"] > 5)
 
         # If payment is paid
-        if (conf_paid > invoice["btc_value"]) or dbg_free_mode_cond:
+        if (conf_paid >= invoice["btc_value"]) or dbg_free_mode_cond:
             status.update(
                 {
                     "payment_complete": 1,
@@ -299,7 +299,7 @@ api.add_resource(complete_payment, "/api/completepayment")
 
 # Test connections on startup:
 print("Connecting to node...")
-bitcoin_node = bitcoind.btcd()
+# bitcoin_node = bitcoind.btcd()
 print("Connection to bitcoin node successful.")
 if config.pay_method == "lnd":
     lightning_node = lnd.lnd()

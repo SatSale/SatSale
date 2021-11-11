@@ -64,10 +64,8 @@ redirect = "https://github.com/nickfarrow/satsale"
 lightning_address = None
 lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
-#clightning_host = "127.0.0.1"
-#clightning_rpcport = "8080"
-#clightning_username = "lightning"
-#clightning_password = ""
+#pay_method = "clightning"
+#clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
 
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
