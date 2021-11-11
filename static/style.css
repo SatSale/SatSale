@@ -1,28 +1,32 @@
 html, body {
     display: flex;
-    /* height:auto;
-    width:260px; */
 }
-body{
+
+body {
+    /* Background color */
     background-color: inherit;
+
     overflow: hidden;
     font-family: "Lucida Console", "Courier New", monospace;
 }
 
 #paybox {
+    /* SatSale Box color */
     background-color: #f7931a;
+    /* Rounded Corners */
     border-radius: 25px;
+
+    font-size: 16px
+
+    height: 275px;
+    width:360px;
+
     padding-left: 20px;
     padding-right: 15px;
     padding-top: 10px;
     padding-bottom: 10px;
-    font-size: 16px
 
-    /* height:auto; */
-    height: 275px;
-    /* width:220px; */
-    width:360px;
-
+    /* Centering */
     position: absolute;
     left: 50%;
     top: 50%;
@@ -30,6 +34,7 @@ body{
     transform: translate(-50%, -50%);
 }
 
+/* Dynamic size on mobile and tablet */
 /* Smartphones */
 @media only screen and (min-width : 0px) and (max-width : 700px){
     #paybox {
@@ -45,35 +50,38 @@ body{
     }
 }
 
-
+/* Text style (addresses) */
 p {
-    /* display: inline-block; */
     overflow-wrap: break-word;
     word-wrap: break-word;
     margin: 0;
     padding: 5px;
 }
+
+/* Heading style */
 h1 {
     font-size: 2em;
 }
 
 .button {
-  background-color: black;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  text-align: center;
-  /* text-decoration: none; */
-  display: inline-block;
-  cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-  font-family: "Lucida Console", "Courier New", monospace;
-  border-radius: 12px;
+    /* Button color then font and font color etc.. */
+    background-color: black;
+    font-family: "Lucida Console", "Courier New", monospace;
+    border: none;
+    border-radius: 12px;
+    color: white;
+
+    padding: 10px 15px;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
 }
 
 .button1 {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 
@@ -111,14 +119,14 @@ h1 {
     display: flex;
 }
  #left {
-  width: 60%;
-  padding: 0 0 0 0;
-  float: left;
+    width: 60%;
+    padding: 0 0 0 0;
+    float: left;
 }
 #right {
-  width: 40%;
-  padding: 0 0 0 0;
-  float: right;
+    width: 40%;
+    padding: 0 0 0 0;
+    float: right;
 }
 #address {
     overflow-wrap: break-word;
