@@ -13,4 +13,4 @@ PySocks==1.7.1
 
 # For lightning (optional)
 setuptools==50.3.2
-lndgrpc==0.2.0
+lnd-grpc-client
