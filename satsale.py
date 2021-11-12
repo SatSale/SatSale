@@ -211,8 +211,6 @@ class complete_payment(Resource):
         if status["payment_complete"] != 1:
             return {"message": "You havent paid you stingy bastard"}
 
-        print(invoice)
-
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
             print("Calling webhook {}".format(invoice["webhook"]))
@@ -299,6 +297,11 @@ print("Connection to bitcoin node successful.")
 if config.pay_method == "lnd":
     lightning_node = lnd.lnd()
     print("Connection to lightning node successful.")
+
+
+if config.lightning_address is not None:
+    from gateways import lightning_address
+    lightning_address.add_ln_address_decorators(app, api, lightning_node)
 
 
 if __name__ == "__main__":
