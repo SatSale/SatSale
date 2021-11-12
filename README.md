@@ -14,6 +14,7 @@ Donation Button     ----->  |  Bitcoin Payment Gateway
     + [Run SatSale](#run-satsale)
     + [Embed a Donation Button](#embed-a-donation-button)
     + [Using HTTPS & Domains](#using-https---domains)
+    + [Lightning Address](#lightning-address)
     + [Security](#security)
     + [Payment Gateway (Woocommerce)](#payment-gateway--woocommerce-)
 - [Updating](#Updating)
@@ -91,11 +92,22 @@ Now embed the donation button into your website HTML:
 ```
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSale on, node or otherwise. Additionally, you could redirect a domain to that IP and use that instead.
 
+
 ### Using HTTPS & Domains
-Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
+Point a domain to your VPS. You can run SatSale or use NGINX/apache to point to the service. See [HTTPS instructions](docs/HTTPS.md). Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
+
+### Lightning Address
+Once you have a HTTPS domain pointed at SatSale, in the configuration you can specify a lightning address:
+```
+# Lightning Address e.g. name@you.satsale.domain (think this requires https url)
+lightning_address = name@ur.domain.com
+lightning_address_comment = "Thank you for your support <3"
+```
 
 ### Security
-For maximum security, we recommend hosting on a machine where your node only has access to a **watch-only** wallet.
+Run SatSale on a separate machine to your node, ensuring your node IP is not exposed.
+When possible, host on a machine where your node only has access to a **watch-only** wallet.
+Similarly, for lightning, use an `invoice.macaroon` not `admin.macaroon` unless required.
 
 ### Payment Gateway (Woocommerce)
 Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webstores extremely easy, [please click here for installation instructions](docs/woocommerce.md). SatSale acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
