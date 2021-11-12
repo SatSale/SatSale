@@ -30,8 +30,9 @@ SatSale currently serves as a
 1. Donation page and button for your website that you can easily embed/link to anywhere.
 2. Bitcoin payment gateway, including a Woocommerce plugin that easily turns any Wordpress site into a Bitcoin accepting store.
 3. Versatile API and payments platform.
+for both on-chain and lightning payments (supporting both clightning and lnd).
 
-Other Bitcoin payment processors are known for being difficult to install and self-host.
+Other Bitcoin payment processors are known for being difficult to install and self-host, SatSale is easy to modify, and build upon.
 
 SatSale makes donation buttons simple - easy copy paste the one line HTML iframe into your site. With a simple Python backend to talk to your own Bitcoin node, SatSale uses RPC to generate new addresses, and monitors the payment status with your own copy of the blockchain.
 
@@ -64,7 +65,7 @@ username = "RPCUSERNAME"
 password = "RPCPASSWORD"
 ```
 (You can find these in `~/.bitcoin/bitcoin.conf`).
-When connecting to a remote node, also edit either the SSH `tunnel_host` (or see [tor hidden service](/docs/tor.md)). If you have a lightning node (lnd) and want to use lightning network payments, see [Lightning instructions](docs/lightning.md). More [example configs](docs/).
+When connecting to a remote node, also edit either the SSH `tunnel_host` (or see [tor hidden service](/docs/tor.md)). If you have a lightning node (lnd or clightning) and want to use lightning network payments, see [Lightning instructions](docs/lightning.md). More [example configs](docs/).
 
 ### Run SatSale
 Run SatSale with
