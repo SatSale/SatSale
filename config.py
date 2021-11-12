@@ -71,7 +71,7 @@ pay_method = "bitcoind"
 #lnd_macaroon = "invoice.macaroon"
 #lnd_cert = "tls.cert"
 
-# Or clightning 
+# Or clightning
 #pay_method = "clightning"
 
 # If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
@@ -83,6 +83,11 @@ pay_method = "bitcoind"
 lightning_address = None
 lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
+# Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
+# https://blockstream.com/liquid/
+# Change lnd_macaroon='admin.macaroon', as you will also need to be able to spend with your lnd certificates.
+# This is NOT a trustless swap. Exchange is carried out using sideshift.ai, you bear all associated exchange risks.
+liquid_address = None
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
