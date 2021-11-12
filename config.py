@@ -60,12 +60,28 @@ connection_attempts = 3
 # Generic redirect url after payment
 redirect = "https://github.com/nickfarrow/satsale"
 
+#### Payment Nodes ####
+pay_method = "bitcoind"
+
+# Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
+#pay_method = "lnd"
+# lnd_dir is only needed if you want to copy macaroon and TLS cert locally
+#lnd_dir = "~/.lnd/"
+#lnd_rpcport = "10009"
+#lnd_macaroon = "invoice.macaroon"
+#lnd_cert = "tls.cert"
+
+# Or clightning 
+#pay_method = "clightning"
+
+# If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
+# creates a lightning-rpc unix domain socket
+#clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
+#######################
+
 # Lightning Address e.g. name@you.satsale.domain (think this requires https url)
 lightning_address = None
 lightning_address_comment = None # Defaults to: "Thank you for your support <3"
-
-#pay_method = "clightning"
-#clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
 
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
