@@ -125,7 +125,7 @@ class lnd:
 
     def pay_invoice(self, invoice):
         ret = json.loads(
-                MessageToJson(self.lnd.send_payment(invoice))
+                MessageToJson(self.lnd.send_payment(invoice, fee_limit_msat=20*1000))
             )
         print(ret)
         return
