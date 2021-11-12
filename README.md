@@ -16,6 +16,7 @@ Donation Button     ----->  |  Bitcoin Payment Gateway
     + [Using HTTPS & Domains](#using-https---domains)
     + [Security](#security)
     + [Payment Gateway (Woocommerce)](#payment-gateway--woocommerce-)
+- [Updating](#Updating)
 - [Docs](#Docs)
 - [Contributions welcomed](#contributions-welcomed)
 - [Coming soon](#coming-soon)
@@ -97,6 +98,15 @@ For maximum security, we recommend hosting on a machine where your node only has
 
 ### Payment Gateway (Woocommerce)
 Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webstores extremely easy, [please click here for installation instructions](docs/woocommerce.md). SatSale acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
+
+# Updating
+When updating you want to you keep your config file changes but also receive new config options so it is often easiest to:
+```
+git stash
+git pull origin master
+git stash pop
+```
+You can also just make commits to your modified fork.
 
 # Docs
 * Basic [API docs](https://satsale.org/docs.html)
