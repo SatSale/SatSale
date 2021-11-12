@@ -17,7 +17,7 @@ import json
 
 from gateways import ssh_tunnel
 import config
-from payments import database
+from payments import database, weakhands
 from payments.price_feed import get_btc_value
 from node import bitcoind
 from node import lnd
@@ -213,6 +213,9 @@ class complete_payment(Resource):
         if status["payment_complete"] != 1:
             return {"message": "You havent paid you stingy bastard"}
 
+        if (config.liquid_address is not None) and (invoice['method'] in ["lnd", "clightning"]):
+            weakhands.swap_lnbtc_for_lusdt(lightning_node, invoice["btc_value"], config.liquid_address)
+
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
             print("Calling webhook {}".format(invoice["webhook"]))
@@ -312,7 +315,6 @@ elif config.pay_method == "clightning":
 if config.lightning_address is not None:
     from gateways import lightning_address
     lightning_address.add_ln_address_decorators(app, api, lightning_node)
-
 
 if __name__ == "__main__":
     app.run(debug=False)
