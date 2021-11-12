@@ -299,7 +299,7 @@ api.add_resource(complete_payment, "/api/completepayment")
 
 # Test connections on startup:
 print("Connecting to node...")
-# bitcoin_node = bitcoind.btcd()
+bitcoin_node = bitcoind.btcd()
 print("Connection to bitcoin node successful.")
 if config.pay_method == "lnd":
     lightning_node = lnd.lnd()
