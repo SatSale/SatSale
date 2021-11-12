@@ -9,7 +9,7 @@ from node import bitcoind
 def open_tunnel(host, port):
     # If tunnel is required (might make things easier)
     try:
-        if host is not None:
+        if config.tunnel_host is not None:
             command = [
                 "ssh",
                 config.tunnel_host,
@@ -35,7 +35,7 @@ def clightning_unix_domain_socket_ssh(rpc_store_dir=None):
         rpc_store_dir = os.getcwd()
 
     # ssh -nNT -L lightning-rpc:~/.lightning/lightning-rpc config.tunnel_host
-    if host is not None:
+    if config.tunnel_host is not None:
         try:
             command = [
                 "ssh",
