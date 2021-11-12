@@ -42,8 +42,9 @@ Our objective is to share the power of self-custody bitcoin payments with the wo
 # Features
 * Process payments with your own Bitcoin node via RPC and SSH. Bitcoin core, or any other node software that supports RPC calls.
 * Direct peer-to-peer payments without any middleman. No KYC, and greater privacy than donation systems wher Bitcoin addresses are reused multiple times.
+* [Lightning Address](https://lightningaddress.com) support (me@mydomain.com)
+* Supports both clightning and lnd, or you can just use on-chain!
 * **Lightweight and highly extendable, basic html and css stying. Modular Python backend**, take a [look at the code](satsale.py) or [lnd.py](/pay/lnd.py)!
-* Natively extendable to all bitcoind node features (e.g. segwit) through RPC.
 * Reusable and extendable [API](https://satsale.org/docs.html).
 * No shitcoins. Bitcoin only.
 
@@ -97,7 +98,7 @@ Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSal
 Point a domain to your VPS. You can run SatSale or use NGINX/apache to point to the service. See [HTTPS instructions](docs/HTTPS.md). Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 ### Lightning Address
-Once you have a HTTPS domain pointed at SatSale, in the configuration you can specify a lightning address:
+Once you have an HTTPS domain pointed at SatSale, in the configuration you can specify a lightning address:
 ```
 # Lightning Address e.g. name@you.satsale.domain (think this requires https url)
 lightning_address = name@ur.domain.com
