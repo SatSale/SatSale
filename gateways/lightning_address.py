@@ -21,8 +21,8 @@ def add_ln_address_decorators(app, api, node):
             try:
                 print("Someone requested our ln address: {}!".format(config.lightning_address))
                 resp = {
-                    "callback": "http://{}/lnaddr".format(config.lightning_address.split("@")[1]),
-                    "maxSendable": max_sats*10**6,
+                    "callback": "https://{}/lnaddr".format(config.lightning_address.split("@")[1]),
+                    "maxSendable": max_sats*10**3,
                     "minSendable": min_sats*10**3,
                     "metadata": metadata,
                     "tag": "payRequest"
