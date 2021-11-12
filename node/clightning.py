@@ -3,7 +3,6 @@ import pathlib
 import time
 import os
 import json
-from base64 import b64decode
 import uuid
 import qrcode
 
