@@ -44,7 +44,7 @@ function check_payment(payment_uuid, checkinterval, payment_data) {
             $('#status').text("Payment confirmed.").html();
             document.getElementById('timerContainer').style.visibility = "hidden";
             complete_payment(payment_uuid, payment_data);
-            // clearInterval(checkinterval);
+            clearInterval(checkinterval);
             return 1;
         }
         else {
@@ -66,9 +66,7 @@ function complete_payment(payment_uuid, payment_data) {
         console.log(payment_completion);
         $('#status').text(payment_completion.message).html();
     });
-    // If we don't redirect, this js file will constantly check payment, so instead:
-    // Hack -- We don't have redirects yet, so let's sleep for a very long time.. then print generic message.
-    setTimeout(() => {  alert("Paid!");  }, 10**20);
+    // setTimeout(() => {  window.location.replace('/');  }, 5000);
 }
 
 function load_qr(payment_uuid) {
