@@ -66,7 +66,9 @@ function complete_payment(payment_uuid, payment_data) {
         console.log(payment_completion);
         $('#status').text(payment_completion.message).html();
     });
-    // setTimeout(() => {  window.location.replace(payment_data.redirect);  }, 5000);
+    // If we don't redirect, this js file will constantly check payment, so instead:
+    // Hack -- We don't have redirects yet, so let's sleep for a very long time.. then print generic message.
+    setTimeout(() => {  alert("Paid!");  }, 10**20);
 }
 
 function load_qr(payment_uuid) {
