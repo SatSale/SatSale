@@ -47,8 +47,10 @@ if not os.path.exists("database.db"):
 # This is currently a donation page that submits to /pay
 @app.route("/")
 def index():
+    params = dict(request.args)
+    params["currency"] = config.base_currency
     headers = {"Content-Type": "text/html"}
-    return make_response(render_template("donate.html"), 200, headers)
+    return make_response(render_template("donate.html", params=params), 200, headers)
 
 
 # /pay is the main page for initiating a payment, takes a GET request with ?amount=
@@ -57,6 +59,7 @@ def pay():
     params = dict(request.args)
     params["lnd_enabled"] = config.pay_method == "lnd"
     params["redirect"] = config.redirect
+    params["currency"] = config.base_currency
     # Render payment page with the request arguments (?amount= etc.)
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("index.html", params=params), 200, headers)
@@ -102,7 +105,8 @@ status_model = api.model(
 
 @api.doc(
     params={
-        "amount": "An amount in `config.base_currecy`.",
+        "amount": "An amount in `config.base_currency`.",
+        "currency": "Currency code `config.base_currency`",
         "method": "(Optional) Specify a payment method: `bitcoind` for onchain, `lnd` for lightning).",
         "w_url": "(Optional) Specify a webhook url to call after successful payment. Currently only supports WooCommerce plugin.",
     }
