@@ -113,7 +113,7 @@ class create_payment(Resource):
     def get(self):
         "Create Payment"
         """Initiate a new payment with an `amount` in `config.base_currecy`."""
-        fiat_amount = request.args.get("amount")
+        base_amount = request.args.get("amount")
         currency = config.base_currency
         label = ""  # request.args.get('label')
         payment_method = request.args.get("method")
@@ -134,8 +134,8 @@ class create_payment(Resource):
 
         invoice = {
             "uuid": str(uuid.uuid4().hex),
-            "fiat_value": fiat_amount,
-            "btc_value": round(get_btc_value(fiat_amount, currency), 8),
+            "fiat_value": base_amount,
+            "btc_value": round(get_btc_value(base_amount, currency), 8),
             "method": payment_method,
             "time": time.time(),
             "webhook": webhook,
