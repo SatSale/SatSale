@@ -59,7 +59,6 @@ def pay():
     params = dict(request.args)
     params["lnd_enabled"] = config.pay_method == "lnd"
     params["redirect"] = config.redirect
-    params["currency"] = config.base_currency
     # Render payment page with the request arguments (?amount= etc.)
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("index.html", params=params), 200, headers)

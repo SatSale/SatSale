@@ -1,27 +1,33 @@
 import requests
+
 import config
 
 
-def get_price(currency):
-
-    # Define some currency_provider-specific settings 
-    if config.currency_provider == "COINDESK":
-        price_feed  = "https://api.coindesk.com/v1/bpi/currentprice.json"  # url to get the pricefeed 
-        result_root = "bpi"               # name of the outer json tag
-        value_attribute   = "rate_float"  # attribute in which the float fx is located in json reposnse
-        ticker      = currency.upper()                     
+def get_currency_provider(currency, currency_provider):
+    # Define some currency_provider-specific settings
+    if currency_provider == "COINDESK":
+        return {
+            "price_feed": "https://api.coindesk.com/v1/bpi/currentprice.json",
+            "result_root": "bpi",
+            "value_attribute": "rate_float",
+            "ticker": currency.upper(),
+        }
     else:
-        price_feed  = "https://api.coingecko.com/api/v3/exchange_rates"
-        result_root = "rates"         # name of the outer json tag
-        value_attribute   = "value"   # attribute in which the float fx is located in json reposnse
-        ticker      = currency.lower() 
+        return {
+            "price_feed": "https://api.coingecko.com/api/v3/exchange_rates",
+            "result_root": "rates",
+            "value_attribute": "value",
+            "ticker": currency.lower(),
+        }
 
-    r = requests.get(price_feed)
 
+def get_price(currency, currency_provider=config.currency_provider):
+    provider = get_currency_provider(currency, currency_provider)
     for i in range(config.connection_attempts):
         try:
+            r = requests.get(provider["price_feed"])
             price_data = r.json()
-            prices = price_data[result_root]
+            prices = price_data[provider["result_root"]]
             break
 
         except Exception as e:
@@ -34,7 +40,7 @@ def get_price(currency):
         raise ("Failed to reach {}.".format(price_feed))
 
     try:
-        price = prices[ticker][value_attribute]
+        price = prices[provider["ticker"]][provider["value_attribute"]]
         return price
 
     except:
@@ -44,8 +50,8 @@ def get_price(currency):
 
 def get_btc_value(base_amount, currency):
     price = get_price(currency)
-    
-    if price:
+
+    if price is not None:
         try:
             float_value = float(base_amount) / float(price)
             if not isinstance(float_value, float):
