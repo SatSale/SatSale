@@ -66,8 +66,8 @@ connection_attempts = 3
 
 # Generic redirect url after payment
 redirect = "https://github.com/nickfarrow/satsale"
-#Currency and exchange rate provider
 
+# Currency and exchange rate provider
 base_currency = "USD"
 currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
 
