@@ -66,6 +66,10 @@ connection_attempts = 3
 
 # Generic redirect url after payment
 redirect = "https://github.com/nickfarrow/satsale"
+#Currency and exchange rate provider
+
+base_currency = "USD"
+currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
 
 # Lightning Address e.g. name@you.satsale.domain (think this requires https url)
 lightning_address = None
@@ -81,6 +85,3 @@ liquid_address = None
 # BE CONSIDERED AS PAID.
 free_mode = False
 
-#Currency and exchange rate provider
-base_currency = "USD"
-currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
