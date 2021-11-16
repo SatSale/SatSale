@@ -1,6 +1,7 @@
 *.macaroon
 *.cert
 config.py
+config.txt
 __pycache__/
 gateways/__pycache__/
 invoice/__pycache__/
