@@ -47,8 +47,10 @@ if not os.path.exists("database.db"):
 # This is currently a donation page that submits to /pay
 @app.route("/")
 def index():
+    params = dict(request.args)
+    params["currency"] = config.base_currency
     headers = {"Content-Type": "text/html"}
-    return make_response(render_template("donate.html"), 200, headers)
+    return make_response(render_template("donate.html", params=params), 200, headers)
 
 
 # /pay is the main page for initiating a payment, takes a GET request with ?amount=
@@ -79,7 +81,7 @@ invoice_model = api.model(
     "invoice",
     {
         "uuid": fields.String(),
-        "dollar_value": fields.Float(),
+        "fiat_value": fields.Float(),
         "btc_value": fields.Float(),
         "method": fields.String(),
         "address": fields.String(),
@@ -102,7 +104,7 @@ status_model = api.model(
 
 @api.doc(
     params={
-        "amount": "An amount in USD.",
+        "amount": "An amount in `config.base_currency`.",
         "method": "(Optional) Specify a payment method: `bitcoind` for onchain, `lnd` for lightning).",
         "w_url": "(Optional) Specify a webhook url to call after successful payment. Currently only supports WooCommerce plugin.",
     }
@@ -112,9 +114,9 @@ class create_payment(Resource):
     @api.response(400, "Invalid payment method")
     def get(self):
         "Create Payment"
-        """Initiate a new payment with an `amount` in USD."""
-        dollar_amount = request.args.get("amount")
-        currency = "USD"
+        """Initiate a new payment with an `amount` in `config.base_currecy`."""
+        base_amount = request.args.get("amount")
+        currency = config.base_currency
         label = ""  # request.args.get('label')
         payment_method = request.args.get("method")
         if payment_method is None:
@@ -134,8 +136,8 @@ class create_payment(Resource):
 
         invoice = {
             "uuid": str(uuid.uuid4().hex),
-            "dollar_value": dollar_amount,
-            "btc_value": round(get_btc_value(dollar_amount, currency), 8),
+            "fiat_value": base_amount,
+            "btc_value": round(get_btc_value(base_amount, currency), 8),
             "method": payment_method,
             "time": time.time(),
             "webhook": webhook,
