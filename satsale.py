@@ -105,7 +105,6 @@ status_model = api.model(
 @api.doc(
     params={
         "amount": "An amount in `config.base_currency`.",
-        "currency": "Currency code `config.base_currency`",
         "method": "(Optional) Specify a payment method: `bitcoind` for onchain, `lnd` for lightning).",
         "w_url": "(Optional) Specify a webhook url to call after successful payment. Currently only supports WooCommerce plugin.",
     }
