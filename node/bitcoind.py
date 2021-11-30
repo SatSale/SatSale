@@ -51,15 +51,15 @@ class btcd(lnd):
         else:
             transactions = transactions_req['transactions']
 
-
-        relevant_txs = [tx for tx in transactions if address in tx["dest_addresses"]]
+        print(transactions)
+        relevant_txs = [tx for tx in transactions if address in tx["destAddresses"]]
 
         conf_paid = 0
         unconf_paid = 0
         for tx in relevant_txs:
 
-            if "num_confirmations" in tx.keys():
-                if tx["num_confirmations"] >= config.required_confirmations:
+            if "numConfirmations" in tx.keys():
+                if tx["numConfirmations"] >= config.required_confirmations:
                     conf_paid += float(tx["amount"]) * 10**-8
                 else:
                     unconf_paid += float(tx["amount"]) * 10**-8
