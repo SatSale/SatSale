@@ -24,7 +24,9 @@ rpcport = os.getenv("BITCOIND_PORT")
 username = os.getenv("BITCOIND_USER")
 password = os.getenv("BITCOIND_PASS")
 
-lnd_dir = os.getenv("LND_DATA_DIR")
+pay_method = "lnd"
+
+lnd_dir = "/lnd"
 lnd_rpcport = os.getenv("LND_GRPC_PORT")
 lnd_macaroon = os.getenv("MACAROON_DIR")
 lnd_cert = os.getenv("TLS_FILE")
@@ -38,7 +40,7 @@ api_key_path = get_opt("api_key_path", "SatSale_API_key")
 tunnel_host = get_opt("tunnel_host", None)
 tor_bitcoinrpc_host = get_opt("tor_bitcoinrpc_host", None)
 tor_proxy = get_opt("tor_proxy", None)
-pay_method = get_opt("pay_method", "bitcoind")
+# pay_method = get_opt("pay_method", "bitcoind")
 # lnd_dir = get_opt("lnd_dir", "~/.lnd/")
 # lnd_rpcport = get_opt("lnd_rpcport", "10009")
 # lnd_macaroon = get_opt("lnd_macaroon", "admin.macaroon")
