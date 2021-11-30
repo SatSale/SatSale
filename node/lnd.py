@@ -38,9 +38,14 @@ class lnd:
                     cert_filepath=self.certs["tls"],
                 )
 
-                print("Getting lnd info...")
-                info = self.lnd.get_info()
-                print(info)
+                if "invoice" in self.certs["macaroon"]:
+                    print("Testing we can fetch invoices...")
+                    inv, _ = self.create_lnd_invoice(1)
+                    print(inv)
+                else:
+                    print("Getting lnd info...")
+                    info = self.lnd.get_info()
+                    print(info)
 
                 print("Successfully contacted lnd.")
                 break
