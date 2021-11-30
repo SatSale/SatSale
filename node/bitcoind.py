@@ -51,7 +51,6 @@ class btcd(lnd):
         else:
             transactions = transactions_req['transactions']
 
-        print(transactions)
         relevant_txs = [tx for tx in transactions if address in tx["destAddresses"]]
 
         conf_paid = 0
