@@ -22,13 +22,14 @@ api_key_path = "SatSale_API_key"
 
 # SSH tunnel to node
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
-# Use host = "127.0.0.1" and you will be able to see your node on 8332
-tunnel_host = None  # "HOST@IP"
+# Combined with host = "127.0.0.1" and you will be able to see your node on 8332
+#tunnel_host = "HOST@IP"
 
 # or tor hidden service for RPC (see docs for how to set up), need onion:
-tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
+#tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
+
 # and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
-tor_proxy = None
+#tor_proxy = None
 
 #### Payment method ####
 pay_method = "bitcoind"
@@ -53,10 +54,10 @@ pay_method = "bitcoind"
 #######################
 
 # Check for payment every xx seconds
-pollrate = 15
+pollrate = 1
 
 # Payment expires after xx seconds
-payment_timeout = 60*60
+payment_timeout = 1800
 
 # Required confirmations for a payment
 required_confirmations = 2
@@ -72,16 +73,15 @@ base_currency = "USD"
 currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
 
 # Lightning Address e.g. name@you.satsale.domain (think this requires https url)
-lightning_address = None
-lightning_address_comment = None # Defaults to: "Thank you for your support <3"
+#lightning_address = None
+#lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
 # Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
 # https://blockstream.com/liquid/
 # Change lnd_macaroon='admin.macaroon', as you will also need to be able to spend with your lnd certificates.
 # This is NOT a trustless swap. Exchange is carried out using sideshift.ai, you bear all associated exchange risks.
-liquid_address = None
+#liquid_address = None
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
-free_mode = False
-
+free_mode = false

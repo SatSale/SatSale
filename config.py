@@ -1,7 +1,7 @@
 import sys
 import toml
 
-conf_path = "config.txt"
+conf_path = "config.toml"
 
 with open(conf_path, "r") as config_file:
     config = toml.load(config_file)
@@ -25,7 +25,6 @@ pay_method = get_opt("pay_method", "bitcoind")
 lnd_dir = get_opt("lnd_dir", "~/.lnd/")
 lnd_rpcport = get_opt("lnd_rpcport", "10009")
 lnd_macaroon = get_opt("lnd_macaroon", "admin.macaroon")
-pay_method = get_opt("pay_method", "clightning")
 clightning_rpc_file = get_opt("clightning_rpc_file", "/home/user/.lightning/lightning-rpc")
 pollrate = get_opt("pollrate", 15)
 payment_timeout = get_opt("payment_timeout", 60*60)
