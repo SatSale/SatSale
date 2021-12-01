@@ -114,13 +114,23 @@ Similarly, for lightning, use an `invoice.macaroon` not `admin.macaroon` unless 
 Currently we have a plugin for Woocommerce in Wordpress that makes Bitcoin webstores extremely easy, [please click here for installation instructions](docs/woocommerce.md). SatSale acts as a custom payment gateway for Woocommerce via the php plugin found in `/gateways`. We have plans to extend to other web stores in the future.
 
 # Updating
-When updating you want to you keep your config file changes but also receive new config options so it is often easiest to:
+When updating we recommend to first backup your config:
+```
+cp config.toml bk_config.toml
+
+# (previously)
+cp config.py bk_config.py
+```
+then stash your changes:
 ```
 git stash
 git pull origin master
 git stash pop
 ```
+We're still in early development, so things are changing a lot. You may have to resolve changes or manually migrate to the `.toml` (if you used an earlier version of SatSale with the `.py` config.)
+
 You can also just make commits to your modified fork.
+
 
 # Docs
 * Basic [API docs](https://satsale.org/docs.html)
