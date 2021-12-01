@@ -4,25 +4,11 @@ import toml
 
 for i, arg in enumerate(sys.argv):
     if arg == "--conf":
+        print("Using config file {}".format(sys.argv[i+1]))
         conf_path = sys.argv[i+1]
         break
 else:
     conf_path = "config.toml"
-
-# if len(sys.argv) > 1:
-#     if sys.argv[1] == "--conf":
-#         if len(sys.argv) == 3:
-#             conf_path = sys.argv[2]
-#         else:
-#             print("Invalid number of arguments, only --conf FILE is supported now", file=sys.stderr)
-#             sys.exit(1)
-#     else:
-#         print(sys.argv)
-#         print("Unknown argument, only --conf FILE is supported now", file=sys.stderr)
-#         sys.exit(1)
-# else:
-#     conf_path = "config.toml"
-
 
 with open(conf_path, "r") as config_file:
     config = toml.load(config_file)
@@ -52,6 +38,8 @@ payment_timeout = get_opt("payment_timeout", 60*60)
 required_confirmations = get_opt("required_confirmations", 2)
 connection_attempts = get_opt("connection_attempts", 3)
 redirect = get_opt("redirect", "https://github.com/nickfarrow/satsale")
+base_currency = get_opt("base_currency", "USD")
+currency_provider = get_opt("currency_provider", "COINGECKO")
 lightning_address = get_opt("lightning_address", None)
 lightning_address_comment = get_opt("lightning_address_comment", None)
 liquid_address = get_opt("liquid_address", None)
