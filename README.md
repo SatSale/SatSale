@@ -59,7 +59,7 @@ cd SatSale/
 pip3 install -r requirements.txt
 ```
 ### Connect to your Bitcoin Node
-Edit the `config.py` configuration and point to your Bitcoin node:
+Edit the `config.toml` configuration and point to your Bitcoin node:
 ```python
 host = "127.0.0.1"
 rpcport = "8332"
