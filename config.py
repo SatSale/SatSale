@@ -1,7 +1,28 @@
 import sys
 import toml
 
-conf_path = "config.toml"
+
+for i, arg in enumerate(sys.argv):
+    if arg == "--conf":
+        conf_path = sys.argv[i+1]
+        break
+else:
+    conf_path = "config.toml"
+
+# if len(sys.argv) > 1:
+#     if sys.argv[1] == "--conf":
+#         if len(sys.argv) == 3:
+#             conf_path = sys.argv[2]
+#         else:
+#             print("Invalid number of arguments, only --conf FILE is supported now", file=sys.stderr)
+#             sys.exit(1)
+#     else:
+#         print(sys.argv)
+#         print("Unknown argument, only --conf FILE is supported now", file=sys.stderr)
+#         sys.exit(1)
+# else:
+#     conf_path = "config.toml"
+
 
 with open(conf_path, "r") as config_file:
     config = toml.load(config_file)
