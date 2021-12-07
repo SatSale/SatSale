@@ -71,11 +71,11 @@ if config.tunnel_host is not None:
     tunnel_proc = open_tunnel(config.tunnel_host, config.rpcport)
 
     # Also for lnd if enabled
-    if "lnd_rpcport" in config.__dict__.keys():
+    if config.lnd_rpcport is not None:
         open_tunnel(config.tunnel_host, config.lnd_rpcport)
 
     # And if clightning is enabled
-    if "clightning_rpc_file" in config.__dict__.keys():
+    if config.clightning_rpc_file is not None:
         clightning_unix_domain_socket_ssh()
 
     time.sleep(2)
