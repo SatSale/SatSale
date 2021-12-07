@@ -14,7 +14,7 @@ then
 sudo systemctl restart tor
 cat /var/lib/tor/node_rpc/hostname
 ```
-to get the onion URL for your tor hidden service. Add this in `config.py` like `tor_bitcoinrpc_host = "http://u7...bid.onion"`
+to get the onion URL for your tor hidden service. Add this in `config.toml` like `tor_bitcoinrpc_host = "http://u7...bid.onion"`
 
 On your SatSale machine, install tor and in `/etc/tor/torrc` (thanks @x_y:matrix.org):
 ```

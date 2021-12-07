@@ -6,7 +6,7 @@ If installing the python library lndgrpc requirement failed, see this [solution]
 
 
 ## LND
-To use lightning, you need to change your `pay_method` in `config.py`, and set your lightning directory on your node.
+To use lightning, you need to change your `pay_method` in `config.toml`, and set your lightning directory on your node.
 ```python
 pay_method = "lnd"
 lnd_dir = "~/.lnd/"
@@ -15,7 +15,7 @@ lnd_rpcport = "10009"
 
 
 ## clightning
-To use lightning, you need to change your `pay_method` in `config.py`, and set your lightning directory on your node.
+To use lightning, you need to change your `pay_method` in `config.toml`, and set your lightning directory on your node.
 ```python
 pay_method = "clightning"
 # If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`

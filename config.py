@@ -1,87 +1,46 @@
-# SatSale needs to connect to your bitcoin/lnd node,
-# with the correct RPC port(s) as set in this config.
-
-# Connecting through local host (see below if connecting to remote node):
-host = "127.0.0.1"
-rpcport = "8332"
-
-# From ~/.bitcoin/bitcoin.conf
-username = "bitcoinrpc"
-password = "rpcpassword"
-
-# Wallet (empty "" if your node has a single wallet, OR wallet name/path as shown in `biitcoin-cli listwallets`)
-wallet = ""
-
-# File in which API key will be stored
-api_key_path = "SatSale_API_key"
+import sys
+import toml
 
 
-#### Connect To Remote Node ####
-# Can use SSH or TOR
-# to tunnel/relay ports required to talk to the node via RPC (gRPC for lightning)
+for i, arg in enumerate(sys.argv):
+    if arg == "--conf":
+        print("Using config file {}".format(sys.argv[i+1]))
+        conf_path = sys.argv[i+1]
+        break
+else:
+    conf_path = "config.toml"
 
-# SSH tunnel to node
-# Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
-# Use host = "127.0.0.1" and you will be able to see your node on 8332
-tunnel_host = None  # "HOST@IP"
+with open(conf_path, "r") as config_file:
+    config = toml.load(config_file)
 
-# or tor hidden service for RPC (see docs for how to set up), need onion:
-tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
-# and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
-tor_proxy = None
+def get_opt(name, default):
+    if name in config:
+        return config[name]
+    else:
+        return default
 
-#### Payment method ####
-pay_method = "bitcoind"
-
-## Lightning 
-# Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
-#pay_method = "lnd"
-
-# To find (or copy from remote nodes) the macaroon and TLS certs
-#lnd_dir = "~/.lnd/"
-
-# lnd RPC port and lnd macaroon (uncomment)
-#lnd_rpcport = "10009"
-#lnd_macaroon = "invoice.macaroon"
-
-# Or clightning
-#pay_method = "clightning"
-
-# If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
-# creates a lightning-rpc unix domain socket
-#clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
-#######################
-
-# Check for payment every xx seconds
-pollrate = 15
-
-# Payment expires after xx seconds
-payment_timeout = 60*60
-
-# Required confirmations for a payment
-required_confirmations = 2
-
-# Global connection attempts
-connection_attempts = 3
-
-# Generic redirect url after payment
-redirect = "https://github.com/nickfarrow/satsale"
-
-# Currency and exchange rate provider
-base_currency = "USD"
-currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
-
-# Lightning Address e.g. name@you.satsale.domain (think this requires https url)
-lightning_address = None
-lightning_address_comment = None # Defaults to: "Thank you for your support <3"
-
-# Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
-# https://blockstream.com/liquid/
-# Change lnd_macaroon='admin.macaroon', as you will also need to be able to spend with your lnd certificates.
-# This is NOT a trustless swap. Exchange is carried out using sideshift.ai, you bear all associated exchange risks.
-liquid_address = None
-
-# DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
-# BE CONSIDERED AS PAID.
-free_mode = False
-
+host = get_opt("host", "127.0.0.1")
+rpcport = get_opt("rpcport", "8332")
+username = get_opt("username", "bitcoinrpc")
+password = get_opt("password", "rpcpassword")
+wallet = get_opt("wallet", "")
+api_key_path = get_opt("api_key_path", "SatSale_API_key")
+tunnel_host = get_opt("tunnel_host", None)
+tor_bitcoinrpc_host = get_opt("tor_bitcoinrpc_host", None)
+tor_proxy = get_opt("tor_proxy", None)
+pay_method = get_opt("pay_method", "bitcoind")
+lnd_dir = get_opt("lnd_dir", "~/.lnd/")
+lnd_rpcport = get_opt("lnd_rpcport", "10009")
+lnd_macaroon = get_opt("lnd_macaroon", "admin.macaroon")
+clightning_rpc_file = get_opt("clightning_rpc_file", "/home/user/.lightning/lightning-rpc")
+pollrate = get_opt("pollrate", 15)
+payment_timeout = get_opt("payment_timeout", 60*60)
+required_confirmations = get_opt("required_confirmations", 2)
+connection_attempts = get_opt("connection_attempts", 3)
+redirect = get_opt("redirect", "https://github.com/nickfarrow/satsale")
+base_currency = get_opt("base_currency", "USD")
+currency_provider = get_opt("currency_provider", "COINGECKO")
+lightning_address = get_opt("lightning_address", None)
+lightning_address_comment = get_opt("lightning_address_comment", None)
+liquid_address = get_opt("liquid_address", None)
+free_mode = get_opt("free_mode", False)

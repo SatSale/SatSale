@@ -9,7 +9,7 @@ protobuf==3.19.1
 flask_restplus==0.13.0
 Werkzeug==0.16.1
 PySocks==1.7.1
-
+toml==0.10.2
 
 # For lightning (optional)
 setuptools==50.3.2
