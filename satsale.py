@@ -259,6 +259,9 @@ def check_payment_status(uuid):
         else:
             conf_paid, unconf_paid = node.check_payment(invoice["address"])
 
+        # Remove any Decimal types
+        conf_paid, unconf_paid = float(conf_paid), float(unconf_paid)
+
         # Debugging and demo mode which auto confirms payments after 5 seconds
         dbg_free_mode_cond = config.free_mode and (time.time() - invoice["time"] > 5)
 
