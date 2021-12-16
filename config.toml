@@ -57,7 +57,7 @@ pay_method = "bitcoind"
 pollrate = 1
 
 # Payment expires after xx seconds
-payment_timeout = 1800
+payment_timeout = 3600
 
 # Required confirmations for a payment
 required_confirmations = 2
