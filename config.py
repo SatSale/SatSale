@@ -19,16 +19,14 @@ def get_opt(name, default):
     else:
         return default
 
-host = os.getenv("BITCOIND_HOST")
-rpcport = os.getenv("BITCOIND_PORT")
-username = os.getenv("BITCOIND_USER")
-password = os.getenv("BITCOIND_PASS")
+host = os.getenv("LND_HOST")
+rpcport = os.getenv("LND_GLND_PORT")
 
 pay_method = "lnd"
 
 lnd_dir = "/lnd"
 lnd_rpcport = os.getenv("LND_GRPC_PORT")
-lnd_macaroon = os.getenv("MACAROON_DIR")
+lnd_macaroon = os.getenv("MACAROON_FILE")
 lnd_cert = os.getenv("TLS_FILE")
 
 # host = get_opt("host", "127.0.0.1")
