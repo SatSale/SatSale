@@ -87,6 +87,7 @@ currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
 
 # Paynym - Display your paynym on your SatSale donation page
 #paynym = "+royalcell593"
+point_of_sale = true
 
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
