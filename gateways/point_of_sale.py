@@ -4,6 +4,8 @@ import time
 import os
 import csv
 
+password = "moneyprintergobrrr"
+
 # Load an API key
 if os.path.exists("SatSale_API_key"):
     with open("SatSale_API_key", "r") as f:
@@ -29,8 +31,15 @@ def save_items(items, file="static/store.csv"):
                 continue
     return
 
+def password_prompt(message):
+    return f'''
+    <form action="/admin" method='post'>
+    <label for="password">{message}:</label><br>
+    <input type="password" id="password" name="password" value=""><br>
+    <input type="submit" value="Submit">
+    </form>'''
 
-def add_webstore_decorators(app, file="static/store.csv"):
+def add_decorators(app, file="static/store.csv"):
     if not os.path.exists(file):
         app.items = [["Roosters", 5, "https://img.jakpost.net/c/2020/08/18/2020_08_18_102621_1597723826._large.jpg"], ['Apples', 2, None], ['Pizza', 5, None]]
         save_items(app.items, file)
@@ -42,10 +51,15 @@ def add_webstore_decorators(app, file="static/store.csv"):
         # Render store page
         return render_template("store.html", params=app.items)
 
-    @app.route("/admin")
-    def admin():
-        # Render store admin page
-        return render_template("admin.html", params=app.items)
+    @app.route('/admin', methods=['GET', 'POST'])
+    def admin_login():
+        if request.method == 'GET':
+            return password_prompt("Admin password:")
+        elif request.method == 'POST':
+            if request.form['password'] != password:
+                return password_prompt("Invalid password, try again. Admin password:")
+            else:
+                return render_template("admin.html", params=app.items)
 
     @app.route("/additem", methods = ['POST'])
     def add_item():
