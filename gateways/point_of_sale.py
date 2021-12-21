@@ -76,7 +76,7 @@ def add_decorators(app, file="static/store.csv"):
                 f = request.files['file']
                 f.save(file)
                 app.items = load_items()
-                return redirect("/admin")
+                return redirect("/store")
 
 
     return app

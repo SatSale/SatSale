@@ -25,23 +25,21 @@
                 <h1 style="margin-bottom:0px;">SatSale Admin</h1>
             </div>
             <div id="right">
-                <a id="qrClick" target="_blank"><img class="logo" id="qrImage" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
+                <a class="logo" target="_blank"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
             </div>
         </div>
 
         <div id="row">
             <div id="left">
                 <h3 style="margin-bottom:0px;"><a href="{{ url_for('static', filename='store.csv') }}">Download Existing Store<a></h3>
-                <h3 style="margin-bottom:0px;">Upload New Items</h3>
+                <h3 style="margin-bottom:0px;">Upload New Item Spreadsheet</h3>
                 <form action= "/uploader" method = "POST" enctype = "multipart/form-data">
                    <input class="button button1" style="color:blue; background-color:white;float:left;width:250px" type="file" name="file" />
                     </br>
                     </br>
                     </br>
                     </br>
-                    <input type="password" name="pass" placeholder="SatSale API Key: a38b2c7f..." id="search"/>
-                    </br>
-                    </br>
+                    <input type="password" name="pass" style="float:left;" placeholder="Admin Password" id="search"/>
                     </br>
                     </br>
                    <input class="button button1" style="color:black; background-color:orange;float:left;width:100px" type="submit"/>
@@ -57,17 +55,16 @@
                         </br>
                         <input type="text" name="itemURL" placeholder="Image URL (optional)" id="search"/>
                         </br>
-                        <input type="password" name="pass" placeholder="SatSale API Key: a38b2c7f..." id="search"/>
+                        <input type="password" name="pass" placeholder="Admin Password" id="search"/>
                         </br>
                         <input type="submit" class="button button1" style="color:black; background-color:orange;float:left;width:100px"/>
                         </br>
                    </form>
             </div>
         </div>
-        <div id="right" style="text-align: right; padding: 10px 10px;">
+        <div id="right" style="text-align: right; padding: 10px 20px;">
             <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank">SatSale</a></small>
         </div>
-
     </div>
 </body>
 </html>
