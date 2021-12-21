@@ -253,11 +253,9 @@ def check_payment_status(uuid):
         node = get_node(invoice["method"])
         if invoice["method"] == "lnd":
             conf_paid, unconf_paid = node.check_payment(invoice["rhash"])
-        elif invoice["method"] == "clightning":
-            # Lookup clightning invoice based on label (uuid)
-            conf_paid, unconf_paid = node.check_payment(invoice["uuid"])
         else:
-            conf_paid, unconf_paid = node.check_payment(invoice["address"])
+            # Lookup bitcoind / clightning invoice based on label (uuid)
+            conf_paid, unconf_paid = node.check_payment(invoice["uuid"])
 
         # Remove any Decimal types
         conf_paid, unconf_paid = float(conf_paid), float(unconf_paid)
