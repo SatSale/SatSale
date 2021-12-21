@@ -58,6 +58,7 @@ def index():
 def pay():
     params = dict(request.args)
     params["lnd_enabled"] = config.pay_method == "lnd"
+    params["cln_enabled"] = config.pay_method == "clightning"
     params["redirect"] = config.redirect
     # Render payment page with the request arguments (?amount= etc.)
     headers = {"Content-Type": "text/html"}
