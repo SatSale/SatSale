@@ -4,13 +4,10 @@ import time
 import os
 import csv
 
-password = "moneyprintergobrrr"
-
-# Load an API key
-if os.path.exists("SatSale_API_key"):
+PASSWORD = os.getenv("APP_PASSWORD")
+if PASSWORD == "" or PASSWORD is None:
     with open("SatSale_API_key", "r") as f:
-        SEC_KEY = f.read().strip()
-
+            PASSWORD = f.read().strip()
 
 def load_items(file="static/store.csv"):
     items = []
@@ -32,12 +29,7 @@ def save_items(items, file="static/store.csv"):
     return
 
 def password_prompt(message):
-    return f'''
-    <form action="/admin" method='post'>
-    <label for="password">{message}:</label><br>
-    <input type="password" id="password" name="password" value=""><br>
-    <input type="submit" value="Submit">
-    </form>'''
+    return render_template("auth.html", message=message)
 
 def add_decorators(app, file="static/store.csv"):
     if not os.path.exists(file):
@@ -56,7 +48,7 @@ def add_decorators(app, file="static/store.csv"):
         if request.method == 'GET':
             return password_prompt("Admin password:")
         elif request.method == 'POST':
-            if request.form['password'] != password:
+            if request.form['password'] != PASSWORD:
                 return password_prompt("Invalid password, try again. Admin password:")
             else:
                 return render_template("admin.html", params=app.items)
@@ -64,9 +56,8 @@ def add_decorators(app, file="static/store.csv"):
     @app.route("/additem", methods = ['POST'])
     def add_item():
         params = dict(request.form)
-        print(params)
         if request.method == 'POST':
-            if params['pass'] != SEC_KEY:
+            if params['pass'] != PASSWORD:
                 return "Incorrect password."
             else:
                 print(params)
@@ -78,9 +69,8 @@ def add_decorators(app, file="static/store.csv"):
     @app.route('/uploader', methods = ['POST'])
     def upload_file(file="static/store.csv"):
         params = dict(request.form)
-        print(params)
         if request.method == 'POST':
-            if params['pass'] != SEC_KEY:
+            if params['pass'] != PASSWORD:
                 return "Incorrect password."
             else:
                 f = request.files['file']
