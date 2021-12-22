@@ -11,7 +11,7 @@ def create_database(name="database.db"):
 
 
 def write_to_database(invoice, name="database.db"):
-    with sqlite3.connect("database.db") as conn:
+    with sqlite3.connect(name) as conn:
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO payments (uuid,fiat_value,btc_value,method,address,time,webhook,rhash) VALUES (?,?,?,?,?,?,?,?)",
@@ -29,13 +29,18 @@ def write_to_database(invoice, name="database.db"):
     return
 
 
-def load_invoice_from_db(uuid):
-    with sqlite3.connect("database.db") as conn:
+def load_invoices_from_db(where, name="database.db"):
+    with sqlite3.connect(name) as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         rows = cur.execute(
-            "select * from payments where uuid='{}'".format(uuid)
+            "SELECT * FROM payments WHERE {}".format(where)
         ).fetchall()
+    return rows
+
+
+def load_invoice_from_db(uuid, name="database.db"):
+    rows = load_invoices_from_db("uuid='{}'".format(uuid), name)
     if len(rows) > 0:
         return [dict(ix) for ix in rows][0]
     else:
