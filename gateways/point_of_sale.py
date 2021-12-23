@@ -33,7 +33,8 @@ def password_prompt(message):
 
 def add_decorators(app, file="static/store.csv"):
     if not os.path.exists(file):
-        app.items = [["Roosters", 5, "https://img.jakpost.net/c/2020/08/18/2020_08_18_102621_1597723826._large.jpg"], ['Apples', 2, None], ['Pizza', 5, None]]
+        # app.items = [["Roosters", 5, "https://img.jakpost.net/c/2020/08/18/2020_08_18_102621_1597723826._large.jpg"], ['Apples', 2, None], ['Pizza', 5, None]]
+        app.items = []
         save_items(app.items, file)
     else:
         app.items = load_items(file)
