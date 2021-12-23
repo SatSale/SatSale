@@ -81,17 +81,16 @@ class btcd:
         img.save("static/qr_codes/{}.png".format(uuid))
         return
 
-    def check_payment(self, address):
+    def check_payment(self, uuid):
         if not self.tor:
-            transactions = self.rpc.listtransactions()
+            transactions = self.rpc.listtransactions(uuid)
         else:
-            transactions = call_tor_bitcoin_rpc("listtransactions", None)["result"]
-
-        relevant_txs = [tx for tx in transactions if tx["address"] == address]
+            transactions = call_tor_bitcoin_rpc("listtransactions",
+                [uuid])["result"]
 
         conf_paid = 0
         unconf_paid = 0
-        for tx in relevant_txs:
+        for tx in transactions:
             if tx["confirmations"] >= config.required_confirmations:
                 conf_paid += tx["amount"]
             else:
