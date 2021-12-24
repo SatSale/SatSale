@@ -4,8 +4,8 @@ html, body {
 
 body {
     /* Background color */
-    background-color: inherit;
-
+    /* background-color: inherit; */
+    background-color: black;
     overflow: hidden;
     font-family: "Lucida Console", "Courier New", monospace;
 }
