@@ -10,14 +10,14 @@ for i, arg in enumerate(sys.argv):
 else:
     conf_path = "config.toml"
 
-with open(conf_path, "r") as config_file:
-    config = toml.load(config_file)
+# with open(conf_path, "r") as config_file:
+#     config = toml.load(config_file)
 
 def get_opt(name, default):
-    if name in config:
-        return config[name]
-    else:
-        return default
+    # if name in config:
+    #     return config[name]
+    # else:
+    return default
 
 host = os.getenv("LND_HOST")
 rpcport = os.getenv("LND_GLND_PORT")
