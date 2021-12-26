@@ -66,7 +66,7 @@ function complete_payment(payment_uuid, payment_data) {
         console.log(payment_completion);
         $('#status').text(payment_completion.message).html();
     });
-    // setTimeout(() => {  window.location.replace('/');  }, 5000);
+    setTimeout(() => {  window.location.replace('/store');  }, 5000);
 }
 
 function load_qr(payment_uuid) {
