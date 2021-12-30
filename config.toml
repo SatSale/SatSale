@@ -82,6 +82,9 @@ currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
 # This is NOT a trustless swap. Exchange is carried out using sideshift.ai, you bear all associated exchange risks.
 #liquid_address = None
 
+# Paynym - Display your paynym on your SatSale donation page
+#paynym = "+royalcell593"
+
 # DO NOT CHANGE THIS TO TRUE UNLESS YOU WANT ALL PAYMENTS TO AUTOMATICALLY
 # BE CONSIDERED AS PAID.
 free_mode = false
