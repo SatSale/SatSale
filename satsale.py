@@ -16,6 +16,7 @@ from pprint import pprint
 import json
 
 from gateways import ssh_tunnel
+from gateways import paynym
 import config
 from payments import database, weakhands
 from payments.price_feed import get_btc_value
@@ -319,6 +320,9 @@ elif config.pay_method == "clightning":
 if config.lightning_address is not None:
     from gateways import lightning_address
     lightning_address.add_ln_address_decorators(app, api, lightning_node)
+
+if config.paynym is not None:
+    paynym.insert_paynym_html(config.paynym)
 
 if __name__ == "__main__":
     app.run(debug=False)
