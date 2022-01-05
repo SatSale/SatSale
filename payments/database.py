@@ -3,7 +3,7 @@ import sqlite3
 
 def create_database(name="database.db"):
     with sqlite3.connect("database.db") as conn:
-        print("Creating new database.db...")
+        logging.info("Creating new database.db...")
         conn.execute(
             "CREATE TABLE payments (uuid TEXT, fiat_value DECIMAL, btc_value DECIMAL, method TEXT, address TEXT, time DECIMAL, webhook TEXT, rhash TEXT)"
         )

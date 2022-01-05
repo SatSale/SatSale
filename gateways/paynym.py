@@ -1,4 +1,5 @@
 import requests
+import logging
 
 paynym_site = "https://paynym.is/"
 
@@ -21,14 +22,14 @@ def insert_paynym_html(nym):
         donate_html = f.read()
 
     if 'class="paynym"' in donate_html:
-        print("Found existing paynym HTML in donate.html.")
+        logging.info("Found existing paynym HTML in donate.html.")
         return
 
     payment_code = get_paynym(nym)
     avatar_url = paynym_site + "{}/avatar".format(payment_code)
     codeimage_url = paynym_site + "{}/codeimage".format(payment_code)
 
-    print("Fetching paynym images...")
+    logging.info("Fetching paynym images...")
 
     avatar_data = requests.get(avatar_url).content
     with open("static/avatar.png", "wb") as f:
@@ -93,6 +94,6 @@ def insert_paynym_html(nym):
     with open(donate_file, "w") as f:
         f.write(modified_html)
 
-    print("Wrote donate.html with paynym tags")
+    logging.info("Wrote donate.html with paynym tags")
 
     return

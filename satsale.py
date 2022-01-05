@@ -14,6 +14,7 @@ import uuid
 import sqlite3
 from pprint import pprint
 import json
+import logging
 
 from gateways import ssh_tunnel
 from gateways import paynym
@@ -26,6 +27,10 @@ from node import clightning
 
 from gateways import woo_webhook
 
+logging.basicConfig(format='[%(asctime)s] [%(levelname)s] %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S %z',
+    level=getattr(logging, config.loglevel))
+
 app = Flask(__name__)
 
 # Load a SatSale API key or create a new one
@@ -37,7 +42,7 @@ else:
         app.config["SECRET_KEY"] = os.urandom(64).hex()
         f.write(app.config["SECRET_KEY"])
 
-print("Initialised Flask with secret key: {}".format(app.config["SECRET_KEY"]))
+logging.info("Initialised Flask with secret key: {}".format(app.config["SECRET_KEY"]))
 
 # Create payment database if it does not exist
 if not os.path.exists("database.db"):
@@ -127,13 +132,13 @@ class create_payment(Resource):
         if webhook is None:
             webhook = None
         else:
-            print("Webhook payment: {}".format(webhook))
+            logging.info("Webhook payment: {}".format(webhook))
 
         # Create the payment using one of the connected nodes as a base
         # ready to recieve the invoice.
         node = get_node(payment_method)
         if node is None:
-            print("Invalid payment method {}".format(payment_method))
+            logging.warning("Invalid payment method {}".format(payment_method))
             return {"message": "Invalid payment method."}, 400
 
         invoice = {
@@ -155,7 +160,7 @@ class create_payment(Resource):
         database.write_to_database(invoice)
 
         invoice["time_left"] = config.payment_timeout - (time.time() - invoice["time"])
-        print("Created invoice:")
+        logging.info("Created invoice:")
         pprint(invoice)
         print()
 
@@ -222,17 +227,17 @@ class complete_payment(Resource):
 
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
-            print("Calling webhook {}".format(invoice["webhook"]))
+            logging.info("Calling webhook {}".format(invoice["webhook"]))
             response = woo_webhook.hook(app.config["SECRET_KEY"], invoice, order_id)
 
             if response.status_code != 200:
                 err = "Failed to confirm order payment via webhook {}, please contact the store to ensure the order has been confirmed, error response is: {}".format(
                     response.status_code, response.text
                 )
-                print(err)
+                logging.error(err)
                 return {"message": err}, 500
 
-            print("Successfully confirmed payment via webhook.")
+            logging.info("Successfully confirmed payment via webhook.")
             return {"message": "Payment confirmed with store."}, 200
 
         return {"message": "Payment confirmed."}, 200
@@ -283,7 +288,7 @@ def check_payment_status(uuid):
                 }
             )
 
-    print("Invoice {} status: {}".format(uuid, status))
+    logging.debug("Invoice {} status: {}".format(uuid, status))
     return status
 
 
@@ -306,15 +311,15 @@ api.add_resource(complete_payment, "/api/completepayment")
 
 
 # Test connections on startup:
-print("Connecting to node...")
+logging.info("Connecting to node...")
 bitcoin_node = bitcoind.btcd()
-print("Connection to bitcoin node successful.")
+logging.info("Connection to bitcoin node successful.")
 if config.pay_method == "lnd":
     lightning_node = lnd.lnd()
-    print("Connection to lightning node (lnd) successful.")
+    logging.info("Connection to lightning node (lnd) successful.")
 elif config.pay_method == "clightning":
     lightning_node = clightning.clightning()
-    print("Connection to lightning node (clightning) successful.")
+    logging.info("Connection to lightning node (clightning) successful.")
 
 
 if config.lightning_address is not None:
