@@ -27,9 +27,7 @@
                 <h1 style="margin-bottom:0px;">Checkout</h1>
             </div>
             <div id="right">
-                <!-- <a id="logo" style="display:none" target="_blank"><img width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a> -->
-                <!-- Logo class gets changed to qr via js -->
-                <a id="qrClick" target="_blank"><img class="logo" id="qrImage" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a>
+                <a id="qrClick" target="_blank" rel="noreferrer"><img class="logo" id="qrImage" width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
             </div>
         </div>
 
@@ -115,7 +113,7 @@
             </div>
         </div>
         <div id="right" style="text-align: right; padding: 10px 10px;">
-            <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank" rel=”noreferrer”>SatSale</a></small>
+            <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank" rel="noreferrer">SatSale</a></small>
         </div>
 
     </div>

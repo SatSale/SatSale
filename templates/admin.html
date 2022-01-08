@@ -25,13 +25,13 @@
                 <h1 style="margin-bottom:0px;">SatSale Admin</h1>
             </div>
             <div id="right">
-                <a class="logo" target="_blank"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
+                <a class="logo" target="_blank" rel="noreferrer"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
             </div>
         </div>
 
         <div id="row">
             <div id="left">
-                <h3 style="margin-bottom:0px;"><a href="{{ url_for('static', filename='store.csv') }}">Download Existing Store<a></h3>
+                <h3 style="margin-bottom:0px;"><a href="{{ url_for('static', filename='store.csv') }}" rel="noreferrer">Download Existing Store</a></h3>
                 <h3 style="margin-bottom:0px;">Upload New Item Spreadsheet</h3>
                 <form action= "/uploader" method = "POST" enctype = "multipart/form-data">
                    <input class="button button1" style="color:blue; background-color:white;float:left;width:250px" type="file" name="file" />
@@ -63,7 +63,7 @@
             </div>
         </div>
         <div id="right" style="text-align: right; padding: 10px 20px;">
-            <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank" rel=”noreferrer”>SatSale</a></small>
+            <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank" rel="noreferrer">SatSale</a></small>
         </div>
     </div>
 </body>
