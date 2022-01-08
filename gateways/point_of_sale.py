@@ -32,6 +32,8 @@ def password_prompt(message):
     return render_template("auth.html", message=message)
 
 def add_decorators(app, file="static/store.csv"):
+    app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
+
     if not os.path.exists(file):
         # app.items = [["Roosters", 5, "https://img.jakpost.net/c/2020/08/18/2020_08_18_102621_1597723826._large.jpg"], ['Apples', 2, None], ['Pizza', 5, None]]
         app.items = []
@@ -70,14 +72,13 @@ def add_decorators(app, file="static/store.csv"):
     @app.route('/uploader', methods = ['POST'])
     def upload_file(file="static/store.csv"):
         params = dict(request.form)
+        if params['pass'] != PASSWORD:
+            return "Incorrect password."
         if request.method == 'POST':
-            if params['pass'] != PASSWORD:
-                return "Incorrect password."
-            else:
-                f = request.files['file']
-                f.save(file)
-                app.items = load_items()
-                return redirect("/store")
+            f = request.files['file']
+            f.save(file)
+            app.items = load_items()
+            return redirect("/store")
 
 
     return app
