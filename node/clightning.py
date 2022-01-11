@@ -5,6 +5,7 @@ import os
 import json
 import uuid
 import qrcode
+import logging
 
 
 from payments.price_feed import get_btc_value
@@ -23,20 +24,20 @@ class clightning:
 
         for i in range(config.connection_attempts):
             try:
-                print("Attempting to connect to clightning...")
+                logging.info("Attempting to connect to clightning...")
                 self.clightning = LightningRpc(config.clightning_rpc_file)
 
-                print("Getting clightning info...")
+                logging.info("Getting clightning info...")
                 info = self.clightning.getinfo()
-                print(info)
+                logging.info(info)
 
-                print("Successfully clightning lnd.")
+                logging.info("Successfully clightning lnd.")
                 break
 
             except Exception as e:
-                print(e)
+                logging.error(e)
                 time.sleep(config.pollrate)
-                print(
+                logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts
                     )
@@ -46,7 +47,7 @@ class clightning:
                 "Could not connect to clightning. Check your port tunneling settings and try again."
             )
 
-        print("Ready for payments requests.")
+        logging.info("Ready for payments requests.")
         return
 
     def create_qr(self, uuid, address, value):
@@ -71,7 +72,7 @@ class clightning:
         invoices = self.clightning.listinvoices(uuid)['invoices']
 
         if len(invoices) == 0:
-            print("Could not find invoice on node. Something's wrong.")
+            logging.error("Could not find invoice on node. Something's wrong.")
             return 0, 0
 
         invoice = invoices[0]
