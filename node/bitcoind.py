@@ -2,6 +2,7 @@ import time
 import uuid
 import qrcode
 import json
+import logging
 
 import config
 from payments.price_feed import get_btc_value
@@ -38,10 +39,10 @@ class btcd:
                     config.rpcport,
                     config.wallet,
                 )
-                print("Attempting to connect to Bitcoin node RPC with user {}.".format(config.username))
+                logging.info("Attempting to connect to Bitcoin node RPC with user {}.".format(config.username))
             else:
                 self.tor = True
-                print(
+                logging.info(
                     "Attempting to contact bitcoind rpc tor hidden service: {}:{}".format(
                         config.tor_bitcoinrpc_host, config.rpcport
                     )
@@ -56,14 +57,14 @@ class btcd:
                 else:
                     info = call_tor_bitcoin_rpc("getblockchaininfo", None)
 
-                print(info)
-                print("Successfully contacted bitcoind.")
+                logging.info(info)
+                logging.info("Successfully contacted bitcoind.")
                 break
 
             except Exception as e:
-                print(e)
+                logging.error(e)
                 time.sleep(config.pollrate)
-                print(
+                logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts
                     )
@@ -109,13 +110,13 @@ class btcd:
                 return address, None
 
             except Exception as e:
-                print(e)
-                print(
+                logging.error(e)
+                logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts
                     )
                 )
             if config.connection_attempts - i == 1:
-                print("Reconnecting...")
+                logging.info("Reconnecting...")
                 self.__init__()
         return None

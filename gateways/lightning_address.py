@@ -1,6 +1,7 @@
 from flask import request
 from flask_restplus import Resource, Api, Namespace, fields
 import hashlib
+import logging
 
 import config
 
@@ -19,7 +20,7 @@ def add_ln_address_decorators(app, api, node):
     class get_ln_address(Resource):
         def get(self):
             try:
-                print("Someone requested our ln address: {}!".format(config.lightning_address))
+                logging.info("Someone requested our ln address: {}!".format(config.lightning_address))
                 resp = {
                     "callback": "https://{}/lnaddr".format(config.lightning_address.split("@")[1]),
                     "maxSendable": max_sats*10**3,
@@ -30,7 +31,7 @@ def add_ln_address_decorators(app, api, node):
                 return resp
 
             except Exception as e:
-                print(e)
+                logging.error(e)
                 return {"status": "ERROR", "reason": e}
 
 
@@ -43,19 +44,19 @@ def add_ln_address_decorators(app, api, node):
             amount_msats = int(request.args.get("amount"))
             amount_btc = amount_msats / 10**(3+8)
 
-            print("Received payment request from ln address for {} msats...".format(amount_msats))
+            logging.info("Received payment request from ln address for {} msats...".format(amount_msats))
 
             description_hash = hashlib.sha256(metadata.encode()).digest()
 
             try:
                 invoice, _ = node.create_lnd_invoice(amount_btc, memo="lightning address payment", description_hash=description_hash)
-                print("Responding with invoice {}".format(invoice))
+                logging.info("Responding with invoice {}".format(invoice))
                 return {
                     	"pr": invoice,
                     	"routes": []
                     }
             except Exception as e:
-                print(e)
+                logging.error(e)
                 return {"status": "ERROR", "reason": e}
 
 

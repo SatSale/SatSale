@@ -1,4 +1,5 @@
 import requests
+import logging
 
 import config
 
@@ -31,8 +32,8 @@ def get_price(currency, currency_provider=config.currency_provider):
             break
 
         except Exception as e:
-            print(e)
-            print(
+            logging.error(e)
+            logging.info(
                 "Attempting again... {}/{}...".format(i + 1, config.connection_attempts)
             )
 
@@ -44,7 +45,7 @@ def get_price(currency, currency_provider=config.currency_provider):
         return price
 
     except:
-        print("Failed to find currency {} from {}.".format(currency, price_feed))
+        logging.error("Failed to find currency {} from {}.".format(currency, price_feed))
         return None
 
 
@@ -57,7 +58,7 @@ def get_btc_value(base_amount, currency):
             if not isinstance(float_value, float):
                 raise Exception("Fiat value should be a float.")
         except Exception as e:
-            print(e)
+            logging.error(e)
 
         return float_value
 

@@ -65,6 +65,9 @@ required_confirmations = 2
 # Global connection attempts
 connection_attempts = 3
 
+# Console log level (DEBUG, INFO, WARNING, ERROR)
+loglevel = "DEBUG"
+
 # Generic redirect url after payment
 redirect = "https://github.com/nickfarrow/satsale"
 

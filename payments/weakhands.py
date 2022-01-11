@@ -1,4 +1,5 @@
 import requests
+import logging
 
 import config
 
@@ -15,12 +16,12 @@ def get_quote(amount_lnbtc):
         "affiliateId": affiliate,
         "depositAmount": str(amount_lnbtc)
     }
-    print("Getting quote to swap {:.8f} LN-BTC to USDT".format(amount_lnbtc))
+    logging.info("Getting quote to swap {:.8f} LN-BTC to USDT".format(amount_lnbtc))
     resp = requests.post(quote_url, json=quote_data)
 
     if resp.status_code != 201:
-        print("Failed quote request:")
-        print(resp.json())
+        logging.error("Failed quote request:")
+        logging.error(resp.json())
         return False
 
     return resp.json()
@@ -34,20 +35,20 @@ def get_swap(quote, amount_lnbtc, liquid_address):
         "settleAddress": liquid_address,
         "affiliateId": affiliate,
     }
-    print("Creating order to swap {:.8f} LN-BTC to USDT (liquid: {})".format(amount_lnbtc, liquid_address))
+    logging.info("Creating order to swap {:.8f} LN-BTC to USDT (liquid: {})".format(amount_lnbtc, liquid_address))
 
     resp = requests.post(swap_url, json=data)
 
     if resp.status_code != 201:
-        print("Failed to create order:")
-        print(resp.json())
+        logging.error("Failed to create order:")
+        logging.error(resp.json())
         return False
 
     return resp.json()
 
 def pay_swap(node, swap):
     payment_req = swap['depositAddress']['paymentRequest']
-    print("Paying invoice: {}".format(payment_req))
+    logging.info("Paying invoice: {}".format(payment_req))
     node.pay_invoice(payment_req)
     return True
 
@@ -55,18 +56,18 @@ def swap_lnbtc_for_lusdt(node, amount_lnbtc, liquid_address):
     try:
         quote = get_quote(amount_lnbtc)
         if not quote:
-            print("Quote failed, not swapping this order.")
+            logging.error("Quote failed, not swapping this order.")
             return False
 
         swap = get_swap(quote, amount_lnbtc, liquid_address)
         if not swap:
-            print("Creating order failed, not swapping this payment.")
+            logging.error("Creating order failed, not swapping this payment.")
             return False
 
         pay_swap(node, swap)
-        print("Paid invoice! Swapped ")
+        logging.info("Paid invoice! Swapped ")
 
     except Exception as e:
-        print("Error encountered during swap: {}".format(e))
+        logging.error("Error encountered during swap: {}".format(e))
 
     return
