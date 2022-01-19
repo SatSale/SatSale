@@ -31,6 +31,7 @@ from gateways import paynym
 from payments import database, weakhands
 from payments.price_feed import get_btc_value
 from node import bitcoind
+from node import pseudonode
 from node import lnd
 from node import clightning
 from utils import btc_amount_format
@@ -296,6 +297,8 @@ def check_payment_status(uuid):
         elif (node.config['name'] == "bitcoind") or (node.config['name'] == "clightning"):
             # Lookup bitcoind / clightning invoice based on label (uuid)
             conf_paid, unconf_paid = node.check_payment(invoice["uuid"])
+        elif node.config['name'] == "xpub":
+            conf_paid, unconf_paid = node.check_payment(invoice["address"])
 
         # Remove any Decimal types
         conf_paid, unconf_paid = float(conf_paid), float(unconf_paid)
@@ -361,6 +364,11 @@ for method in config.payment_methods:
         lightning_node = clightning.clightning(method)
         logging.info("Connection to lightning node (clightning) successful.")
         enabled_payment_methods.append("lightning")
+
+    elif method['name'] == "xpub":
+        bitcoin_node = xpub.xpub(method)
+        logging.info("Not connecting to any node! Using zpubs and blockexplorer APIs.")
+        enabled_payment_methods.append("onchain")
 
 # Add node connection page
 if config.node_info is not None:

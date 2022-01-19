@@ -53,6 +53,10 @@ for method_name in config['payment_methods']:
         check_set_node_conf("lightning_address", None, method_config)
         check_set_node_conf("lightning_address_comment", None, method_config)
 
+    elif method_name == "xpub":
+        method_config['name'] = "xpub"
+        check_set_node_conf("xpub", None, method_config)
+
     else:
         Exception("Unknown payment method: {}".format(method_name))
 

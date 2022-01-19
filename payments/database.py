@@ -85,3 +85,46 @@ def load_invoice_from_db(uuid, name="database.db"):
         return [dict(ix) for ix in rows][0]
     else:
         return None
+
+
+def check_address_table_exists():
+    with sqlite3.connect("database.db") as conn:
+        exists = conn.execute(
+            f"SELECT name FROM sqlite_master WHERE type='table' AND name='addresses'"
+        ).fetchall()
+        if len(exists) == 0:
+            return False
+
+    return exists
+
+
+def create_address_table():
+    with sqlite3.connect("database.db") as conn:
+        logging.info("Creating new table for generated addresses")
+        conn.execute("CREATE TABLE addresses (n INTEGER, address TEXT)")
+    return
+
+
+def add_generated_address(index, address):
+    with sqlite3.connect("database.db") as conn:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO addresses (n, address) VALUES (?,?)",
+            (
+                index,
+                address,
+            ),
+        )
+    return
+
+
+def get_next_address_index():
+    with sqlite3.connect("database.db") as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        addresses = cur.execute("SELECT * FROM addresses").fetchall()
+
+    if len(addresses) == 0:
+        return 0
+    else:
+        return max([dict(addr)["n"] for addr in addresses]) + 1

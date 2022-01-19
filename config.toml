@@ -1,5 +1,7 @@
 # SatSale Config :: Configure payment nodes and SatSale settings
 payment_methods = ["bitcoind"]
+# SatSale can connect to your own bitcoin/lnd/clightning node, with the correct connection details set in this config.
+# Otherwise, you can just use `payment_method=pseudonode` with an `xpub=...` (found in your wallet) to derive onchain addresses.
 
 ## BITCOIND :: Add "bitcoind" to payment_methods and from ~/.bitcoin/bitcoin.conf
 # use either username / password pair or rpc_cookie_file
@@ -30,6 +32,10 @@ lnd_macaroon = "invoice.macaroon"
 # node_info="uri" (manually) or true (fetch if macaroon has access to `getinfo`)
 [clightning]
 clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
+
+[xpub]
+## XPUB :: Add "xpub" to payment_methods and enter your xpub.
+#xpub = ""
 
 [satsale]
 #### Connect To Remote Node ####
