@@ -10,7 +10,6 @@ import qrcode
 import logging
 
 
-from payments.price_feed import get_btc_value
 import config
 
 
@@ -117,10 +116,9 @@ class lnd:
         return
 
     # Create lightning invoice
-    def create_lnd_invoice(self, btc_amount, memo=None, description_hash=None):
-        # Multiplying by 10^8 to convert to satoshi units
-        sats_amount = int(btc_amount * 10 ** 8)
-        res = self.lnd.add_invoice(value=sats_amount, memo=memo, description_hash=description_hash)
+    def create_lnd_invoice(self, sat_amount, memo=None, description_hash=None):
+        # Multiplying by 10^3 to convert to satoshi units
+        res = self.lnd.add_invoice(value=sat_amount, memo=memo, description_hash=description_hash)
         lnd_invoice = json.loads(MessageToJson(res))
 
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
@@ -148,7 +146,7 @@ class lnd:
             unconf_paid = 0
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = int(invoice_status["amtPaidSat"]) / (10 ** 8)
+            conf_paid = int(invoice_status["amtPaidSat"])
             unconf_paid = 0
 
         return conf_paid, unconf_paid

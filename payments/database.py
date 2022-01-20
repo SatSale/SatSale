@@ -5,7 +5,7 @@ def create_database(name="database.db"):
     with sqlite3.connect("database.db") as conn:
         logging.info("Creating new database.db...")
         conn.execute(
-            "CREATE TABLE payments (uuid TEXT, fiat_value DECIMAL, btc_value DECIMAL, method TEXT, address TEXT, time DECIMAL, webhook TEXT, rhash TEXT)"
+            "CREATE TABLE payments (uuid TEXT, fiat_value DECIMAL, sat_value INTEGER, method TEXT, address TEXT, time DECIMAL, webhook TEXT, rhash TEXT)"
         )
     return
 
@@ -14,11 +14,11 @@ def write_to_database(invoice, name="database.db"):
     with sqlite3.connect(name) as conn:
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO payments (uuid,fiat_value,btc_value,method,address,time,webhook,rhash) VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO payments (uuid,fiat_value,sat_value,method,address,time,webhook,rhash) VALUES (?,?,?,?,?,?,?,?)",
             (
                 invoice["uuid"],
                 invoice["fiat_value"],
-                invoice["btc_value"],
+                invoice["sat_value"],
                 invoice["method"],
                 invoice["address"],
                 invoice["time"],

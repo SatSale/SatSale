@@ -13,9 +13,11 @@ function payment(payment_data) {
             invoice = data.invoice;
             payment_uuid = invoice.uuid;
 
+            var btc_value = (invoice.sat_value / (10**8)).toFixed(8);
+
             $('#address').text(invoice.address).html();
-            $('#amount').text(invoice.btc_value).html();
-            $('#amount_sats').text(Math.round(invoice.btc_value * 10**8)).html();
+            $('#amount').text(btc_value).html();
+            $('#amount_sats').text(invoice.sat_value).html();
             $('#timer').text(Math.round(invoice.time_left)).html();
 
             return payment_uuid

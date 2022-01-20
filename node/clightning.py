@@ -8,7 +8,6 @@ import qrcode
 import logging
 
 
-from payments.price_feed import get_btc_value
 import config
 
 # if False:  # config.tor_clightningrpc_host is not None:
@@ -57,9 +56,9 @@ class clightning:
         return
 
     # Create lightning invoice
-    def create_clightning_invoice(self, btc_amount, label):
-        # Multiplying by 10^8 to convert to satoshi units
-        msats_amount = int(btc_amount * 10 ** (3+8))
+    def create_clightning_invoice(self, sat_amount, label):
+        # Multiplying by 10^3 to convert to satoshi units
+        msats_amount = int(sat_amount * 10 ** (3))
         lnd_invoice = self.clightning.invoice(msats_amount, label, "SatSale-{}".format(label))
         return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
 
@@ -82,7 +81,7 @@ class clightning:
             unconf_paid = 0
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = int(invoice["msatoshi_received"]) / 10**(3+8)
+            conf_paid = int(invoice["msatoshi_received"] / (10**3))
             unconf_paid = 0
 
         return conf_paid, unconf_paid

@@ -63,3 +63,7 @@ def get_btc_value(base_amount, currency):
         return float_value
 
     raise Exception("Failed to get fiat value.")
+
+
+def get_sat_value(base_amount, currency):
+    return int(get_btc_value(base_amount, currency) * 10**8)

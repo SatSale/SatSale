@@ -20,7 +20,7 @@ from gateways import ssh_tunnel
 from gateways import paynym
 import config
 from payments import database, weakhands
-from payments.price_feed import get_btc_value
+from payments.price_feed import get_sat_value
 from node import bitcoind
 from node import lnd
 from node import clightning
@@ -89,7 +89,7 @@ invoice_model = api.model(
     {
         "uuid": fields.String(),
         "fiat_value": fields.Float(),
-        "btc_value": fields.Float(),
+        "sat_value": fields.Float(),
         "method": fields.String(),
         "address": fields.String(),
         "time": fields.Float(),
@@ -144,7 +144,7 @@ class create_payment(Resource):
         invoice = {
             "uuid": str(uuid.uuid4().hex),
             "fiat_value": base_amount,
-            "btc_value": round(get_btc_value(base_amount, currency), 8),
+            "sat_value": get_sat_value(base_amount, currency),
             "method": payment_method,
             "time": time.time(),
             "webhook": webhook,
@@ -152,9 +152,9 @@ class create_payment(Resource):
 
         # Get an address / invoice, and create a QR code
         invoice["address"], invoice["rhash"] = node.get_address(
-            invoice["btc_value"], invoice["uuid"]
+            invoice["sat_value"], invoice["uuid"]
         )
-        node.create_qr(invoice["uuid"], invoice["address"], invoice["btc_value"])
+        node.create_qr(invoice["uuid"], invoice["address"], invoice["sat_value"])
 
         # Save invoice to database
         database.write_to_database(invoice)
@@ -223,7 +223,7 @@ class complete_payment(Resource):
             return {"message": "You havent paid you stingy bastard"}
 
         if (config.liquid_address is not None) and (invoice['method'] in ["lnd", "clightning"]):
-            weakhands.swap_lnbtc_for_lusdt(lightning_node, invoice["btc_value"], config.liquid_address)
+            weakhands.swap_lnbtc_for_lusdt(lightning_node, invoice["sat_value"], config.liquid_address)
 
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
@@ -271,7 +271,7 @@ def check_payment_status(uuid):
         dbg_free_mode_cond = config.free_mode and (time.time() - invoice["time"] > 5)
 
         # If payment is paid
-        if (conf_paid >= invoice["btc_value"]) or dbg_free_mode_cond:
+        if (conf_paid >= invoice["sat_value"]) or dbg_free_mode_cond:
             status.update(
                 {
                     "payment_complete": 1,
