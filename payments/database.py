@@ -1,5 +1,5 @@
 import sqlite3
-
+import logging
 
 def create_database(name="database.db"):
     with sqlite3.connect("database.db") as conn:
