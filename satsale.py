@@ -34,18 +34,18 @@ logging.basicConfig(format='[%(asctime)s] [%(levelname)s] %(message)s',
 app = Flask(__name__)
 
 # Load a SatSale API key or create a new one
-if os.path.exists("SatSale_API_key"):
-    with open("SatSale_API_key", "r") as f:
+if os.path.exists(config.api_key_path):
+    with open(config.api_key_path, "r") as f:
         app.config["SECRET_KEY"] = f.read().strip()
 else:
-    with open("SatSale_API_key", "w") as f:
+    with open(config.api_key_path, "w") as f:
         app.config["SECRET_KEY"] = os.urandom(64).hex()
         f.write(app.config["SECRET_KEY"])
 
 logging.info("Initialised Flask with secret key: {}".format(app.config["SECRET_KEY"]))
 
 # Create payment database if it does not exist
-if not os.path.exists("database.db"):
+if not os.path.exists(config.database):
     database.create_database()
 
 
