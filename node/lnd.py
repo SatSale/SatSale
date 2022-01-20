@@ -148,7 +148,7 @@ class lnd:
             unconf_paid = 0
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = int(invoice_status["amtPaidSat"]) * 10 ** 8
+            conf_paid = int(invoice_status["amtPaidSat"]) / (10 ** 8)
             unconf_paid = 0
 
         return conf_paid, unconf_paid
