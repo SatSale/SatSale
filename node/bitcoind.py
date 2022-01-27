@@ -76,7 +76,7 @@ class btcd:
             )
 
     def create_qr(self, uuid, address, value):
-        qr_str = "{}?amount={}&label={}".format(address.upper(), value, uuid)
+        qr_str = "bitcoin:{}?amount={}&label={}".format(address, value, uuid)
 
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
