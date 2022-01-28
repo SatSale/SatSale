@@ -1,0 +1,30 @@
+{
+  "name": "satsale-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for satsale using cucumberjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DrWalrus1/SatSale.git"
+  },
+  "keywords": [
+    "tests",
+    "e2e",
+    "satsale",
+    "javascript",
+    "bitcoin",
+    "lightning"
+  ],
+  "author": "Luke Lynch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DrWalrus1/SatSale/issues"
+  },
+  "homepage": "https://github.com/DrWalrus1/SatSale#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^8.0.0-rc.2"
+  }
+}
