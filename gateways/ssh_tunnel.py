@@ -31,6 +31,7 @@ def open_tunnel(host, port):
         pass
     return
 
+
 def clightning_unix_domain_socket_ssh(rpc_store_dir=None):
     if rpc_store_dir is None:
         rpc_store_dir = os.getcwd()
@@ -50,7 +51,9 @@ def clightning_unix_domain_socket_ssh(rpc_store_dir=None):
             return tunnel_proc
 
         except Exception as e:
-            logging.error("FAILED TO OPEN UNIX DOMAIN SOCKET OVER SSH. Exception: {}".format(e))
+            logging.error(
+                "FAILED TO OPEN UNIX DOMAIN SOCKET OVER SSH. Exception: {}".format(e)
+            )
             tunnel_proc = None
             pass
 

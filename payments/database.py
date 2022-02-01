@@ -1,6 +1,7 @@
 import sqlite3
 import logging
 
+
 def create_database(name="database.db"):
     with sqlite3.connect("database.db") as conn:
         logging.info("Creating new database.db...")
@@ -33,9 +34,7 @@ def load_invoices_from_db(where, name="database.db"):
     with sqlite3.connect(name) as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
-        rows = cur.execute(
-            "SELECT * FROM payments WHERE {}".format(where)
-        ).fetchall()
+        rows = cur.execute("SELECT * FROM payments WHERE {}".format(where)).fetchall()
     return rows
 
 

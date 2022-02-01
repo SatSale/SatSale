@@ -9,12 +9,13 @@ quote_url = "https://sideshift.ai/api/v1/quotes"
 swap_url = "https://sideshift.ai/api/v1/orders"
 affiliate = "eK590V1Mh"
 
+
 def get_quote(amount_lnbtc):
     quote_data = {
         "depositMethod": "ln",
         "settleMethod": "usdtla",
         "affiliateId": affiliate,
-        "depositAmount": str(amount_lnbtc)
+        "depositAmount": str(amount_lnbtc),
     }
     logging.info("Getting quote to swap {:.8f} LN-BTC to USDT".format(amount_lnbtc))
     resp = requests.post(quote_url, json=quote_data)
@@ -31,11 +32,15 @@ def get_swap(quote, amount_lnbtc, liquid_address):
     swap_url = "https://sideshift.ai/api/orders"
     data = {
         "type": "fixed",
-        "quoteId": quote['id'],
+        "quoteId": quote["id"],
         "settleAddress": liquid_address,
         "affiliateId": affiliate,
     }
-    logging.info("Creating order to swap {:.8f} LN-BTC to USDT (liquid: {})".format(amount_lnbtc, liquid_address))
+    logging.info(
+        "Creating order to swap {:.8f} LN-BTC to USDT (liquid: {})".format(
+            amount_lnbtc, liquid_address
+        )
+    )
 
     resp = requests.post(swap_url, json=data)
 
@@ -46,11 +51,13 @@ def get_swap(quote, amount_lnbtc, liquid_address):
 
     return resp.json()
 
+
 def pay_swap(node, swap):
-    payment_req = swap['depositAddress']['paymentRequest']
+    payment_req = swap["depositAddress"]["paymentRequest"]
     logging.info("Paying invoice: {}".format(payment_req))
     node.pay_invoice(payment_req)
     return True
+
 
 def swap_lnbtc_for_lusdt(node, amount_lnbtc, liquid_address):
     try:

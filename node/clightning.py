@@ -18,6 +18,7 @@ import config
 #
 #     session = None
 
+
 class clightning:
     def __init__(self):
         from pyln.client import LightningRpc
@@ -59,8 +60,10 @@ class clightning:
     # Create lightning invoice
     def create_clightning_invoice(self, btc_amount, label):
         # Multiplying by 10^8 to convert to satoshi units
-        msats_amount = int(btc_amount * 10 ** (3+8))
-        lnd_invoice = self.clightning.invoice(msats_amount, label, "SatSale-{}".format(label))
+        msats_amount = int(btc_amount * 10 ** (3 + 8))
+        lnd_invoice = self.clightning.invoice(
+            msats_amount, label, "SatSale-{}".format(label)
+        )
         return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
 
     def get_address(self, amount, label):
@@ -69,7 +72,7 @@ class clightning:
 
     # Check whether the payment has been paid
     def check_payment(self, uuid):
-        invoices = self.clightning.listinvoices(uuid)['invoices']
+        invoices = self.clightning.listinvoices(uuid)["invoices"]
 
         if len(invoices) == 0:
             logging.error("Could not find invoice on node. Something's wrong.")
@@ -82,7 +85,7 @@ class clightning:
             unconf_paid = 0
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = int(invoice["msatoshi_received"]) / 10**(3+8)
+            conf_paid = int(invoice["msatoshi_received"]) / 10 ** (3 + 8)
             unconf_paid = 0
 
         return conf_paid, unconf_paid
