@@ -27,9 +27,11 @@ from node import clightning
 
 from gateways import woo_webhook
 
-logging.basicConfig(format='[%(asctime)s] [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S %z',
-    level=getattr(logging, config.loglevel))
+logging.basicConfig(
+    format="[%(asctime)s] [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S %z",
+    level=getattr(logging, config.loglevel),
+)
 
 app = Flask(__name__)
 
@@ -222,8 +224,12 @@ class complete_payment(Resource):
         if status["payment_complete"] != 1:
             return {"message": "You havent paid you stingy bastard"}
 
-        if (config.liquid_address is not None) and (invoice['method'] in ["lnd", "clightning"]):
-            weakhands.swap_lnbtc_for_lusdt(lightning_node, invoice["btc_value"], config.liquid_address)
+        if (config.liquid_address is not None) and (
+            invoice["method"] in ["lnd", "clightning"]
+        ):
+            weakhands.swap_lnbtc_for_lusdt(
+                lightning_node, invoice["btc_value"], config.liquid_address
+            )
 
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
@@ -324,6 +330,7 @@ elif config.pay_method == "clightning":
 
 if config.lightning_address is not None:
     from gateways import lightning_address
+
     lightning_address.add_ln_address_decorators(app, api, lightning_node)
 
 if config.paynym is not None:

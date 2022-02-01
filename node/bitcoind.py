@@ -39,7 +39,11 @@ class btcd:
                     config.rpcport,
                     config.wallet,
                 )
-                logging.info("Attempting to connect to Bitcoin node RPC with user {}.".format(config.username))
+                logging.info(
+                    "Attempting to connect to Bitcoin node RPC with user {}.".format(
+                        config.username
+                    )
+                )
             else:
                 self.tor = True
                 logging.info(
@@ -86,8 +90,7 @@ class btcd:
         if not self.tor:
             transactions = self.rpc.listtransactions(uuid)
         else:
-            transactions = call_tor_bitcoin_rpc("listtransactions",
-                [uuid])["result"]
+            transactions = call_tor_bitcoin_rpc("listtransactions", [uuid])["result"]
 
         conf_paid = 0
         unconf_paid = 0

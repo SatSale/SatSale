@@ -45,7 +45,9 @@ def get_price(currency, currency_provider=config.currency_provider):
         return price
 
     except:
-        logging.error("Failed to find currency {} from {}.".format(currency, price_feed))
+        logging.error(
+            "Failed to find currency {} from {}.".format(currency, price_feed)
+        )
         return None
 
 

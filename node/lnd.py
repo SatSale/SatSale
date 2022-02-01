@@ -77,18 +77,23 @@ class lnd:
     def copy_certs(self):
         self.certs = {"tls": "tls.cert", "macaroon": config.lnd_macaroon}
 
-        if (not os.path.isfile("tls.cert")) or (not os.path.isfile(config.lnd_macaroon)):
+        if (not os.path.isfile("tls.cert")) or (
+            not os.path.isfile(config.lnd_macaroon)
+        ):
             try:
                 tls_file = os.path.join(config.lnd_dir, "tls.cert")
                 macaroon_file = os.path.join(
-                    config.lnd_dir, "data/chain/bitcoin/mainnet/{}".format(config.lnd_macaroon)
+                    config.lnd_dir,
+                    "data/chain/bitcoin/mainnet/{}".format(config.lnd_macaroon),
                 )
 
                 # SSH copy
                 if config.tunnel_host is not None:
                     logging.warning(
                         "Could not find tls.cert or {} in SatSale folder. \
-                         Attempting to download from remote lnd directory.".format(config.lnd_macaroon)
+                         Attempting to download from remote lnd directory.".format(
+                            config.lnd_macaroon
+                        )
                     )
 
                     subprocess.run(
@@ -120,7 +125,9 @@ class lnd:
     def create_lnd_invoice(self, btc_amount, memo=None, description_hash=None):
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(btc_amount * 10 ** 8)
-        res = self.lnd.add_invoice(value=sats_amount, memo=memo, description_hash=description_hash)
+        res = self.lnd.add_invoice(
+            value=sats_amount, memo=memo, description_hash=description_hash
+        )
         lnd_invoice = json.loads(MessageToJson(res))
 
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
@@ -131,11 +138,10 @@ class lnd:
 
     def pay_invoice(self, invoice):
         ret = json.loads(
-                MessageToJson(self.lnd.send_payment(invoice, fee_limit_msat=20*1000))
-            )
+            MessageToJson(self.lnd.send_payment(invoice, fee_limit_msat=20 * 1000))
+        )
         logging.info(ret)
         return
-
 
     # Check whether the payment has been paid
     def check_payment(self, rhash):
