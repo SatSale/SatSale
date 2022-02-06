@@ -4,7 +4,7 @@ Flask==1.1.2
 MarkupSafe==1.1.1
 requests==2.26.0
 gunicorn==20.0.4
-Pillow==8.01.1
+Pillow==9.0.0
 protobuf==3.19.1
 flask_restplus==0.13.0
 Werkzeug==0.16.1
