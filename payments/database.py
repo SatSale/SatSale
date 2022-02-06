@@ -30,15 +30,15 @@ def write_to_database(invoice, name="/data/database.db"):
     return
 
 
-def load_invoice_from_db(uuid):
-    with sqlite3.connect("/data/database.db") as conn:
+def load_invoices_from_db(where, name="/data/database.db"):
+    with sqlite3.connect(name) as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         rows = cur.execute("SELECT * FROM payments WHERE {}".format(where)).fetchall()
     return rows
 
 
-def load_invoice_from_db(uuid, name="database.db"):
+def load_invoice_from_db(uuid, name="/data/database.db"):
     rows = load_invoices_from_db("uuid='{}'".format(uuid), name)
     if len(rows) > 0:
         return [dict(ix) for ix in rows][0]

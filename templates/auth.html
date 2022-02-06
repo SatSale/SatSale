@@ -13,6 +13,12 @@
 </head>
 
 
+#search {
+    background-color: black;
+    color: white;
+    font-size: 1.2em;
+}
+
 <body>
     <div id="paybox">
         <div id="row" height="50px">
@@ -25,17 +31,17 @@
         </div>
 
         <div id="paymentForm">
-            <center>
+            <centre>
                 <form action="/admin" method='post'>
                     <label for="password">{{ message }}</label><br>
-                    <input type="password" id="password" name="password" value="">
+                    <input type="password" id="password" name="password" style="background-color:black;color:white;" value="">
                     </br>
                     </br>
                     <input class="button button1" type="submit" value="Submit">
                 </form>
                 </br>
-                <small>(Default is $APP_PASSWORD (Umbrel) or SatSale_API_key)</small>
-            </center>
+                <small>(Umbrel: App Store -> SatSale -> Password. Otherwise: SatSale_API_key)</small>
+            </centre>
         </div>
 
         <div id="paybutton"></div>
