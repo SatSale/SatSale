@@ -40,15 +40,16 @@ class lnd:
                 )
 
                 if "invoice" in self.certs["macaroon"]:
-                    logging.info("Testing we can fetch invoices...")
-                    inv, _ = self.create_lnd_invoice(1)
-                    logging.info(inv)
+                    logging.info("Not checking connection -- avoid mysterious invoices")
+                    # logging.info("Testing we can fetch invoices...")
+                    # inv, _ = self.create_lnd_invoice(1)
+                    # logging.info(inv)
                 else:
                     logging.info("Getting lnd info...")
                     info = self.lnd.get_info()
                     logging.info(info)
 
-                logging.info("Successfully contacted lnd.")
+                # logging.info("Successfully contacted lnd.")
                 break
 
             except Exception as e:
