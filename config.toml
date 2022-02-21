@@ -6,8 +6,10 @@ host = "127.0.0.1"
 rpcport = "8332"
 
 # From ~/.bitcoin/bitcoin.conf
+# Use either username / password pair or rpc_cookie_file
 username = "bitcoinrpc"
 password = "rpcpassword"
+#rpc_cookie_file =
 
 # Wallet (empty "" if your node has a single wallet, OR wallet name/path as shown in `biitcoin-cli listwallets`)
 wallet = ""

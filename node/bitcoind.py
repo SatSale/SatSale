@@ -1,8 +1,9 @@
-import time
-import uuid
-import qrcode
 import json
 import logging
+import os
+import qrcode
+import time
+import uuid
 
 import config
 from payments.price_feed import get_btc_value
@@ -29,12 +30,23 @@ class btcd:
     def __init__(self):
         from bitcoinrpc.authproxy import AuthServiceProxy
 
+        if config.rpc_cookie_file:
+            if os.path.isfile(config.rpc_cookie_file):
+                rpc_credentials_str = open(config.rpc_cookie_file, "r").read()
+                (username, password) = rpc_credentials_str.split(":")
+            else:
+                raise Exception("rpc_cookie_file {} not found".format(
+                    config.rpc_cookie_file))
+        else:
+            username = config.username
+            password = config.password
+
         for i in range(config.connection_attempts):
             if config.tor_bitcoinrpc_host is None:
                 self.tor = False
                 connection_str = "http://{}:{}@{}:{}/wallet/{}".format(
-                    config.username,
-                    config.password,
+                    username,
+                    password,
                     config.host,
                     config.rpcport,
                     config.wallet,
