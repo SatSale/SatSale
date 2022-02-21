@@ -24,6 +24,7 @@ from payments.price_feed import get_btc_value
 from node import bitcoind
 from node import lnd
 from node import clightning
+from utils import btc_amount_format
 
 from gateways import woo_webhook
 
@@ -146,7 +147,7 @@ class create_payment(Resource):
         invoice = {
             "uuid": str(uuid.uuid4().hex),
             "fiat_value": base_amount,
-            "btc_value": round(get_btc_value(base_amount, currency), 8),
+            "btc_value": btc_amount_format(get_btc_value(base_amount, currency)),
             "method": payment_method,
             "time": time.time(),
             "webhook": webhook,
@@ -277,20 +278,20 @@ def check_payment_status(uuid):
         dbg_free_mode_cond = config.free_mode and (time.time() - invoice["time"] > 5)
 
         # If payment is paid
-        if (conf_paid >= invoice["btc_value"]) or dbg_free_mode_cond:
+        if (conf_paid >= float(invoice["btc_value"])) or dbg_free_mode_cond:
             status.update(
                 {
                     "payment_complete": 1,
-                    "confirmed_paid": conf_paid,
-                    "unconfirmed_paid": unconf_paid,
+                    "confirmed_paid": btc_amount_format(conf_paid),
+                    "unconfirmed_paid": btc_amount_format(unconf_paid),
                 }
             )
         else:
             status.update(
                 {
                     "payment_complete": 0,
-                    "confirmed_paid": conf_paid,
-                    "unconfirmed_paid": unconf_paid,
+                    "confirmed_paid": btc_amount_format(conf_paid),
+                    "unconfirmed_paid": btc_amount_format(unconf_paid),
                 }
             )
 
