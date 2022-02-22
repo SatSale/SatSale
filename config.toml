@@ -36,6 +36,10 @@ api_key_path = "SatSale_API_key"
 #### Payment method ####
 pay_method = "bitcoind"
 
+# Dust limit for onchain payments in BTC. Don't generate onchain invoices
+# below this value.
+onchain_dust_limit = 0.00000546
+
 ## Lightning 
 # Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
 #pay_method = "lnd"

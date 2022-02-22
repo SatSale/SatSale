@@ -122,6 +122,7 @@ status_model = api.model(
 class create_payment(Resource):
     @api.response(200, "Success", invoice_model)
     @api.response(400, "Invalid payment method")
+    @api.response(406, "Amount below dust limit")
     def get(self):
         "Create Payment"
         """Initiate a new payment with an `amount` in `config.base_currecy`."""
@@ -144,13 +145,22 @@ class create_payment(Resource):
             logging.warning("Invalid payment method {}".format(payment_method))
             return {"message": "Invalid payment method."}, 400
 
+        btc_value = get_btc_value(base_amount, currency)
+        if node.is_onchain and btc_value < config.onchain_dust_limit:
+            logging.warning(
+                "Requested onchain payment for {} {} below dust limit ({} < {})".format(
+                    base_amount, currency, btc_amount_format(btc_value),
+                    btc_amount_format(config.onchain_dust_limit)))
+            return {"message": "Amount below dust limit."}, 406
+
         invoice = {
             "uuid": str(uuid.uuid4().hex),
             "fiat_value": base_amount,
-            "btc_value": btc_amount_format(get_btc_value(base_amount, currency)),
+            "btc_value": btc_amount_format(btc_value),
             "method": payment_method,
             "time": time.time(),
             "webhook": webhook,
+            "onchain_dust_limit": config.onchain_dust_limit
         }
 
         # Get an address / invoice, and create a QR code
