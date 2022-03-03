@@ -32,6 +32,8 @@ class btcd:
     def __init__(self):
         from bitcoinrpc.authproxy import AuthServiceProxy
 
+        self.is_onchain = True
+
         if config.rpc_cookie_file:
             if os.path.isfile(config.rpc_cookie_file):
                 rpc_credentials_str = open(config.rpc_cookie_file, "r").read()

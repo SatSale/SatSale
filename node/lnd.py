@@ -18,6 +18,8 @@ class lnd:
     def __init__(self):
         from lndgrpc import LNDClient
 
+        self.is_onchain = False
+
         # Copy admin macaroon and tls cert to local machine
         self.copy_certs()
 
