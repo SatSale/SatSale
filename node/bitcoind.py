@@ -7,6 +7,8 @@ import uuid
 
 import config
 from payments.price_feed import get_btc_value
+from utils import btc_amount_format
+
 
 if config.tor_bitcoinrpc_host is not None:
     from gateways.tor import session
@@ -92,7 +94,8 @@ class btcd:
             )
 
     def create_qr(self, uuid, address, value):
-        qr_str = "bitcoin:{}?amount={}&label={}".format(address, value, uuid)
+        qr_str = "bitcoin:{}?amount={}&label={}".format(
+            address, btc_amount_format(value), uuid)
 
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))

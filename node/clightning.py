@@ -60,7 +60,7 @@ class clightning:
     # Create lightning invoice
     def create_clightning_invoice(self, btc_amount, label):
         # Multiplying by 10^8 to convert to satoshi units
-        msats_amount = int(btc_amount * 10 ** (3 + 8))
+        msats_amount = int(float(btc_amount) * 10 ** (3 + 8))
         lnd_invoice = self.clightning.invoice(
             msats_amount, label, "SatSale-{}".format(label)
         )
