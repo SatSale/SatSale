@@ -23,6 +23,8 @@ class clightning:
     def __init__(self):
         from pyln.client import LightningRpc
 
+        self.is_onchain = False
+
         for i in range(config.connection_attempts):
             try:
                 logging.info("Attempting to connect to clightning...")

@@ -33,7 +33,7 @@
         </div>
 
 
-        <div id="paymentDetails" style="display:block; padding: 0;">
+        <div id="paymentDetails" style="display:none; padding: 0;">
             <p style="padding:0;">Send: <b><span id="amount_sats"></span></b> sats</p>
             <p style="padding:0;">&nbsp&nbsp&nbsp&nbsp&nbsp(<b><span id="amount"></span></b> BTC)</p>
             <p style="padding:0;">To: </p><b><p id="address" onclick="copyTextFromElement('address')"></p></b>
@@ -41,10 +41,15 @@
             <p id="timerContainer" style="padding:0;visibility:hidden;"><span id="timer"></span> seconds remaining.</p>
         </div>
 
+        <div id="error" style="display:none;">
+            <p style="padding:0;">Error generating invoice! Amount too small?</p>
+        </div>
+
         </br>
 
         <div id="row">
             <div id="left" style="text-align: left; padding: 0;">
+                <div id="paymentMethodSwitchButton" style="display:none;">
                 <!-- Alternate between offering lightning or on chain payment switch -->
                 {% if params.lnd_enabled %}
                     {% if params.method != "bitcoind"%}
@@ -60,6 +65,7 @@
                         <button class="button button1" onclick="replaceUrlParam(window.location, 'method', 'clightning');">Lightning Payment</button>
                     {% endif %}
                 {% endif %}
+                </div>
             </div>
 
             <div id="right" style="text-align: right; padding: 10px 10px;">

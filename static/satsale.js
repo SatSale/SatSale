@@ -17,14 +17,24 @@ function payment(payment_data) {
             $('#amount').text(invoice.btc_value).html();
             $('#amount_sats').text(Math.round(invoice.btc_value * 10**8)).html();
             $('#timer').text(Math.round(invoice.time_left)).html();
+            $('#paymentDetails').show();
+
+            if (invoice.btc_value >= invoice.onchain_dust_limit) {
+                $('#paymentMethodSwitchButton').show();
+            }
 
             return payment_uuid
+        }, function(data) {
+            $('#error').show();
+            return "";
         }).then(function(payment_uuid) {
-            load_qr(payment_uuid);
-            document.getElementById('timerContainer').style.visibility = "visible";
+            if (payment_uuid != "") {
+                load_qr(payment_uuid);
+                document.getElementById('timerContainer').style.visibility = "visible";
 
-            // Pass payment uuid and the interval process to check_payment
-            var checkinterval = setInterval(function() {check_payment(payment_uuid, checkinterval, payment_data);}, 1000);
+                // Pass payment uuid and the interval process to check_payment
+                var checkinterval = setInterval(function() {check_payment(payment_uuid, checkinterval, payment_data);}, 1000);
+            }
         })
     });
 }
