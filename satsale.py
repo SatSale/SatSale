@@ -69,8 +69,7 @@ def index():
 @app.route("/pay")
 def pay():
     params = dict(request.args)
-    params["lnd_enabled"] = config.pay_method == "lnd"
-    params["cln_enabled"] = config.pay_method == "clightning"
+    params["payment_methods"] = enabled_payment_methods
     params["redirect"] = config.redirect
     # Render payment page with the request arguments (?amount= etc.)
     headers = {"Content-Type": "text/html"}
@@ -135,7 +134,7 @@ class create_payment(Resource):
         label = ""  # request.args.get('label')
         payment_method = request.args.get("method")
         if payment_method is None:
-            payment_method = config.pay_method
+            payment_method = enabled_payment_methods[0]
         webhook = request.args.get("w_url")
         if webhook is None:
             webhook = None
@@ -284,9 +283,9 @@ def check_payment_status(uuid):
     # If payment has not expired, then we're going to check for any transactions
     if status["time_left"] > 0:
         node = get_node(invoice["method"])
-        if invoice["method"] == "lnd":
+        if node.config['name'] == "lnd":
             conf_paid, unconf_paid = node.check_payment(invoice["rhash"])
-        else:
+        elif (node.config['name'] == "bitcoind") or (node.config['name'] == "clightning"):
             # Lookup bitcoind / clightning invoice based on label (uuid)
             conf_paid, unconf_paid = node.check_payment(invoice["uuid"])
 
@@ -319,11 +318,9 @@ def check_payment_status(uuid):
 
 
 def get_node(payment_method):
-    if payment_method == "bitcoind":
+    if payment_method == "onchain":
         node = bitcoin_node
-    elif payment_method == "lnd":
-        node = lightning_node
-    elif payment_method == "clightning":
+    elif payment_method == "lightning":
         node = lightning_node
     else:
         node = None
@@ -335,23 +332,27 @@ api.add_resource(create_payment, "/api/createpayment")
 api.add_resource(check_payment, "/api/checkpayment")
 api.add_resource(complete_payment, "/api/completepayment")
 
-
 # Test connections on startup:
-logging.info("Connecting to node...")
-bitcoin_node = bitcoind.btcd()
-logging.info("Connection to bitcoin node successful.")
-if config.pay_method == "lnd":
-    lightning_node = lnd.lnd()
-    logging.info("Connection to lightning node (lnd) successful.")
-elif config.pay_method == "clightning":
-    lightning_node = clightning.clightning()
-    logging.info("Connection to lightning node (clightning) successful.")
+enabled_payment_methods = []
+for method in config.payment_methods:
+    print(method)
+    if method['name'] == "bitcoind":
+        bitcoin_node = bitcoind.btcd(method)
+        logging.info("Connection to bitcoin node successful.")
+        enabled_payment_methods.append("onchain")
 
+    elif method['name'] == "lnd":
+        lightning_node = lnd.lnd(method)
+        logging.info("Connection to lightning node (lnd) successful.")
+        if lightning_node.config['lightning_address'] is not None:
+            from gateways import lightning_address
+            lightning_address.add_ln_address_decorators(app, api, lightning_node)
+        enabled_payment_methods.append("lightning")
 
-if config.lightning_address is not None:
-    from gateways import lightning_address
-
-    lightning_address.add_ln_address_decorators(app, api, lightning_node)
+    elif method['name'] == "clightning":
+        lightning_node = clightning.clightning(method)
+        logging.info("Connection to lightning node (clightning) successful.")
+        enabled_payment_methods.append("lightning")
 
 if config.paynym is not None:
     paynym.insert_paynym_html(config.paynym)

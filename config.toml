@@ -1,63 +1,57 @@
-# SatSale needs to connect to your bitcoin/lnd node,
-# with the correct RPC port(s) as set in this config.
+# SatSale Config :: Configure payment nodes and SatSale settings
+payment_methods = ["bitcoind"]
 
-# Connecting through local host (see below if connecting to remote node):
+## BITCOIND :: Add "bitcoind" to payment_methods and from ~/.bitcoin/bitcoin.conf
+# use either username / password pair or rpc_cookie_file
+# wallet (empty "" if your bitcoind node has a single wallet, OR wallet name/path as shown in `bitcoin-cli listwallets`)
+[bitcoind]
 host = "127.0.0.1"
-rpcport = "8332"
-
-# From ~/.bitcoin/bitcoin.conf
-# Use either username / password pair or rpc_cookie_file
 username = "bitcoinrpc"
 password = "rpcpassword"
+rpcport = "8332"
 #rpc_cookie_file =
-
-# Wallet (empty "" if your node has a single wallet, OR wallet name/path as shown in `biitcoin-cli listwallets`)
 wallet = ""
 
-# File in which API key will be stored
-api_key_path = "SatSale_API_key"
+## LND :: Add "lnd" to payment_methods
+[lnd]
+host = "127.0.0.1"
+lnd_dir = "~/.lnd/"
+lnd_rpcport = "10009"
+lnd_macaroon = "invoice.macaroon"
+#lightning_address = None #e.g name@your.satsale.domain (think this requires https url)
+#lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
+## CLIGHTNING :: Add "clightning" to payment_methods
+# If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host}`
+# creates a lightning-rpc unix domain socket. (use full paths local: /home/install/satsale/lightning-rpc)
+[clightning]
+clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
 
+[satsale]
 #### Connect To Remote Node ####
-# Can use SSH or TOR
-# to tunnel/relay ports required to talk to the node via RPC (gRPC for lightning)
+# Either SSH or TOR should be used to 
+# to tunnel/relay communications to the remote node
 
-# SSH tunnel to node
+# SSH tunnel to node (recommended)
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
-# Combined with host = "127.0.0.1" and you will be able to see your node on 8332
-#tunnel_host = "HOST@IP"
+# Leave host="127.0.0.1" and you will be able to see your node as if it were local
+#tunnel_host = None # Format: "HOST@IP"
 
-# or tor hidden service for RPC (see docs for how to set up), need onion:
-#tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
-
-# and a tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
+# TOR hidden service to node (see docs for how to set up), 
+# Currently only works for bitcoind. 
+# Set `tor_bitcoinrpc_host="http://if...dwr.onion"` in bitcoind section above:
+# A tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
 #tor_proxy = None
 
-#### Payment method ####
-pay_method = "bitcoind"
+## !! Once up to here, you should now test your node configuration !!
+
+
+# SatSale API key will be stored in this file
+api_key_path = "SatSale_API_key"
 
 # Dust limit for onchain payments in BTC. Don't generate onchain invoices
 # below this value.
 onchain_dust_limit = 0.00000546
-
-## Lightning 
-# Switch payment_method to lnd if you want to use lightning payments instead. And uncomment lnd_dir.
-#pay_method = "lnd"
-
-# To find (or copy from remote nodes) the macaroon and TLS certs
-#lnd_dir = "~/.lnd/"
-
-# lnd RPC port and lnd macaroon (uncomment)
-#lnd_rpcport = "10009"
-#lnd_macaroon = "invoice.macaroon"
-
-# Or clightning
-#pay_method = "clightning"
-
-# If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host}`
-# creates a lightning-rpc unix domain socket. (use full paths local: /home/install/satsale/lightning-rpc)
-#clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
-#######################
 
 # Check for payment every xx seconds
 pollrate = 1
@@ -80,10 +74,6 @@ redirect = "https://github.com/nickfarrow/satsale"
 # Currency and exchange rate provider
 base_currency = "USD"
 currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
-
-# Lightning Address e.g. name@you.satsale.domain (think this requires https url)
-#lightning_address = None
-#lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
 # Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
 # https://blockstream.com/liquid/

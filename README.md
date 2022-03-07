@@ -60,11 +60,13 @@ pip3 install -r requirements.txt
 ```
 ### Connect to your Bitcoin Node
 Edit the `config.toml` configuration and point to your Bitcoin node:
-```python
+```toml
+[bitcoind]
 host = "127.0.0.1"
+username = "bitcoinrpc"
+password = "rpcpassword"
 rpcport = "8332"
-username = "RPCUSERNAME"
-password = "RPCPASSWORD"
+wallet = ""
 ```
 (You can find these in `~/.bitcoin/bitcoin.conf`).
 When connecting to a remote node, also edit either the SSH `tunnel_host` to a node like `"pi@IP"`, ensuring you have SSH keys in `~/.ssh/authorized_keys` and `ufw allow 8332` the appropriate ports to connect to your node. Or alternatively, see [tor hidden service](/docs/tor.md). 
@@ -100,7 +102,7 @@ Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSal
 Point a domain to your VPS. You can run SatSale or use NGINX/apache to point to the service. See [HTTPS instructions](docs/HTTPS.md). Embedded iframes are easy if your site only uses HTTP. But if your site uses HTTPS, then you can see your donation button at `http://YOUR_SERVER_IP:8000/` but will not be able to in an embedded iframe. See [HTTPS instructions](docs/HTTPS.md).
 
 ### Lightning Address
-Once you have an HTTPS domain pointed at SatSale, in the configuration you can specify a lightning address:
+Once you have an HTTPS domain pointed at SatSale, in the configuration under a lightning node you can specify a lightning address:
 ```
 # Lightning Address e.g. name@you.satsale.domain (think this requires https url)
 lightning_address = name@ur.domain.com

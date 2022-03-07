@@ -20,15 +20,16 @@ import config
 
 
 class clightning:
-    def __init__(self):
+    def __init__(self, node_config):
         from pyln.client import LightningRpc
 
+        self.config = node_config
         self.is_onchain = False
 
         for i in range(config.connection_attempts):
             try:
                 if config.tunnel_host is None:
-                    rpc_file = config.clightning_rpc_file
+                    rpc_file = self.config['clightning_rpc_file']
                 else:
                     rpc_file = "lightning-rpc"
 

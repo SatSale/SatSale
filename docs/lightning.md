@@ -6,22 +6,23 @@ If installing the python library lndgrpc requirement failed, see this [solution]
 
 
 ## LND
-To use lightning, you need to change your `pay_method` in `config.toml`, and set your lightning directory on your node.
-```python
-pay_method = "lnd"
+To connect to a LND node, you need to set `payment_methods = ["lnd", "bitcoind"]` in `config.toml`, and set your lightning directory on your node.
+```toml
+[lnd]
+host = "127.0.0.1"
 lnd_dir = "~/.lnd/"
 lnd_rpcport = "10009"
+lnd_macaroon = "invoice.macaroon"
 ```
 
 
 ## clightning
-To use lightning, you need to change your `pay_method` in `config.toml`, and set your lightning directory on your node.
-```python
-pay_method = "clightning"
-# If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
-clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
+To use clightning,  you need to set `payment_methods = ["clightning", "bitcoind"]` in `config.toml`, and
+```toml
+[clightning]
+clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
 ```
-
+If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host}` creates a lightning-rpc unix domain socket. (use full paths local: /home/install/satsale/lightning-rpc).
 
 ## Notes
 Your lnd directory is used to find your `.tls` and `.macaroon` files that are required to talk to your lightning node. They are copied over SSH into your SatSale folder. If this copy fails, perhaps copy them manually and they will be identified on start up.

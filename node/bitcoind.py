@@ -9,74 +9,59 @@ import config
 from payments.price_feed import get_btc_value
 from utils import btc_amount_format
 
-
-if config.tor_bitcoinrpc_host is not None:
-    from gateways.tor import session
-
-
-def call_tor_bitcoin_rpc(method, params):
-    url = "{}:{}".format(config.tor_bitcoinrpc_host, config.rpcport)
-    payload = json.dumps({"method": method, "params": params})
-    headers = {"content-type": "application/json", "cache-control": "no-cache"}
-    response = session.request(
-        "POST",
-        url,
-        data=payload,
-        headers=headers,
-        auth=(config.username, config.password),
-    )
-    return json.loads(response.text)
-
-
 class btcd:
-    def __init__(self):
+    def __init__(self, node_config):
         from bitcoinrpc.authproxy import AuthServiceProxy
+        self.config = node_config
 
+        if self.config['tor_bitcoinrpc_host'] is not None:
+            from gateways.tor import session
+            self.session = session
         self.is_onchain = True
 
-        if config.rpc_cookie_file:
-            if os.path.isfile(config.rpc_cookie_file):
-                rpc_credentials_str = open(config.rpc_cookie_file, "r").read()
+        if self.config['rpc_cookie_file']:
+            if os.path.isfile(self.config['rpc_cookie_file']):
+                rpc_credentials_str = open(self.config['rpc_cookie_file'], "r").read()
                 (username, password) = rpc_credentials_str.split(":")
             else:
                 raise Exception(
-                    "rpc_cookie_file {} not found".format(config.rpc_cookie_file)
+                    "rpc_cookie_file {} not found".format(self.config['rpc_cookie_file'])
                 )
         else:
-            username = config.username
-            password = config.password
+            username = self.config['username']
+            password = self.config['password']
 
         for i in range(config.connection_attempts):
-            if config.tor_bitcoinrpc_host is None:
+            if self.config['tor_bitcoinrpc_host'] is None:
                 self.tor = False
                 connection_str = "http://{}:{}@{}:{}/wallet/{}".format(
                     username,
                     password,
                     config.host,
-                    config.rpcport,
-                    config.wallet,
+                    self.config['rpcport'],
+                    self.config['wallet'],
                 )
                 logging.info(
                     "Attempting to connect to Bitcoin node RPC with user {}.".format(
-                        config.username
+                        self.config['username']
                     )
                 )
             else:
                 self.tor = True
                 logging.info(
                     "Attempting to contact bitcoind rpc tor hidden service: {}:{}".format(
-                        config.tor_bitcoinrpc_host, config.rpcport
+                        self.config['tor_bitcoinrpc_host'], self.config['rpcport']
                     )
                 )
 
             try:
                 # Normal Connection
-                if config.tor_bitcoinrpc_host is None:
+                if self.config['tor_bitcoinrpc_host'] is None:
                     self.rpc = AuthServiceProxy(connection_str)
                     info = self.rpc.getblockchaininfo()
                 # Tor Connection
                 else:
-                    info = call_tor_bitcoin_rpc("getblockchaininfo", None)
+                    info = self.call_tor_bitcoin_rpc("getblockchaininfo", None)
 
                 logging.info(info)
                 logging.info("Successfully contacted bitcoind.")
@@ -96,6 +81,19 @@ class btcd:
                 Check your RPC / port tunneling settings and try again."
             )
 
+    def call_tor_bitcoin_rpc(self, method, params):
+        url = "{}:{}".format(self.config['tor_bitcoinrpc_host'], config.rpcport)
+        payload = json.dumps({"method": method, "params": params})
+        headers = {"content-type": "application/json", "cache-control": "no-cache"}
+        response = self.session.request(
+            "POST",
+            url,
+            data=payload,
+            headers=headers,
+            auth=(config.username, config.password),
+        )
+        return json.loads(response.text)
+
     def create_qr(self, uuid, address, value):
         qr_str = "bitcoin:{}?amount={}&label={}".format(
             address, btc_amount_format(value), uuid
@@ -109,7 +107,7 @@ class btcd:
         if not self.tor:
             transactions = self.rpc.listtransactions(uuid)
         else:
-            transactions = call_tor_bitcoin_rpc("listtransactions", [uuid])["result"]
+            transactions = self.call_tor_bitcoin_rpc("listtransactions", [uuid])["result"]
 
         conf_paid = 0
         unconf_paid = 0
@@ -127,7 +125,7 @@ class btcd:
                 if not self.tor:
                     address = self.rpc.getnewaddress(label)
                 else:
-                    address = call_tor_bitcoin_rpc("getnewaddress", [label])["result"]
+                    address = self.call_tor_bitcoin_rpc("getnewaddress", [label])["result"]
 
                 return address, None
 

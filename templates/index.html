@@ -50,20 +50,17 @@
         <div id="row">
             <div id="left" style="text-align: left; padding: 0;">
                 <div id="paymentMethodSwitchButton" style="display:none;">
-                <!-- Alternate between offering lightning or on chain payment switch -->
-                {% if params.lnd_enabled %}
-                    {% if params.method != "bitcoind"%}
-                        <button class="button button1" onclick="replaceUrlParam(window.location, 'method', 'bitcoind');">Onchain Payment</button>
-                    {% else %}
-                        <button class="button button1" onclick="replaceUrlParam(window.location, 'method', 'lnd');">Lightning Payment</button>
-                    {% endif %}
-                {% endif %}
-                {% if params.cln_enabled %}
-                    {% if params.method != "bitcoind"%}
-                        <button class="button button1" onclick="replaceUrlParam(window.location, 'method', 'bitcoind');">Onchain Payment</button>
-                    {% else %}
-                        <button class="button button1" onclick="replaceUrlParam(window.location, 'method', 'clightning');">Lightning Payment</button>
-                    {% endif %}
+                {% if params.payment_methods|length > 1 %}
+                    <select class="button" name="method" id="payment_method_select" onchange="replaceUrlParam(window.location, 'method', document.getElementById('payment_method_select').value);">
+                        {% if params.method %}
+                            <option value="{{ params.method }}">{{ params.method }}</option>
+                        {% endif %}                       
+                        {% for method in params.payment_methods %}
+                            {% if params.method != method %}
+                                <option value="{{ method }}">{{ method }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
                 {% endif %}
                 </div>
             </div>

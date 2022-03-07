@@ -15,16 +15,17 @@ import config
 
 
 class lnd:
-    def __init__(self):
+    def __init__(self, node_config):
         from lndgrpc import LNDClient
 
+        self.config = node_config
         self.is_onchain = False
 
         # Copy admin macaroon and tls cert to local machine
         self.copy_certs()
 
         # Conect to lightning node
-        connection_str = "{}:{}".format(config.host, config.lnd_rpcport)
+        connection_str = "{}:{}".format(config.host, self.config['lnd_rpcport'])
         logging.info(
             "Attempting to connect to lightning node {}. This may take a few seconds...".format(
                 connection_str
@@ -36,7 +37,7 @@ class lnd:
                 logging.info("Attempting to initialise lnd rpc client...")
                 time.sleep(3)
                 self.lnd = LNDClient(
-                    "{}:{}".format(config.host, config.lnd_rpcport),
+                    "{}:{}".format(config.host, self.config['lnd_rpcport']),
                     macaroon_filepath=self.certs["macaroon"],
                     cert_filepath=self.certs["tls"],
                 )
@@ -77,16 +78,16 @@ class lnd:
 
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
-        self.certs = {"tls": "tls.cert", "macaroon": config.lnd_macaroon}
+        self.certs = {"tls": "tls.cert", "macaroon": self.config['lnd_macaroon']}
 
         if (not os.path.isfile("tls.cert")) or (
-            not os.path.isfile(config.lnd_macaroon)
+            not os.path.isfile(self.config['lnd_macaroon'])
         ):
             try:
-                tls_file = os.path.join(config.lnd_dir, "tls.cert")
+                tls_file = os.path.join(self.config['lnd_dir'], "tls.cert")
                 macaroon_file = os.path.join(
-                    config.lnd_dir,
-                    "data/chain/bitcoin/mainnet/{}".format(config.lnd_macaroon),
+                    self.config['lnd_dir'],
+                    "data/chain/bitcoin/mainnet/{}".format(self.config['lnd_macaroon']),
                 )
 
                 # SSH copy
@@ -94,7 +95,7 @@ class lnd:
                     logging.warning(
                         "Could not find tls.cert or {} in SatSale folder. \
                          Attempting to download from remote lnd directory.".format(
-                            config.lnd_macaroon
+                            self.config['lnd_macaroon']
                         )
                     )
 

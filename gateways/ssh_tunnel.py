@@ -27,7 +27,7 @@ def open_tunnel(host, port):
     return None
 
 
-def clightning_unix_domain_socket_ssh(rpc_store_dir=None):
+def clightning_unix_domain_socket_ssh(rpc_file, rpc_store_dir=None):
     if rpc_store_dir is None:
         rpc_store_dir = os.getcwd()
 
@@ -39,7 +39,7 @@ def clightning_unix_domain_socket_ssh(rpc_store_dir=None):
             "ssh",
             "-nNT",
             "-L",
-            "{}:{}".format(local_file, config.clightning_rpc_file),
+            "{}:{}".format(local_file, rpc_file),
             "{}".format(config.tunnel_host),
         ]
         print("Opening tunnel to {}.".format(" ".join(command)))
@@ -67,24 +67,26 @@ def close_tunnels(ssh_processes):
             except Exception as e:
                 continue
 
-        if config.clightning_rpc_file is not None:
-            rm_lightning_rpc_file()
+    if "clightning" in config.payment_methods:
+        rm_lightning_rpc_file()
     return
 
 
 # Open tunnel
 def open_tunnels():
-    # global ssh_tunnel_processes
     ssh_tunnel_processes = []
     if config.tunnel_host is not None:
-        ssh_tunnel_processes.append(open_tunnel(config.tunnel_host, config.rpcport))
+        for method in config.payment_methods:
+            if method['name'] == "bitcoind":
+                ssh_tunnel_processes.append(open_tunnel(config.tunnel_host, method['rpcport']))
 
-        # Also for lnd if enabled
-        if config.lnd_rpcport is not None:
-            ssh_tunnel_processes.append(open_tunnel(config.tunnel_host, config.lnd_rpcport))
+            # Also for lnd if enabled
+            if method['name'] == "lnd":
+                ssh_tunnel_processes.append(open_tunnel(config.tunnel_host, method['lnd_rpcport']))
 
-        # And if clightning is enabled
-        if config.clightning_rpc_file is not None:
-            ssh_tunnel_processes.append(clightning_unix_domain_socket_ssh())
+            # And if clightning is enabled
+            if method['name'] == "clightning":
+                rm_lightning_rpc_file()
+                ssh_tunnel_processes.append(clightning_unix_domain_socket_ssh(method['clightning_rpc_file']))
 
     return [proc for proc in ssh_tunnel_processes if proc is not None]

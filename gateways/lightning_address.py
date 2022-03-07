@@ -3,34 +3,32 @@ from flask_restplus import Resource, Api, Namespace, fields
 import hashlib
 import logging
 
-import config
-
 min_sats = 10 ** 2
 max_sats = 10 ** 6
 
 # Following https://github.com/andrerfneves/lightning-address/blob/master/DIY.md
 
-description = config.lightning_address_comment
-if description is None:
-    description = "Thank you for your support <3"
-
-metadata = '[["text/plain", "{}"], ["text/identifier", "{}"]]'.format(
-    description, config.lightning_address.split("@")[0]
-)
-
-
 def add_ln_address_decorators(app, api, node):
+    description = node.config['lightning_address_comment']
+    address = node.config['lightning_address']
+    if description is None:
+        description = "Thank you for your support <3"
+
+    metadata = '[["text/plain", "{}"], ["text/identifier", "{}"]]'.format(
+        description, address.split("@")[0]
+    )
+
     class get_ln_address(Resource):
         def get(self):
             try:
                 logging.info(
                     "Someone requested our ln address: {}!".format(
-                        config.lightning_address
+                        address
                     )
                 )
                 resp = {
                     "callback": "https://{}/lnaddr".format(
-                        config.lightning_address.split("@")[1]
+                        address.split("@")[1]
                     ),
                     "maxSendable": max_sats * 10 ** 3,
                     "minSendable": min_sats * 10 ** 3,
@@ -76,7 +74,7 @@ def add_ln_address_decorators(app, api, node):
 
     api.add_resource(
         get_ln_address,
-        "/.well-known/lnurlp/{}".format(config.lightning_address.split("@")[0]),
+        "/.well-known/lnurlp/{}".format(address.split("@")[0]),
     )
     api.add_resource(init_ln_addr_payment, "/lnaddr")
     return
