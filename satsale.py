@@ -123,6 +123,7 @@ class create_payment(Resource):
     @api.response(200, "Success", invoice_model)
     @api.response(400, "Invalid payment method")
     @api.response(406, "Amount below dust limit")
+    @api.response(522, "Error fetching address from node")
     def get(self):
         "Create Payment"
         """Initiate a new payment with an `amount` in `config.base_currecy`."""
@@ -164,9 +165,14 @@ class create_payment(Resource):
         }
 
         # Get an address / invoice, and create a QR code
-        invoice["address"], invoice["rhash"] = node.get_address(
-            invoice["btc_value"], invoice["uuid"]
-        )
+        try:
+            invoice["address"], invoice["rhash"] = node.get_address(
+                invoice["btc_value"], invoice["uuid"]
+            )
+        except Exception as e:
+            logging.error("Failed to fetch address")
+            return {"message": "Error fetching address. Check config.."}, 522
+
         node.create_qr(invoice["uuid"], invoice["address"], invoice["btc_value"])
 
         # Save invoice to database
