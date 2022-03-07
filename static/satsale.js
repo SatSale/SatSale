@@ -25,7 +25,9 @@ function payment(payment_data) {
 
             return payment_uuid
         }, function(data) {
+            console.error(data["responseJSON"]["message"]);
             $('#error').show();
+            $('#error_message').text(data["responseJSON"]["message"]).html();
             return "";
         }).then(function(payment_uuid) {
             if (payment_uuid != "") {
