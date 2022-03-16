@@ -9,14 +9,16 @@ from btclib import bip32, slip132
 
 import config
 from payments.price_feed import get_btc_value
+from utils import btc_amount_format
 from payments import database
 
 if config.tor_bitcoinrpc_host is not None:
     from gateways.tor import session
 
 
-class pseudonode:
-    def __init__(self):
+class xpub:
+    def __init__(self, xpub):
+        self.xpub_key = xpub
         self.is_onchain = True
         self.api = "https://mempool.space/api"
         self.address_counter_file = "address_counter"
@@ -29,7 +31,9 @@ class pseudonode:
         )
 
     def create_qr(self, uuid, address, value):
-        qr_str = "{}?amount={}&label={}".format(address.upper(), value, uuid)
+        qr_str = "bitcoin:{}?amount={}&label={}".format(
+            address, btc_amount_format(value), uuid)
+
 
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
@@ -59,9 +63,8 @@ class pseudonode:
 
     def get_address(self, amount, label):
         n = self.get_next_address_index()
-        xpub = bip32.derive(xkey=config.zpub, der_path="m/84'/0'/0'/0/{}".format(n))
+        # xpub = bip32.derive(xkey=config.xpub, der_path="m/84'/0/0/0/{}".format(n))        
+        xpub = bip32.derive(xkey=config.xpub, der_path="0/{}".format(n))        
         address = slip132.address_from_xpub(xpub)
-
         database.add_generated_address(n, address)
-
         return address, None

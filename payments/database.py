@@ -122,7 +122,7 @@ def get_next_address_index():
     with sqlite3.connect("database.db") as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
-        addresses = cur.execute("SELECT * FROM addresses").fetchall()
+        addresses = cur.execute("SELECT n FROM addresses ORDER BY n DESC LIMIT 1").fetchall()
 
     if len(addresses) == 0:
         return 0

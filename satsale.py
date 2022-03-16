@@ -31,7 +31,7 @@ from gateways import paynym
 from payments import database, weakhands
 from payments.price_feed import get_btc_value
 from node import bitcoind
-from node import pseudonode
+from node import xpub
 from node import lnd
 from node import clightning
 from utils import btc_amount_format
@@ -181,7 +181,7 @@ class create_payment(Resource):
                 invoice["btc_value"], invoice["uuid"]
             )
         except Exception as e:
-            logging.error("Failed to fetch address")
+            logging.error("Failed to fetch address: {}".format(e))
             return {"message": "Error fetching address. Check config.."}, 522
 
         node.create_qr(invoice["uuid"], invoice["address"], invoice["btc_value"])
