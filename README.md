@@ -67,7 +67,9 @@ username = "RPCUSERNAME"
 password = "RPCPASSWORD"
 ```
 (You can find these in `~/.bitcoin/bitcoin.conf`).
-When connecting to a remote node, also edit either the SSH `tunnel_host` (or see [tor hidden service](/docs/tor.md)). If you have a lightning node (lnd or clightning) and want to use lightning network payments, see [Lightning instructions](docs/lightning.md). More [example configs](docs/).
+When connecting to a remote node, also edit either the SSH `tunnel_host` to a node like `"pi@IP"`, ensuring you have SSH keys in `~/.ssh/authorized_keys` and `ufw allow 8332` the appropriate ports to connect to your node. Or alternatively, see [tor hidden service](/docs/tor.md). 
+
+If you have a lightning node (lnd or clightning) and want to use lightning network payments, see [Lightning instructions](docs/lightning.md). More [example configs](docs/).
 
 ### Run SatSale
 Run SatSale with
