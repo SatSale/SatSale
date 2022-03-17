@@ -11,7 +11,7 @@ username = "bitcoinrpc"
 password = "rpcpassword"
 #rpc_cookie_file =
 
-# Wallet (empty "" if your node has a single wallet, OR wallet name/path as shown in `biitcoin-cli listwallets`)
+# Wallet (empty "" if your node has a single wallet, OR wallet name/path as shown in `bitcoin-cli listwallets`)
 wallet = ""
 
 # File in which API key will be stored
@@ -23,9 +23,10 @@ api_key_path = "SatSale_API_key"
 # to tunnel/relay ports required to talk to the node via RPC (gRPC for lightning)
 
 # SSH tunnel to node
-# Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
+# Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332 -p PORT`
 # Combined with host = "127.0.0.1" and you will be able to see your node on 8332
 #tunnel_host = "HOST@IP"
+#tunnel_port = "PORT"  #defaults to 22, if left blank
 
 # or tor hidden service for RPC (see docs for how to set up), need onion:
 #tor_bitcoinrpc_host = None # e.g. "http://if...dwr.onion"
@@ -54,7 +55,7 @@ onchain_dust_limit = 0.00000546
 # Or clightning
 #pay_method = "clightning"
 
-# If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
+# If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host} -p {tunnel_port}`
 # creates a lightning-rpc unix domain socket
 #clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
 #######################
