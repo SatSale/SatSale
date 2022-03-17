@@ -39,7 +39,7 @@ class xpub:
         img.save("static/qr_codes/{}.png".format(uuid))
         return
 
-    def check_payment(self, address):
+    def check_payment(self, address, slow=True):
         conf_paid, unconf_paid = 0, 0
         try:
             r = requests.get(self.api + "/address/{}".format(address))
@@ -47,7 +47,11 @@ class xpub:
             stats = r.json()
             conf_paid = stats["chain_stats"]["funded_txo_sum"] / (10 ** 8)
             unconf_paid = stats["mempool_stats"]["funded_txo_sum"] / (10 ** 8)
-            time.sleep(2)
+
+            # Don't request too often
+            if slow and (conf_paid == 0):
+                time.sleep(1)
+
             return conf_paid, unconf_paid
 
         except Exception as e:
@@ -68,7 +72,7 @@ class xpub:
             xpub = bip32.derive(xkey=config.xpub, der_path="0/{}".format(n))        
             address = slip132.address_from_xpub(xpub)
             database.add_generated_address(n, address)
-            conf_paid, unconf_paid = self.check_payment(address)
+            conf_paid, unconf_paid = self.check_payment(address, slow=False)
             if conf_paid == 0 and unconf_paid == 0:
                 break
         return address, None
