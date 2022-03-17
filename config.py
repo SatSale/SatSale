@@ -59,6 +59,7 @@ for method_name in config['payment_methods']:
 host = get_opt("host", "127.0.0.1")
 api_key_path = get_opt("api_key_path", "SatSale_API_key")
 tunnel_host = get_opt("tunnel_host", None)
+tunnel_port = get_opt("tunnel_port", 22)
 tor_proxy = get_opt("tor_proxy", None)
 onchain_dust_limit = get_opt("onchain_dust_limit", 0.00000546)
 pollrate = get_opt("pollrate", 15)

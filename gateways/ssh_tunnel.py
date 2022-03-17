@@ -12,14 +12,16 @@ def open_tunnel(host, port):
     try:
         command = [
             "ssh",
-            config.tunnel_host,
             "-q",
             "-N",
             "-L",
             "{}:localhost:{}".format(port, port),
+            config.tunnel_host,
+            "-p {}".format(config.tunnel_port),
         ]
         print("Opening tunnel to {}.".format(" ".join(command)))
         return subprocess.Popen(command)
+
 
     except Exception as e:
         print("FAILED TO OPEN TUNNEL. Exception: {}".format(e))
@@ -33,7 +35,7 @@ def clightning_unix_domain_socket_ssh(rpc_file, rpc_store_dir=None):
 
     local_file = rpc_store_dir + "/lightning-rpc"
 
-    # ssh -nNT -L lightning-rpc:~/.lightning/lightning-rpc config.tunnel_host
+    # ssh -nNT -L lightning-rpc:~/.lightning/lightning-rpc config.tunnel_host -p config.tunnel_port
     try:
         command = [
             "ssh",
@@ -41,10 +43,12 @@ def clightning_unix_domain_socket_ssh(rpc_file, rpc_store_dir=None):
             "-L",
             "{}:{}".format(local_file, rpc_file),
             "{}".format(config.tunnel_host),
-        ]
+            "-p {}".format(config.tunnel_port),
+            ]
         print("Opening tunnel to {}.".format(" ".join(command)))
         tunnel_proc = subprocess.Popen(command)
         return tunnel_proc
+
 
     except Exception as e:
         print(

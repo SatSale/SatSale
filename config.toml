@@ -22,7 +22,7 @@ lnd_macaroon = "invoice.macaroon"
 #lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
 ## CLIGHTNING :: Add "clightning" to payment_methods
-# If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host}`
+# If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host} -p {tunnel_port}`
 # creates a lightning-rpc unix domain socket. (use full paths local: /home/install/satsale/lightning-rpc)
 [clightning]
 clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
@@ -33,9 +33,10 @@ clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
 # to tunnel/relay communications to the remote node
 
 # SSH tunnel to node (recommended)
-# Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332`
+# Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332 -p PORT`
 # Leave host="127.0.0.1" and you will be able to see your node as if it were local
 #tunnel_host = None # Format: "HOST@IP"
+#tunnel_port = "PORT"  #defaults to 22, if left blank
 
 # TOR hidden service to node (see docs for how to set up), 
 # Currently only works for bitcoind. 
