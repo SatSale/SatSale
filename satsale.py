@@ -50,6 +50,8 @@ logging.info("Initialised Flask with secret key: {}".format(app.config["SECRET_K
 # Create payment database if it does not exist
 if not os.path.exists("database.db"):
     database.create_database()
+# Check and migrate database to current version if needed
+database.migrate_database()
 
 
 # Render index page
