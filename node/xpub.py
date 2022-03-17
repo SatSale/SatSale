@@ -62,9 +62,13 @@ class xpub:
         return n
 
     def get_address(self, amount, label):
-        n = self.get_next_address_index()
-        # xpub = bip32.derive(xkey=config.xpub, der_path="m/84'/0/0/0/{}".format(n))        
-        xpub = bip32.derive(xkey=config.xpub, der_path="0/{}".format(n))        
-        address = slip132.address_from_xpub(xpub)
-        database.add_generated_address(n, address)
+        while True:
+            n = self.get_next_address_index()
+            # xpub = bip32.derive(xkey=config.xpub, der_path="m/84'/0/0/0/{}".format(n))        
+            xpub = bip32.derive(xkey=config.xpub, der_path="0/{}".format(n))        
+            address = slip132.address_from_xpub(xpub)
+            database.add_generated_address(n, address)
+            conf_paid, unconf_paid = self.check_payment(address)
+            if conf_paid == 0 and unconf_paid == 0:
+                break
         return address, None
