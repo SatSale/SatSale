@@ -16,9 +16,16 @@ from pprint import pprint
 import json
 import logging
 
+import config
+# Initialise logging before importing other modules
+logging.basicConfig(
+    format="[%(asctime)s] [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S %z",
+    level=getattr(logging, config.loglevel),
+)
+
 from gateways import ssh_tunnel
 from gateways import paynym
-import config
 from payments import database, weakhands
 from payments.price_feed import get_btc_value
 from node import bitcoind
@@ -27,12 +34,6 @@ from node import clightning
 from utils import btc_amount_format
 
 from gateways import woo_webhook
-
-logging.basicConfig(
-    format="[%(asctime)s] [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S %z",
-    level=getattr(logging, config.loglevel),
-)
 
 app = Flask(__name__)
 
