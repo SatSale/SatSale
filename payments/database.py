@@ -3,12 +3,53 @@ import logging
 
 
 def create_database(name="database.db"):
-    with sqlite3.connect("database.db") as conn:
-        logging.info("Creating new database.db...")
+    with sqlite3.connect(name) as conn:
+        logging.info("Creating new {}...".format(name))
         conn.execute(
             "CREATE TABLE payments (uuid TEXT, fiat_value DECIMAL, btc_value DECIMAL, method TEXT, address TEXT, time DECIMAL, webhook TEXT, rhash TEXT)"
         )
     return
+
+
+def _get_database_schema_version(name="database.db"):
+    with sqlite3.connect(name) as conn:
+        return conn.execute("SELECT version FROM schema_version").fetchone()[0]
+
+
+def _set_database_schema_version(version, name="database.db"):
+    with sqlite3.connect(name) as conn:
+        conn.execute("UPDATE schema_version SET version = {}".format(version))
+
+
+def _log_migrate_database(from_version, to_version, message):
+    logging.info("Migrating database from {} to {}: {}".format(
+        from_version, to_version, message))
+
+
+def migrate_database(name="database.db"):
+    with sqlite3.connect(name) as conn:
+        version_table_exists = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'schema_version'"
+        ).fetchone()
+        if version_table_exists:
+            schema_version = _get_database_schema_version(name)
+        else:
+            schema_version = 0
+
+    if schema_version < 1:
+        _log_migrate_database(0, 1, "Creating new table for schema version")
+        with sqlite3.connect(name) as conn:
+            conn.execute("CREATE TABLE schema_version (version INT)")
+            conn.execute("INSERT INTO schema_version (version) VALUES (1)")
+
+    #if schema_version < 2:
+    #   do next migration
+
+    new_version = _get_database_schema_version(name)
+    if schema_version != new_version:
+        logging.info(
+            "Finished migrating database schema from version {} to {}".format(
+                schema_version, new_version))
 
 
 def write_to_database(invoice, name="database.db"):
