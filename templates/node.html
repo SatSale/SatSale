@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>SatSale</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <script src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='satsale.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+
+<body>
+    <div id="paybox">
+        <div id="row" height="50px">
+            <div id="left" style="display:inline-block;" height="75px">
+                <h1>Open a channel:</h1>
+            </div>
+            <div id="right">
+                <p><img class="qr" style="display:block; margin-left: auto; margin-right: auto;" width="100px" src="{{ url_for('static', filename='qr_codes/node.png') }}"></p>
+            </div>
+        </div>
+        <pre id="nodeInfo" style="padding:10px;background-color:black;color:white;border-radius:15px;white-space:pre-wrap;word-wrap:break-word;">
+            <span id="node_url"></span>
+        </pre>
+        
+        </br>
+
+        <div id="row">
+            <div id="left" style="text-align: left; padding: 0;">
+            </div>
+
+            <div id="right" style="text-align: right; padding: 10px 10px;">
+                <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank">SatSale</a></small>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        node_info = {{ params|tojson }};
+        console.log(node_info);
+        document.getElementById("node_url").innerHTML = node_info.uri;
+
+    </script>
+
+</body>
+</html>

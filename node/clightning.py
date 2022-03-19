@@ -69,6 +69,14 @@ class clightning:
         img.save("static/qr_codes/{}.png".format(uuid))
         return
 
+    def get_info(self):
+        return self.clightning.getinfo()
+
+    def get_uri(self):
+        info = self.get_info()
+        address = info["address"][0]
+        return info["id"] + "@" + address["address"] + ":" + str(address["port"])
+
     # Create lightning invoice
     def create_clightning_invoice(self, btc_amount, label):
         # Multiplying by 10^8 to convert to satoshi units

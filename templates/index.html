@@ -25,7 +25,7 @@
     <div id="paybox">
         <div id="row" height="50px">
             <div id="left" style="display:inline-block;" height="75px">
-                <h1>Pay Bitcoin</h>
+                <h1>Pay Bitcoin</h1>
             </div>
             <div id="right">
                 <a id="qrClick" target="_blank"><img class="logo" id="qrImage" width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
@@ -48,7 +48,7 @@
         </br>
 
         <div id="row">
-            <div id="left" style="text-align: left; padding: 0;">
+            <div id="left" style="width:40%; text-align: left; padding: 0;">
                 <div id="paymentMethodSwitchButton" style="display:none;">
                 {% if params.payment_methods|length > 1 %}
                     <select class="button" name="method" id="payment_method_select" onchange="replaceUrlParam(window.location, 'method', document.getElementById('payment_method_select').value);">
@@ -65,7 +65,11 @@
                 </div>
             </div>
 
-            <div id="right" style="text-align: right; padding: 10px 10px;">
+            <div id="right" style="width:60%; text-align: right; padding: 10px 10px;">
+                {% if params.node_info %}
+                    <small><a id="about" href="/node/" target="_blank">Open a channel with me!</a></small>
+                    </br>
+                {% endif %}
                 <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank">SatSale</a></small>
             </div>
         </div>
