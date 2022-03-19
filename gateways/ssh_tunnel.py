@@ -10,57 +10,49 @@ from node import bitcoind
 def open_tunnel(host, port):
     # If tunnel is required (might make things easier)
     try:
-        if config.tunnel_host is not None:
-            command = [
-                "ssh",
-                config.tunnel_host,
-                "-q",
-                "-N",
-                "-L",
-                "{}:localhost:{}".format(port, port),
-            ]
-            logging.info("Opening tunnel to {}.".format(" ".join(command)))
-            tunnel_proc = subprocess.Popen(command)
-            return tunnel_proc
+        command = [
+            "ssh",
+            config.tunnel_host,
+            "-q",
+            "-N",
+            "-L",
+            "{}:localhost:{}".format(port, port),
+        ]
+        logging.info("Opening tunnel to {}.".format(" ".join(command)))
+        return subprocess.Popen(command)
 
-        else:
-            tunnel_proc = None
     except Exception as e:
         logging.error("FAILED TO OPEN TUNNEL. Exception: {}".format(e))
-        tunnel_proc = None
-        pass
-    return
+
+    return None
 
 
 def clightning_unix_domain_socket_ssh(rpc_store_dir=None):
     if rpc_store_dir is None:
         rpc_store_dir = os.getcwd()
 
+    local_file = rpc_store_dir + "/lightning-rpc"
+
     # ssh -nNT -L lightning-rpc:~/.lightning/lightning-rpc config.tunnel_host
-    if config.tunnel_host is not None:
-        try:
-            command = [
-                "ssh",
-                "-nNT",
-                "-L",
-                "lightning-rpc:{}".format(config.clightning_rpc_file),
-                "{}".format(config.tunnel_host),
-            ]
-            logging.info("Opening tunnel to {}.".format(" ".join(command)))
-            tunnel_proc = subprocess.Popen(command)
-            return tunnel_proc
+    try:
+        command = [
+            "ssh",
+            "-nNT",
+            "-L",
+            "{}:{}".format(local_file, config.clightning_rpc_file),
+            "{}".format(config.tunnel_host),
+        ]
+        logging.info("Opening tunnel to {}.".format(" ".join(command)))
+        tunnel_proc = subprocess.Popen(command)
+        return tunnel_proc
 
-        except Exception as e:
-            logging.error(
-                "FAILED TO OPEN UNIX DOMAIN SOCKET OVER SSH. Exception: {}".format(e)
-            )
-            tunnel_proc = None
-            pass
+    except Exception as e:
+        logging.error(
+            "FAILED TO OPEN UNIX DOMAIN SOCKET OVER SSH. Exception: {}".format(e)
+        )
+        return None
 
-    else:
-        tunnel_proc = None
-
-    return
+    return None
 
 
 def close_tunnel():

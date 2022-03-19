@@ -54,8 +54,8 @@ onchain_dust_limit = 0.00000546
 # Or clightning
 #pay_method = "clightning"
 
-# If remote clightning, make sure `ssh -nNT -L lightning-rpc:{clightning_rpc_file} {tunnel_host}`
-# creates a lightning-rpc unix domain socket
+# If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host}`
+# creates a lightning-rpc unix domain socket. (use full paths local: /home/install/satsale/lightning-rpc)
 #clightning_rpc_file = "/home/user/.lightning/lightning-rpc"
 #######################
 

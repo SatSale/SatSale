@@ -28,7 +28,7 @@ class clightning:
         for i in range(config.connection_attempts):
             try:
                 logging.info("Attempting to connect to clightning...")
-                self.clightning = LightningRpc(config.clightning_rpc_file)
+                self.clightning = LightningRpc("lightning-rpc")
 
                 logging.info("Getting clightning info...")
                 info = self.clightning.getinfo()
