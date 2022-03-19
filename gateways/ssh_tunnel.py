@@ -18,11 +18,11 @@ def open_tunnel(host, port):
             "-L",
             "{}:localhost:{}".format(port, port),
         ]
-        logging.info("Opening tunnel to {}.".format(" ".join(command)))
+        print("Opening tunnel to {}.".format(" ".join(command)))
         return subprocess.Popen(command)
 
     except Exception as e:
-        logging.error("FAILED TO OPEN TUNNEL. Exception: {}".format(e))
+        print("FAILED TO OPEN TUNNEL. Exception: {}".format(e))
 
     return None
 
@@ -42,38 +42,45 @@ def clightning_unix_domain_socket_ssh(rpc_store_dir=None):
             "{}:{}".format(local_file, config.clightning_rpc_file),
             "{}".format(config.tunnel_host),
         ]
-        logging.info("Opening tunnel to {}.".format(" ".join(command)))
+        print("Opening tunnel to {}.".format(" ".join(command)))
         tunnel_proc = subprocess.Popen(command)
         return tunnel_proc
 
     except Exception as e:
-        logging.error(
+        print(
             "FAILED TO OPEN UNIX DOMAIN SOCKET OVER SSH. Exception: {}".format(e)
         )
-        return None
 
     return None
 
 
-def close_tunnel():
-    if tunnel_proc is not None:
-        tunnel_proc.kill()
-        logging.info("Tunnel closed.")
+def rm_lightning_rpc_file():
+    if os.path.exists("lightning-rpc"):
+        os.remove("lightning-rpc")
+    return
+
+def close_tunnels(ssh_processes):
+    for proc in ssh_processes:
+        proc.kill()
+
+    if config.clightning_rpc_file is not None:
+        rm_lightning_rpc_file()
     return
 
 
 # Open tunnel
-if config.tunnel_host is not None:
-    tunnel_proc = open_tunnel(config.tunnel_host, config.rpcport)
+def open_tunnels():
+    # global ssh_tunnel_processes
+    ssh_tunnel_processes = []
+    if config.tunnel_host is not None:
+        ssh_tunnel_processes.append(open_tunnel(config.tunnel_host, config.rpcport))
 
-    # Also for lnd if enabled
-    if config.lnd_rpcport is not None:
-        open_tunnel(config.tunnel_host, config.lnd_rpcport)
+        # Also for lnd if enabled
+        if config.lnd_rpcport is not None:
+            ssh_tunnel_processes.append(open_tunnel(config.tunnel_host, config.lnd_rpcport))
 
-    # And if clightning is enabled
-    if config.clightning_rpc_file is not None:
-        clightning_unix_domain_socket_ssh()
+        # And if clightning is enabled
+        if config.clightning_rpc_file is not None:
+            ssh_tunnel_processes.append(clightning_unix_domain_socket_ssh())
 
-    time.sleep(2)
-else:
-    tunnel_proc = None
+    return [proc for proc in ssh_tunnel_processes if proc is not None]
