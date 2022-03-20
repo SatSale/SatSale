@@ -55,7 +55,7 @@ class lnd:
 
             except Exception as e:
                 logging.error(e)
-                time.sleep(config.pollrate)
+                time.sleep(2)
                 logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts

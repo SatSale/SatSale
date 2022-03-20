@@ -39,8 +39,9 @@ class btcd:
                 rpc_credentials_str = open(config.rpc_cookie_file, "r").read()
                 (username, password) = rpc_credentials_str.split(":")
             else:
-                raise Exception("rpc_cookie_file {} not found".format(
-                    config.rpc_cookie_file))
+                raise Exception(
+                    "rpc_cookie_file {} not found".format(config.rpc_cookie_file)
+                )
         else:
             username = config.username
             password = config.password
@@ -83,7 +84,7 @@ class btcd:
 
             except Exception as e:
                 logging.error(e)
-                time.sleep(config.pollrate)
+                time.sleep(2)
                 logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts
@@ -97,7 +98,8 @@ class btcd:
 
     def create_qr(self, uuid, address, value):
         qr_str = "bitcoin:{}?amount={}&label={}".format(
-            address, btc_amount_format(value), uuid)
+            address, btc_amount_format(value), uuid
+        )
 
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))

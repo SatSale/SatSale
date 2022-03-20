@@ -27,19 +27,28 @@ class clightning:
 
         for i in range(config.connection_attempts):
             try:
-                logging.info("Attempting to connect to clightning...")
-                self.clightning = LightningRpc("lightning-rpc")
+                if config.tunnel_host is None:
+                    rpc_file = config.clightning_rpc_file
+                else:
+                    rpc_file = "lightning-rpc"
+
+                logging.info(
+                    "Attempting to connect to clightning with unix domain socket: {}".format(
+                        rpc_file
+                    )
+                )
+                self.clightning = LightningRpc(rpc_file)
 
                 logging.info("Getting clightning info...")
                 info = self.clightning.getinfo()
                 logging.info(info)
 
-                logging.info("Successfully clightning lnd.")
+                logging.info("Successfully connected to clightning.")
                 break
 
             except Exception as e:
                 logging.error(e)
-                time.sleep(config.pollrate)
+                time.sleep(2)
                 logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts
