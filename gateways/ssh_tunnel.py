@@ -60,14 +60,15 @@ def rm_lightning_rpc_file():
     return
 
 def close_tunnels(ssh_processes):
-    for proc in ssh_processes:
-        try:
-            proc.kill()
-        except Exception as e:
-            continue
+    if ssh_processes is not None:
+        for proc in ssh_processes:
+            try:
+                proc.kill()
+            except Exception as e:
+                continue
 
-    if config.clightning_rpc_file is not None:
-        rm_lightning_rpc_file()
+        if config.clightning_rpc_file is not None:
+            rm_lightning_rpc_file()
     return
 
 
