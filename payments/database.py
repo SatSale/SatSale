@@ -22,8 +22,9 @@ def _set_database_schema_version(version, name="database.db"):
 
 
 def _log_migrate_database(from_version, to_version, message):
-    logging.info("Migrating database from {} to {}: {}".format(
-        from_version, to_version, message))
+    logging.info(
+        "Migrating database from {} to {}: {}".format(from_version, to_version, message)
+    )
 
 
 def migrate_database(name="database.db"):
@@ -55,7 +56,9 @@ def migrate_database(name="database.db"):
     if schema_version != new_version:
         logging.info(
             "Finished migrating database schema from version {} to {}".format(
-                schema_version, new_version))
+                schema_version, new_version
+            )
+        )
 
 
 def write_to_database(invoice, name="database.db"):
@@ -110,7 +113,9 @@ def get_next_address_index():
     with sqlite3.connect("database.db") as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
-        addresses = cur.execute("SELECT n FROM addresses ORDER BY n DESC LIMIT 1").fetchall()
+        addresses = cur.execute(
+            "SELECT n FROM addresses ORDER BY n DESC LIMIT 1"
+        ).fetchall()
 
     if len(addresses) == 0:
         return 0

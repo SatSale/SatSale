@@ -12,6 +12,7 @@ from payments.price_feed import get_btc_value
 from utils import btc_amount_format
 from payments import database
 
+
 class xpub:
     def __init__(self, node_config):
         self.is_onchain = True
@@ -25,8 +26,8 @@ class xpub:
 
     def create_qr(self, uuid, address, value):
         qr_str = "bitcoin:{}?amount={}&label={}".format(
-            address, btc_amount_format(value), uuid)
-
+            address, btc_amount_format(value), uuid
+        )
 
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
@@ -59,14 +60,16 @@ class xpub:
         return n
 
     def get_address_at_index(self, index):
-        if self.config["bip"] == "BIP84":     
-            bip84_acc = Bip84.FromExtendedKey(self.config['xpub'], Bip84Coins.BITCOIN)
+        if self.config["bip"] == "BIP84":
+            bip84_acc = Bip84.FromExtendedKey(self.config["xpub"], Bip84Coins.BITCOIN)
             child_key = bip84_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
         elif self.config["bip"] == "BIP44":
-            bip44_acc = Bip44.FromExtendedKey(self.config['xpub'], Bip44Coins.BITCOIN)
+            bip44_acc = Bip44.FromExtendedKey(self.config["xpub"], Bip44Coins.BITCOIN)
             child_key = bip44_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
         else:
-            raise NotImplementedError("{} is not yet implemented!".format(self.config['bip']))
+            raise NotImplementedError(
+                "{} is not yet implemented!".format(self.config["bip"])
+            )
 
         address = child_key.PublicKey().ToAddress()
         return address
@@ -84,15 +87,21 @@ class xpub:
 
 def test():
     # Account 0, root = m/84'/0'/0'
-    test_zpub  = "zpub6rFR7y4Q2AijBEqTUquhVz398htDFrtymD9xYYfG1m4wAcvPhXNfE3EfH1r1ADqtfSdVCToUG868RvUUkgDKf31mGDtKsAYz2oz2AGutZYs"
+    test_zpub = "zpub6rFR7y4Q2AijBEqTUquhVz398htDFrtymD9xYYfG1m4wAcvPhXNfE3EfH1r1ADqtfSdVCToUG868RvUUkgDKf31mGDtKsAYz2oz2AGutZYs"
     pseudonode = xpub({"xpub": test_zpub, "bip": "BIP84"})
-    assert(pseudonode.get_address_at_index(0) == "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu")
-    assert(pseudonode.get_address_at_index(1) == "bc1qnjg0jd8228aq7egyzacy8cys3knf9xvrerkf9g")
+    assert (
+        pseudonode.get_address_at_index(0)
+        == "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu"
+    )
+    assert (
+        pseudonode.get_address_at_index(1)
+        == "bc1qnjg0jd8228aq7egyzacy8cys3knf9xvrerkf9g"
+    )
     print("BIP84 test succeded")
 
     test_xpub = "xpub6C5uh2bEhmF8ck3LSnNsj261dt24wrJHMcsXcV25MjrYNo3ZiduE3pS2Xs7nKKTR6kGPDa8jemxCQPw6zX2LMEA6VG2sypt2LUJRHb8G63i"
     pseudonode2 = xpub({"xpub": test_xpub, "bip": "BIP44"})
-    assert(pseudonode2.get_address_at_index(0) == "1LLNwhAMsS3J9tZR2T4fFg2ibuZyRSxFZg")
-    assert(pseudonode2.get_address_at_index(1) == "1EaEuwMRVKdWBoKeJZzJ8abUzVbWNhGhtC")
+    assert pseudonode2.get_address_at_index(0) == "1LLNwhAMsS3J9tZR2T4fFg2ibuZyRSxFZg"
+    assert pseudonode2.get_address_at_index(1) == "1EaEuwMRVKdWBoKeJZzJ8abUzVbWNhGhtC"
     print("BIP44 test succeded")
     return
