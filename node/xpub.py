@@ -5,7 +5,7 @@ import json
 import os
 import logging
 import requests
-from btclib import bip32, slip132
+from bip_utils import Bip84, Bip44Changes, Bip84Coins
 
 import config
 from payments.price_feed import get_btc_value
@@ -68,9 +68,10 @@ class xpub:
     def get_address(self, amount, label):
         while True:
             n = self.get_next_address_index()
-            # xpub = bip32.derive(xkey=config.xpub, der_path="m/84'/0/0/0/{}".format(n))        
-            xpub = bip32.derive(xkey=config.xpub, der_path="0/{}".format(n))        
-            address = slip132.address_from_xpub(xpub)
+            bip84_acc = Bip84.FromExtendedKey(config.xpub, Bip84Coins.BITCOIN)
+            bip84_addr = bip84_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(n)
+            address = bip84_addr.PublicKey().ToAddress()
+            
             database.add_generated_address(n, address)
             conf_paid, unconf_paid = self.check_payment(address, slow=False)
             if conf_paid == 0 and unconf_paid == 0:
