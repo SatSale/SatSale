@@ -19,10 +19,19 @@ class xpub:
         self.config = node_config
         self.api = "https://mempool.space/api"
 
+        next_n = self.get_next_address_index(self.config["xpub"])
+        if next_n == 0:
+            logging.warn(
+                "Deriving addresses for first time from xpub: {}".format(
+                    self.config["xpub"]
+                )
+            )
+            logging.warn("CONFIRM THIS IS THE FIRST ADDRESS YOU EXPECT IN YOUR WALLET:")
+            logging.warn(self.get_address_at_index(next_n))
+            time.sleep(10)
+
         logging.info("Fetching blockchain info from {}".format(self.api))
-        logging.info(
-            "Next address shown to users is #{}".format(self.get_next_address_index())
-        )
+        logging.info("Next address shown to users is #{}".format(next_n))
 
     def create_qr(self, uuid, address, value):
         qr_str = "bitcoin:{}?amount={}&label={}".format(
@@ -55,8 +64,8 @@ class xpub:
 
         return 0, 0
 
-    def get_next_address_index(self):
-        n = database.get_next_address_index()
+    def get_next_address_index(self, xpub):
+        n = database.get_next_address_index(xpub)
         return n
 
     def get_address_at_index(self, index):
@@ -76,9 +85,9 @@ class xpub:
 
     def get_address(self, amount, label):
         while True:
-            n = self.get_next_address_index()
+            n = self.get_next_address_index(self.config["xpub"])
             address = self.get_address_at_index(n)
-            database.add_generated_address(n, address)
+            database.add_generated_address(n, address, self.config["xpub"])
             conf_paid, unconf_paid = self.check_payment(address, slow=False)
             if conf_paid == 0 and unconf_paid == 0:
                 break

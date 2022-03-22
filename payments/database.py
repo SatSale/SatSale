@@ -46,7 +46,7 @@ def migrate_database(name="database.db"):
     if schema_version < 2:
         _log_migrate_database(1, 2, "Creating new table for generated addresses")
         with sqlite3.connect(name) as conn:
-            conn.execute("CREATE TABLE addresses (n INTEGER, address TEXT)")
+            conn.execute("CREATE TABLE addresses (n INTEGER, address TEXT, xpub TEXT)")
         _set_database_schema_version(2)
 
     #if schema_version < 2:
@@ -96,25 +96,26 @@ def load_invoice_from_db(uuid, name="database.db"):
         return None
 
 
-def add_generated_address(index, address):
+def add_generated_address(index, address, xpub):
     with sqlite3.connect("database.db") as conn:
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO addresses (n, address) VALUES (?,?)",
+            "INSERT INTO addresses (n, address, xpub) VALUES (?,?,?)",
             (
                 index,
                 address,
+                xpub,
             ),
         )
     return
 
 
-def get_next_address_index():
+def get_next_address_index(xpub):
     with sqlite3.connect("database.db") as conn:
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         addresses = cur.execute(
-            "SELECT n FROM addresses ORDER BY n DESC LIMIT 1"
+            "SELECT n FROM addresses WHERE xpub='{}' ORDER BY n DESC LIMIT 1".format(xpub)
         ).fetchall()
 
     if len(addresses) == 0:

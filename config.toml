@@ -35,6 +35,7 @@ clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
 
 [xpub]
 ## XPUB :: Add "xpub" to payment_methods and enter your xpub.
+# Ensure you manually confirm the first address matches what you expect! See output.
 xpub = ""
 bip = "BIP84" # bc1q addresses (xpub will start with `zpub...`). Can use BIP44 for 1legacy
 
