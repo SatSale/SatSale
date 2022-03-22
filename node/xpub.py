@@ -5,25 +5,18 @@ import json
 import os
 import logging
 import requests
-from bip_utils import Bip84, Bip44Changes, Bip84Coins
+from bip_utils import Bip84, Bip44Changes, Bip84Coins, Bip44, Bip44Coins
 
 import config
 from payments.price_feed import get_btc_value
 from utils import btc_amount_format
 from payments import database
 
-if config.tor_bitcoinrpc_host is not None:
-    from gateways.tor import session
-
-
 class xpub:
-    def __init__(self, xpub):
-        self.xpub_key = xpub
+    def __init__(self, node_config):
         self.is_onchain = True
+        self.config = node_config
         self.api = "https://mempool.space/api"
-        self.address_counter_file = "address_counter"
-        if not database.check_address_table_exists():
-            database.create_address_table()
 
         logging.info("Fetching blockchain info from {}".format(self.api))
         logging.info(
@@ -65,15 +58,41 @@ class xpub:
         n = database.get_next_address_index()
         return n
 
+    def get_address_at_index(self, index):
+        if self.config["bip"] == "BIP84":     
+            bip84_acc = Bip84.FromExtendedKey(self.config['xpub'], Bip84Coins.BITCOIN)
+            child_key = bip84_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
+        elif self.config["bip"] == "BIP44":
+            bip44_acc = Bip44.FromExtendedKey(self.config['xpub'], Bip44Coins.BITCOIN)
+            child_key = bip44_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
+        else:
+            raise NotImplementedError("{} is not yet implemented!".format(self.config['bip']))
+
+        address = child_key.PublicKey().ToAddress()
+        return address
+
     def get_address(self, amount, label):
         while True:
             n = self.get_next_address_index()
-            bip84_acc = Bip84.FromExtendedKey(config.xpub, Bip84Coins.BITCOIN)
-            bip84_addr = bip84_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(n)
-            address = bip84_addr.PublicKey().ToAddress()
-            
+            address = self.get_address_at_index(n)
             database.add_generated_address(n, address)
             conf_paid, unconf_paid = self.check_payment(address, slow=False)
             if conf_paid == 0 and unconf_paid == 0:
                 break
         return address, None
+
+
+def test():
+    # Account 0, root = m/84'/0'/0'
+    test_zpub  = "zpub6rFR7y4Q2AijBEqTUquhVz398htDFrtymD9xYYfG1m4wAcvPhXNfE3EfH1r1ADqtfSdVCToUG868RvUUkgDKf31mGDtKsAYz2oz2AGutZYs"
+    pseudonode = xpub({"xpub": test_zpub, "bip": "BIP84"})
+    assert(pseudonode.get_address_at_index(0) == "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu")
+    assert(pseudonode.get_address_at_index(1) == "bc1qnjg0jd8228aq7egyzacy8cys3knf9xvrerkf9g")
+    print("BIP84 test succeded")
+
+    test_xpub = "xpub6C5uh2bEhmF8ck3LSnNsj261dt24wrJHMcsXcV25MjrYNo3ZiduE3pS2Xs7nKKTR6kGPDa8jemxCQPw6zX2LMEA6VG2sypt2LUJRHb8G63i"
+    pseudonode2 = xpub({"xpub": test_xpub, "bip": "BIP44"})
+    assert(pseudonode2.get_address_at_index(0) == "1LLNwhAMsS3J9tZR2T4fFg2ibuZyRSxFZg")
+    assert(pseudonode2.get_address_at_index(1) == "1EaEuwMRVKdWBoKeJZzJ8abUzVbWNhGhtC")
+    print("BIP44 test succeded")
+    return

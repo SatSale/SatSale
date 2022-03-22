@@ -42,6 +42,12 @@ def migrate_database(name="database.db"):
             conn.execute("CREATE TABLE schema_version (version INT)")
             conn.execute("INSERT INTO schema_version (version) VALUES (1)")
 
+    if schema_version < 2:
+        _log_migrate_database(1, 2, "Creating new table for generated addresses")
+        with sqlite3.connect(name) as conn:
+            conn.execute("CREATE TABLE addresses (n INTEGER, address TEXT)")
+        _set_database_schema_version(2)
+
     #if schema_version < 2:
     #   do next migration
 
@@ -85,24 +91,6 @@ def load_invoice_from_db(uuid, name="database.db"):
         return [dict(ix) for ix in rows][0]
     else:
         return None
-
-
-def check_address_table_exists():
-    with sqlite3.connect("database.db") as conn:
-        exists = conn.execute(
-            f"SELECT name FROM sqlite_master WHERE type='table' AND name='addresses'"
-        ).fetchall()
-        if len(exists) == 0:
-            return False
-
-    return exists
-
-
-def create_address_table():
-    with sqlite3.connect("database.db") as conn:
-        logging.info("Creating new table for generated addresses")
-        conn.execute("CREATE TABLE addresses (n INTEGER, address TEXT)")
-    return
 
 
 def add_generated_address(index, address):
