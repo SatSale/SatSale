@@ -367,7 +367,7 @@ for method in config.payment_methods:
 
     elif method['name'] == "xpub":
         bitcoin_node = xpub.xpub(method)
-        logging.info("Not connecting to any node! Using zpubs and blockexplorer APIs.")
+        logging.info("Not connecting to a bitcoin node, using xpubs and blockexplorer APIs.")
         enabled_payment_methods.append("onchain")
 
 # Add node connection page

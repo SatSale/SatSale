@@ -21,12 +21,12 @@ class xpub:
 
         next_n = self.get_next_address_index(self.config["xpub"])
         if next_n == 0:
-            logging.warn(
+            logging.info(
                 "Deriving addresses for first time from xpub: {}".format(
                     self.config["xpub"]
                 )
             )
-            logging.warn("CONFIRM THIS IS THE FIRST ADDRESS YOU EXPECT IN YOUR WALLET:")
+            logging.warn("YOU MUST CHECK THIS MATCHES THE FIRST ADDRESS IN YOUR WALLET:")
             logging.warn(self.get_address_at_index(next_n))
             time.sleep(10)
 
