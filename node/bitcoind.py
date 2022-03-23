@@ -69,7 +69,10 @@ class btcd:
 
             except Exception as e:
                 logging.error(e)
-                time.sleep(2)
+                if i < 5:
+                    time.sleep(2)
+                else:
+                    time.sleep(60)
                 logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts
@@ -131,6 +134,10 @@ class btcd:
 
             except Exception as e:
                 logging.error(e)
+                if i < 5:
+                    time.sleep(2)
+                else:
+                    time.sleep(60)
                 logging.info(
                     "Attempting again... {}/{}...".format(
                         i + 1, config.connection_attempts
