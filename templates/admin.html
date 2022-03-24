@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Store Admin</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='store_style.css') }}">
+
+    <!-- <script src="{{ url_for('static', filename='store.js') }}"></script> -->
+    <script type="text/javascript">
+        var items = {{ params | tojson }};
+        console.log(items);
+    </script>
+</head>
+
+
+<body>
+    <div id="paybox" style="width: 85%;height: auto;">
+        <div id="row" height="50px">
+            <div id="left" style="display:inline-block;" height="75px">
+                <h1 style="margin-bottom:0px;">SatSale Admin</h1>
+            </div>
+            <div id="right">
+                <a class="logo" target="_blank" rel="noreferrer"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
+            </div>
+        </div>
+
+        <div id="row">
+            <div id="left">
+                <centre>
+                    <h3 style="margin-bottom:0px;"><a id="about" href="/store" rel="noreferrer">View Store</a></h3>
+                    <h3 style="margin-bottom:0px;"><a id="about" href="/" rel="noreferrer">View Donation Page</a></h3>
+                    <h3 style="margin-bottom:0px;"><a id="about" href="{{ url_for('static', filename='store.csv') }}" rel="noreferrer">Download Existing Store</a></h3>
+                    <h3 style="margin-bottom:0px;">Upload New Item Spreadsheet</h3>
+                    <form action= "/uploader" method = "POST" enctype = "multipart/form-data">
+                    <input class="button button1" style="color:white; float:left;width:250px" type="file" name="file" />
+                        </br>
+                        </br>
+                        </br>
+                        </br>
+                        <input type="password" name="pass" style="float:left;" placeholder="Admin Password" id="search"/>
+                        </br>
+                        </br>
+                    <input class="button button1" style="color:black; background-color:orange;float:left;width:100px" type="submit"/>
+                    </form>
+                </centre>
+            </div>
+            <div id="right">
+                <centre>
+                    <h3 style="margin-bottom:0px;">Add Individual Item</h3>
+                    <div id="left">
+                        <form action = "/additem" style="text-align: left;" method = "POST">
+                            <input type="text" name="itemName" placeholder="Item" id="search"/>
+                            </br>
+                            <input type="number" name="itemPrice" placeholder="Price" id="search"/>
+                            </br>
+                            <input type="text" name="itemURL" placeholder="Image URL (optional)" id="search"/>
+                            </br>
+                            <input type="password" name="pass" placeholder="Admin Password" id="search"/>
+                            </br>
+                            <input type="submit" class="button button1" style="color:black; background-color:orange;float:left;width:100px"/>
+                            </br>
+                        </form>
+                    </div>
+                </centre>
+            </div>
+        </div>
+        <div id="right" style="text-align: right; padding: 10px 20px;">
+            <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank" rel="noreferrer">SatSale</a></small>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Store</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='store_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='calc.css') }}">
+
+
+    <script src="{{ url_for('static', filename='store.js') }}"></script>
+    <script type="text/javascript">
+        var items = {{ params | tojson }};
+        console.log(items);
+    </script>
+
+</head>
+
+
+<body>
+    <div id="paybox2" style="width: 85%;height: auto;">
+        <div id="row" height="50px">
+            <div id="left" style="display:inline-block;" height="75px">
+                <h1 style="margin-bottom:0px;">Checkout</h1>
+            </div>
+            <div id="right">
+                <a id="qrClick" target="_blank" rel="noreferrer"><img class="logo" id="qrImage" width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
+            </div>
+        </div>
+
+        <div id="row">
+            <div id="left">
+                <h3 style="margin-bottom:0px;">Store</h3>
+                <form id="payform" action='/pay'>
+                    <div id="row">
+                        <div id="left" style="width:250px">
+                            <input type="text" id="search" style="border-radius:5px;float:left;margin-top:10px;" placeholder="Search Items"></input>
+                        </div>
+                        <div id="right">
+                            <input class="button button1" onclick="clearSearch();" style="color:black; background-color:orange;float:left;width:10px" value="X">
+                        </div>
+                    </div>
+                    <div id="storetablediv">
+                    </div>
+                    <input style="display:none" size="4" type="float" name="amount" id="amount" placeholder="USD" required></input>
+                    <input type="hidden" id="hiddenbaskettotal" value="0">
+                    <!-- </br> -->
+                    <!-- <input type="text" id="search" style="float:left; border-radius:5px;" placeholder="Search Items"></input><input class="button button1" onclick="clearSearch();" style="float:left; color:black; background-color:orange;" value="Clear"> -->
+                    <!-- &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input class="button button1" onclick="launchCalc()" style="float:left; color:black; background-color:orange;" value="Calc"> -->
+                </form>
+            </div>
+            <div id="right">
+                <h3 style="margin-bottom:0px;">Cart</h3>
+                <p style="text-align:left;padding:0;">BTCUSD: $<b><span id="BTCPrice"></span></b></p>
+                </br>
+                </br>
+                <input class="button button1" onclick="clearQuantities();updateInvoice();" style="float:left; color:black; background-color:orange;width:50px" value="Clear">
+                &nbsp&nbsp&nbsp&nbsp
+                <input type="button" class="button button1" onclick="showHideCalc();" style="float:left; color:white; background-color:navy;" value="Calc">
+                <div id="receipttablediv">
+                </div>
+                </br>
+                <div style="margin-top:100px; wordwrap:break-word; display:inline">
+                    <p></p>
+                    <p style="display:block">Total: $<b><span id="invoicetotal"></span></b></p>
+                    <p style="display:block;padding:0;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <b><span id="sats_amount"></span></b> sats</p>
+                    <p style="display:block;padding:0;">&nbsp(<b><span id="btc_amount"></span></b> BTC)</p>
+                    </br>
+                </div>
+                <h3><input type="text" class="calculator-screen" value="" disabled /> sats</h3>
+                <div class="calculator"  id="calculator-div" style="display:none">
+
+                    <div class="calculator-keys">
+
+                        <button type="button" class="operator" value="+">+</button>
+                        <button type="button" class="operator" value="-">-</button>
+                        <button type="button" class="operator" value="*">&times;</button>
+                        <button type="button" class="operator" value="/">&divide;</button>
+
+                        <button type="button" value="7">7</button>
+                        <button type="button" value="8">8</button>
+                        <button type="button" value="9">9</button>
+                        <button type="button" class="minusfive" value="m5">-5%</br>SATS</button>
+
+
+                        <button type="button" value="4">4</button>
+                        <button type="button" value="5">5</button>
+                        <button type="button" value="6">6</button>
+
+
+                        <button type="button" value="1">1</button>
+                        <button type="button" value="2">2</button>
+                        <button type="button" value="3">3</button>
+
+
+                        <button type="button" value="0">0</button>
+                        <button type="button" class="decimal" value=".">.</button>
+                        <button type="button" class="all-clear" value="all-clear">AC</button>
+
+                        <button type="button" class="equal-sign operator" value="=">=</button>
+
+                    </div>
+                </div>
+                </br>
+                <script src="{{ url_for('static', filename='calc.js') }}"></script>
+                <input form="payform" class="button button1" style="float:left;" type="submit" value="Pay"></input>
+
+
+
+            </div>
+        </div>
+        <div id="right" style="text-align: right; padding: 10px 10px;">
+            <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank" rel="noreferrer">SatSale</a></small>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        main(items, receipt=true)
+
+
+        $("#search").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+
+            $("table tr").each(function(index) {
+                if (index !== 0) {
+                    $row = $(this);
+
+                    var $tdElement = $row.find("td:first");
+                    var id = $tdElement.text().toLowerCase();
+                    var matchedIndex = id.indexOf(value);
+
+                    if (matchedIndex == -1) {
+                        $row.hide();
+                    }
+                    else {
+                        $row.show();
+                    }
+                }
+            });
+        });
+
+    update_receipt();
+
+
+    </script>
+</body>
+</html>

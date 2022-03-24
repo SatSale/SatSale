@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Admin</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    <!-- <script src="{{ url_for('static', filename='server_connection.js') }}"></script> -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+
+#search {
+    background-color: black;
+    color: white;
+    font-size: 1.2em;
+}
+
+<body>
+    <div id="paybox">
+        <div id="row" height="50px">
+            <div id="left" style="display:inline-block;" height="75px">
+                <h1>Admin Login</h>
+            </div>
+            <div id="right">
+                <a class="logo" target="_blank" rel="noreferrer"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
+            </div>
+        </div>
+
+        <div id="paymentForm">
+            <centre>
+                <form action="/admin" method='post'>
+                    <label for="password">{{ message }}</label><br>
+                    <input type="password" id="password" name="password" style="background-color:black;color:white;" value="">
+                    </br>
+                    </br>
+                    <input class="button button1" type="submit" value="Submit">
+                </form>
+                </br>
+                <small>(Umbrel: App Store -> SatSale -> Password. Otherwise: SatSale_API_key)</small>
+            </centre>
+        </div>
+
+        <div id="paybutton"></div>
+    </div>
+</body>
+</html>

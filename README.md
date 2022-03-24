@@ -1,4 +1,14 @@
 # SatSale
+![pos](https://user-images.githubusercontent.com/24557779/130327358-2f6439f6-eb25-4245-875b-2a80c6474a29.png)
+
+UI needs work but it's pretty functional.
+
+Requires one config line:
+`point_of_sale = True`
+
+This will add `/store` and `/admin`. On the `/admin` page you can add items or upload new lists if you have the API key (API file in satsale directory).
+
+----------
 <!---Existing self-custody Bitcoin payment processors are bloated, difficult to install, and not easily customisable.--->
 SatSale is a lightweight Bitcoin payment processor that connects to your own Bitcoin node or Lightning network node.
 

@@ -62,6 +62,9 @@ onchain_dust_limit = 0.00000546
 # node_info="uri" (manually) or true (use `admin.macaroon` to fetch `getinfo`)
 #node_info = "uri"
 
+# Point of Sale
+point_of_sale = true
+
 # Check for payment every xx seconds
 pollrate = 1
 

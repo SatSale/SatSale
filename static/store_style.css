@@ -1,0 +1,154 @@
+body {
+    width: 100%;
+    overflow: visible;
+}
+
+/* Overwriting */
+#paybox2 {
+    background-color: #f7931a;
+    border-radius: 25px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px
+
+    /* height: 90%;
+    width: 85%; */
+
+    /* height: 275px; */
+    /* width:360px; */
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    margin-top: 50px;
+
+
+
+  /* position: static;
+  left: 0%;
+  top: 0%;
+  -webkit-transform: translate(0%, 0%);
+  transform: translate(-0%, 0%);
+  margin: auto; */
+
+}
+/*  */
+
+
+form {
+  width: 100%;
+  /* margin-left: 0px; */
+  /* margin: 0 auto; */
+  text-align: center;
+}
+
+#storetablediv {
+ /* height: 260px;
+ width: 400px; */
+ /* width: 90%; */
+ /* overflow-x: hidden;
+ overflow-y: auto; */
+ width: 80%;
+}
+
+
+#receipttablediv {
+    /* height: 260px; */
+     width: 60%;
+ /* width: 350px; */ */
+ /* width: 90%; */
+ /* overflow-x: hidden; */
+ /* overflow-y: auto; */
+}
+
+
+
+#itemtable {
+    /* display: inline-block; */
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#itemtable td, #itemtable th {
+  border: 1px solid;
+  padding:10px;
+}
+
+/* #itemtable tr:nth-child(even){background-color: #f2f2f2;} */
+
+#itemtable tr:hover {background-color: #ddd;}
+
+#itemtable th {
+  background-color: #000000;
+  color: white;
+  border: 0px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#search {
+    background-color: black;
+    color: white;
+    font-size: 1.2em;
+}
+
+.button {
+    margin:5px;
+    width: 100px;
+}
+
+
+.value-button {
+  display: inline-block;
+  border: 1px solid  #000000;
+  margin: 0px;
+  width: 15px;
+  height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 2px 0;
+  color: white;
+  background:  #000000;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.value-button:hover {
+  cursor: pointer;
+}
+
+form #decrease {
+  margin-right: -4px;
+  border-radius: 8px 0 0 8px;
+}
+
+form #increase {
+  margin-left: -4px;
+  border-radius: 0 8px 8px 0;
+}
+
+/* form #input-wrap {
+  margin: 0px;
+  padding: 0px;
+} */
+
+
+.number {
+  text-align: center;
+  border: none;
+  margin: 0px;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

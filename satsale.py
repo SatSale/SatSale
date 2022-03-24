@@ -386,5 +386,9 @@ if lightning_node.config['lightning_address'] is not None:
 if config.paynym is not None:
     paynym.insert_paynym_html(config.paynym)
 
+if config.point_of_sale:
+    from gateways import point_of_sale
+    app = point_of_sale.add_decorators(app)
+
 if __name__ == "__main__":
     app.run(debug=False)
