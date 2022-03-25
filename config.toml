@@ -1,7 +1,7 @@
 # SatSale Config :: Configure payment nodes and SatSale settings
 payment_methods = ["bitcoind"]
 # SatSale can connect to your own bitcoin/lnd/clightning node, with the correct connection details set in this config.
-# Otherwise, you can just use `payment_method=pseudonode` with an `xpub=...` (found in your wallet) to derive onchain addresses.
+# Otherwise, you can just use `payment_method=['xpub']` with an `xpub=...` (found in your wallet) to derive onchain addresses.
 
 ## BITCOIND :: Add "bitcoind" to payment_methods and from ~/.bitcoin/bitcoin.conf
 # use either username / password pair or rpc_cookie_file
@@ -9,10 +9,17 @@ payment_methods = ["bitcoind"]
 [bitcoind]
 host = "127.0.0.1"
 username = "bitcoinrpc"
-password = "rpcpassword"
+password = ""
 rpcport = "8332"
 #rpc_cookie_file =
 wallet = ""
+
+## XPUB :: Add "xpub" to payment_methods and enter your xpub below.
+# You should strongly consider running a node and using it to verify payments rather than trusting block explorers.
+# You MUST ensure you manually confirm the first address matches what you expect in your wallet! See output.
+[xpub]
+xpub = ""
+bip = "BIP84" # For bc1q addresses (xpub will start like `zpub..`). Can use BIP44 for 1egacy.
 
 ## LND :: Add "lnd" to payment_methods
 # You can display your node connection so users can open channels with you by setting
@@ -32,12 +39,6 @@ lnd_macaroon = "invoice.macaroon"
 # node_info="uri" (manually) or true (fetch if macaroon has access to `getinfo`)
 [clightning]
 clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
-
-[xpub]
-## XPUB :: Add "xpub" to payment_methods and enter your xpub.
-# Ensure you manually confirm the first address matches what you expect! See output.
-xpub = ""
-bip = "BIP84" # bc1q addresses (xpub will start with `zpub...`). Can use BIP44 for 1legacy
 
 [satsale]
 #### Connect To Remote Node ####

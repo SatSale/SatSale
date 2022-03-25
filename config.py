@@ -30,16 +30,26 @@ def check_set_node_conf(name, default, node_conf):
 
 
 payment_methods = []
+# This could be cleaned up into a single function that takes args, defaults, and required args.
 for method_name in config["payment_methods"]:
     method_config = config[method_name]
     if method_name == "bitcoind":
         method_config["name"] = "bitcoind"
         check_set_node_conf("rpcport", "8332", method_config)
         check_set_node_conf("username", "bitcoinrpc", method_config)
-        check_set_node_conf("password", "rpcpassword", method_config)
+        check_set_node_conf("password", "", method_config)
         check_set_node_conf("rpc_cookie_file", "", method_config)
         check_set_node_conf("wallet", "", method_config)
         check_set_node_conf("tor_bitcoinrpc_host", None, method_config)
+        if (method_config["password"] == "" or method_config["password"] is None) and (
+            method_config["rpc_cookie_file"] == ""
+            or method_config["rpc_cookie_file"] is None
+        ):
+            raise KeyError(
+                "Mising {} config: {} or {}".format(
+                    method_name, "password", "rpc_cookie_file"
+                )
+            )
 
     elif method_name == "lnd":
         method_config["name"] = "lnd"
@@ -54,10 +64,19 @@ for method_name in config["payment_methods"]:
         check_set_node_conf("clightning_rpc_file", None, method_config)
         check_set_node_conf("lightning_address", None, method_config)
         check_set_node_conf("lightning_address_comment", None, method_config)
+        if (
+            method_config["clightning_rpc_file"] == ""
+            or method_config["clightning_rpc_file"] is None
+        ):
+            raise KeyError(
+                "Mising {}: config {}".format(method_name, "clightning_rpc_file")
+            )
 
     elif method_name == "xpub":
         method_config["name"] = "xpub"
         check_set_node_conf("xpub", None, method_config)
+        if method_config["xpub"] == "" or method_config["xpub"] is None:
+            raise KeyError("Mising {}: config {}".format(method_name, "xpub"))
 
     else:
         Exception("Unknown payment method: {}".format(method_name))

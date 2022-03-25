@@ -26,7 +26,9 @@ class xpub:
                     self.config["xpub"]
                 )
             )
-            logging.warn("YOU MUST CHECK THIS MATCHES THE FIRST ADDRESS IN YOUR WALLET:")
+            logging.warn(
+                "YOU MUST CHECK THIS MATCHES THE FIRST ADDRESS IN YOUR WALLET:"
+            )
             logging.warn(self.get_address_at_index(next_n))
             time.sleep(10)
 
