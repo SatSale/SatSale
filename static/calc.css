@@ -1,0 +1,88 @@
+/* MIT LICENSE */
+/* https://freshman.tech/calculator/ */
+
+/* html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+} */
+
+.calculator {
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  /* position: absolute; */
+  top: 50%;
+  left: 50%;
+  /* transform: translate(-50%, -50%); */
+  width: 75%;
+}
+
+.calculator-screen {
+  width: 75%;
+  font-size: 3rem;
+  height: 80px;
+  border-radius: 20px;
+  border: none;
+  background-color: black;
+  color: white;
+  text-align: right;
+  /* padding-right: 20px;
+  padding-left: 10px; */
+}
+
+button {
+  height: 50px;
+  background-color: black;
+  border-radius: 5px;
+  border: 1px solid black;
+  /* background-color: transparent; */
+  font-size: 1.5rem;
+  color: white;
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+
+button:hover {
+  background-color: #eaeaea;
+}
+
+.operator {
+  color: #orange;
+}
+
+.all-clear {
+  background-color: #f0595f;
+  border-color: #b0353a;
+  color: #fff;
+}
+
+.all-clear:hover {
+  background-color: #f17377;
+}
+
+.equal-sign {
+  background-color: orange;
+  color: #fff;
+  height: 100%;
+  grid-area: 3 / 4 / 6 / 5;
+}
+
+.minusfive {
+  background-color: green;
+  color: #white;
+}
+
+.equal-sign:hover {
+  background-color: green;
+}
+
+.calculator-keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5px;
+  padding: 20px;
+}
