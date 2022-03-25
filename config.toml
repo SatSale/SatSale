@@ -63,8 +63,9 @@ payment_timeout = 3600
 # Required confirmations for a payment
 required_confirmations = 2
 
-# Global connection attempts
-connection_attempts = 3
+# Global connection attempts (Note: SatSale has 60s breaks after the 5th attempt)
+# If you're getting worker timeouts, try launch with a long `--timeout`.
+connection_attempts = 15
 
 # Console log level (DEBUG, INFO, WARNING, ERROR)
 loglevel = "DEBUG"
