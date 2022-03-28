@@ -13,6 +13,8 @@ rpcport = "8332"
 wallet = ""
 
 ## LND :: Add "lnd" to payment_methods
+# You can display your node connection so users can open channels with you by setting
+# node_info="uri" (manually) or true (fetch if macaroon has access to `getinfo`)
 [lnd]
 host = "127.0.0.1"
 lnd_dir = "~/.lnd/"
@@ -24,6 +26,8 @@ lnd_macaroon = "invoice.macaroon"
 ## CLIGHTNING :: Add "clightning" to payment_methods
 # If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host} -p {tunnel_port}`
 # creates a lightning-rpc unix domain socket. (use full paths local: /home/install/satsale/lightning-rpc)
+# You can display your node connection so users can open channels with you by setting
+# node_info="uri" (manually) or true (fetch if macaroon has access to `getinfo`)
 [clightning]
 clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
 
@@ -53,6 +57,10 @@ api_key_path = "SatSale_API_key"
 # Dust limit for onchain payments in BTC. Don't generate onchain invoices
 # below this value.
 onchain_dust_limit = 0.00000546
+
+# You can display your node uri so users can open channels with you by setting
+# node_info="uri" (manually) or true (use `admin.macaroon` to fetch `getinfo`)
+#node_info = "uri"
 
 # Check for payment every xx seconds
 pollrate = 1

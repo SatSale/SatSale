@@ -14,9 +14,11 @@ import uuid
 import sqlite3
 from pprint import pprint
 import json
+import qrcode
 import logging
 
 import config
+
 # Initialise logging before importing other modules
 logging.basicConfig(
     format="[%(asctime)s] [%(levelname)s] %(message)s",
@@ -61,6 +63,7 @@ database.migrate_database()
 def index():
     params = dict(request.args)
     params["currency"] = config.base_currency
+    params["node_info"] = config.node_info
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("donate.html", params=params), 200, headers)
 
@@ -71,6 +74,7 @@ def pay():
     params = dict(request.args)
     params["payment_methods"] = enabled_payment_methods
     params["redirect"] = config.redirect
+    params["node_info"] = config.node_info
     # Render payment page with the request arguments (?amount= etc.)
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("index.html", params=params), 200, headers)
@@ -152,8 +156,12 @@ class create_payment(Resource):
         if node.is_onchain and btc_value < config.onchain_dust_limit:
             logging.warning(
                 "Requested onchain payment for {} {} below dust limit ({} < {})".format(
-                    base_amount, currency, btc_amount_format(btc_value),
-                    btc_amount_format(config.onchain_dust_limit)))
+                    base_amount,
+                    currency,
+                    btc_amount_format(btc_value),
+                    btc_amount_format(config.onchain_dust_limit),
+                )
+            )
             return {"message": "Amount below dust limit."}, 406
 
         invoice = {
@@ -163,7 +171,7 @@ class create_payment(Resource):
             "method": payment_method,
             "time": time.time(),
             "webhook": webhook,
-            "onchain_dust_limit": config.onchain_dust_limit
+            "onchain_dust_limit": config.onchain_dust_limit,
         }
 
         # Get an address / invoice, and create a QR code
@@ -354,6 +362,27 @@ for method in config.payment_methods:
         logging.info("Connection to lightning node (clightning) successful.")
         enabled_payment_methods.append("lightning")
 
+# Add node connection page
+if config.node_info is not None:
+    @app.route("/node/")
+    def node():
+        if config.node_info == True:
+            uri = lightning_node.get_uri()
+        else:
+            uri = config.node_info
+        img = qrcode.make(uri)
+        img.save("static/qr_codes/node.png")
+        headers = {"Content-Type": "text/html"}
+        return make_response(
+            render_template("node.html", params={"uri": uri}), 200, headers
+        )
+
+# Add lightning address 
+if lightning_node.config['lightning_address'] is not None:
+    from gateways import lightning_address
+    lightning_address.add_ln_address_decorators(app, api, lightning_node)
+
+# Add Paynym
 if config.paynym is not None:
     paynym.insert_paynym_html(config.paynym)
 

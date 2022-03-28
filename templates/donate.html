@@ -28,7 +28,6 @@
     <meta property="twitter:description" content="Lightweight Bitcoin payment processor written in easily deployable Python. ">
     <meta property="twitter:image" content="https://user-images.githubusercontent.com/24557779/109666538-60ee4800-7bc3-11eb-8615-2cb1b239cc11.png">
 
-
 </head>
 
 
@@ -45,18 +44,29 @@
         </div>
 
         <div id="paymentForm">
-            <center>
-                <form id="pay" action='/pay' style="margin:0;padding0;">
-                    <h2 style="margin:0;padding0;">Amount:
+            <form id="pay" action='/pay'>
+                <div style="display:block;text-align: center;">
+                    <h2 style="margin:0;">Amount:
                     <input id="amountenter" style="display:inline" size="4" type="float" name="amount" id="amount" placeholder="{{ params.currency }}" required>
                     </h2>
                     <br>
                     <input class="button button1" style="width:40%" type="submit" value="Donate">
-                </form>
-            </center>
+                </div>
+            </form>
+            <div id="paybutton"></div>
         </div>
-
-        <div id="paybutton"></div>
+        <br>
+        <div id="row">
+            <div id="left">
+                {% if params.node_info %}
+                <small><a id="about" href="/node/" target="_blank">Open a Lightning channel with me!</a></small>
+                </br>
+                {% endif %}
+            </div>
+            <div id="right" style="text-align:right;">
+                <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank">SatSale</a></small>   
+            </div>
+        </div>
     </div>
 </body>
 </html>

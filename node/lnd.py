@@ -48,7 +48,7 @@ class lnd:
                     logging.info(inv)
                 else:
                     logging.info("Getting lnd info...")
-                    info = self.lnd.get_info()
+                    info = self.get_info()
                     logging.info(info)
 
                 logging.info("Successfully contacted lnd.")
@@ -148,6 +148,13 @@ class lnd:
         )
         logging.info(ret)
         return
+
+    def get_info(self):
+        return json.loads(MessageToJson(self.lnd.get_info()))
+
+    def get_uri(self):
+        info = self.get_info()
+        return info["uris"][0]
 
     # Check whether the payment has been paid
     def check_payment(self, rhash):
