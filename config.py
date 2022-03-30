@@ -50,6 +50,8 @@ for method_name in config['payment_methods']:
     elif method_name == "clightning":
         method_config['name'] = "clightning"
         check_set_node_conf("clightning_rpc_file", None, method_config)
+        check_set_node_conf("lightning_address", None, method_config)
+        check_set_node_conf("lightning_address_comment", None, method_config)
 
     else:
         Exception("Unknown payment method: {}".format(method_name))
