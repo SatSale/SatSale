@@ -79,6 +79,9 @@ class clightning:
         info = self.get_info()
         address = info["address"][0]
         return info["id"] + "@" + address["address"] + ":" + str(address["port"])
+    
+    def list_invoices(self):
+        return self.clightning.listinvoices()
 
     # Create lightning invoice
     def create_clightning_invoice(self, btc_amount, label):
