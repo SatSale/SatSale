@@ -378,9 +378,13 @@ if config.node_info is not None:
         )
 
 # Add lightning address 
-if lightning_node.config['lightning_address'] is not None:
-    from gateways import lightning_address
-    lightning_address.add_ln_address_decorators(app, api, lightning_node)
+try:
+    if lightning_node.config['lightning_address'] is not None:
+        from gateways import lightning_address
+        lightning_address.add_ln_address_decorators(app, api, lightning_node)
+except NameError:
+    # lightning_node is not defined if no LN support configured
+    pass
 
 # Add Paynym
 if config.paynym is not None:
