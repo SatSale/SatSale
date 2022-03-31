@@ -1,9 +1,22 @@
-# Linux desktop notifications upon payment
-# Run `python3 -c "from scripts import notification"` from SatSale/ directory
+# Notifications Upon Payment
+# Run with `python3 -c "from scripts import notification"` from SatSale/ directory
+# 
 # This will load your config.toml and continually refresh for lightning payments (SatSale and others)
 # 
-# By default, a command `notify-send {node} {message}` is sent to give a desktop notification.
-# You can change `do_this_with_invoice(node, invoice)` which called under a certain `condition(invoice)`.
+# This script can either give Telegram notifications from a bot, or linux desktop notifications.
+# Or you can set a custom `do_this_with_invoice(node, invoice)` which called under a certain `condition(invoice)`.
+#
+# By default, desktop notifications run with command `notify-send {node} {message}`.
+# 
+# If you want to recieve telegram notifications from a bot you need to create 
+# a one with the BotFather in telegram and fill out these settings
+TELEGRAM_API_KEY = ""
+# Add your bot to a group, message them and check their for a chat id
+# https://api.telegram.org/bot<TELEGRAM_KEY>/getUpdates
+TELEGRAM_CHAT_ID = ""
+#
+SLEEP_TIME = 30
+#
 import subprocess
 import time
 
@@ -12,7 +25,6 @@ from node import clightning
 import config
 from gateways import ssh_tunnel
 
-SLEEP_TIME = 30
 
 def condition(invoice):
     if "state" in invoice.keys() and invoice["state"] == "SETTLED":
@@ -21,10 +33,29 @@ def condition(invoice):
 
 def do_this_with_invoice(node, invoice):
     print("Found {}".format(invoice["memo"]))
+    
+    if TELEGRAM_API_KEY != "" and TELEGRAM_CHAT_ID != "":
+        telegram_message(node, invoice)
+    linux_notify_send(node, invoice)
+    return
+
+def telegram_message(node, invoice):
+    import urllib, requests
+    message = "Recieved payment: {} sats\n{}".format(invoice['value'], invoice['memo'])
+    url = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s" % (
+        TELEGRAM_API_KEY,
+        TELEGRAM_CHAT_ID,
+        urllib.parse.quote_plus(message),
+    )
+    _ = requests.get(url, timeout=10)
+    return
+
+def linux_notify_send(node, invoice):
     message = "Recieved payment: {} sats\n{}".format(invoice['value'], invoice['memo'])
     command = ["notify-send", node.config['name'], message]
     subprocess.run(command)
     return
+
 
 
 ssh_tunnel.open_tunnels()
