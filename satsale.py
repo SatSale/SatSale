@@ -343,7 +343,7 @@ api.add_resource(complete_payment, "/api/completepayment")
 # Test connections on startup:
 enabled_payment_methods = []
 for method in config.payment_methods:
-    print(method)
+    #print(method)
     if method['name'] == "bitcoind":
         bitcoin_node = bitcoind.btcd(method)
         logging.info("Connection to bitcoin node successful.")
