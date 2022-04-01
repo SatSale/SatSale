@@ -37,13 +37,13 @@ class btcd:
                 connection_str = "http://{}:{}@{}:{}/wallet/{}".format(
                     username,
                     password,
-                    config.host,
+                    self.config['host'],
                     self.config['rpcport'],
                     self.config['wallet'],
                 )
                 logging.info(
-                    "Attempting to connect to Bitcoin node RPC with user {}.".format(
-                        self.config['username']
+                    "Attempting to connect to Bitcoin node RPC to {}:{} with user {}.".format(
+                        self.config['host'], self.config['rpcport'], self.config['username']
                     )
                 )
             else:
