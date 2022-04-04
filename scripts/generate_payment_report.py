@@ -1,6 +1,10 @@
 import argparse
 import csv
 from datetime import datetime, timedelta
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import config
 from payments import database
@@ -32,11 +36,24 @@ def main():
         print("Error: {}".format(e))
         return
 
-    bitcoin_node = bitcoind.btcd()
-    if config.pay_method == "lnd":
-        lightning_node = lnd.lnd()
-    elif config.pay_method == "clightning":
-        lightning_node = clightning.clightning()
+    nodes = {}
+    onchain = None
+    lightning = None
+    for method in config.payment_methods:
+        print("Connecting to {} node...".format(method["name"]))
+        if method["name"] == "bitcoind":
+            nodes["bitcoind"] = bitcoind.btcd(method)
+            onchain = "bitcoind"
+        elif method["name"] == "lnd":
+            nodes["lnd"] = lnd.lnd(method)
+            lightning = "lnd"
+        elif method["name"] == "clightning":
+            nodes["clightning"] = clightning.clightning(method)
+            lightning = "clightning"
+        elif method["name"] == "xpub":
+            nodes["xpub"] = xpub.xpub(method)
+            onchain = "xpub"
+    print("All nodes connected.")
 
     where = "1"
     if args.date_from:
@@ -55,15 +72,17 @@ def main():
         ])
         num_rows = 0
         for invoice in invoices:
-            conf_paid = 0
-            if invoice["method"] == "bitcoind":
-                conf_paid, unconf_paid = bitcoin_node.check_payment(
-                    invoice["uuid"])
-            elif invoice["method"] == "lnd":
-                conf_paid, unconf_paid = lightning_node.check_payment(
+            if invoice["method"] == "onchain":
+                use_node_type = onchain
+            elif invoice["method"] == "lightning":
+                use_node_type = lightning
+            else:
+                use_node_type = invoice["method"]
+            if use_node_type == "lnd":
+                conf_paid, unconf_paid = nodes[use_node_type].check_payment(
                     invoice["rhash"])
-            elif invoice["method"] == "clightning":
-                conf_paid, unconf_paid = lightning_node.check_payment(
+            else:
+                conf_paid, unconf_paid = nodes[use_node_type].check_payment(
                     invoice["uuid"])
 
             if conf_paid > 0:
