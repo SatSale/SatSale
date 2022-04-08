@@ -102,5 +102,5 @@ paynym = get_opt("paynym", None)
 free_mode = get_opt("free_mode", False)
 loglevel = get_opt("loglevel", "DEBUG")
 
-print(config)
-print(tunnel_host)
+#print(config)
+#print(tunnel_host)
