@@ -136,13 +136,14 @@ function satsale_init_gateway_class() {
          	$args = array(
                 'amount' => $order->get_total(),
                 'w_url' => $this->callback_URL,
-                'id' => $order_id)
+                'id' => $order_id
+			);
 
             write_log($args);
 
             $key = hex2bin($this->SatSale_API_Key);
 
-             $payment_url = add_query_arg(
+            $payment_url = add_query_arg(
                 $args,
                 $this->satsale_server_url . '/pay'
             );
