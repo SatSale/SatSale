@@ -8,7 +8,7 @@ max_sats = 10 ** 6
 
 # Following https://github.com/andrerfneves/lightning-address/blob/master/DIY.md
 
-def add_ln_address_decorators(app, api, node):
+def add_ln_address_decorators(api, node):
     description = node.config['lightning_address_comment']
     address = node.config['lightning_address']
     if description is None:
@@ -77,4 +77,3 @@ def add_ln_address_decorators(app, api, node):
         "/.well-known/lnurlp/{}".format(address.split("@")[0]),
     )
     api.add_resource(init_ln_addr_payment, "/lnaddr")
-    return

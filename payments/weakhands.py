@@ -3,8 +3,6 @@ import logging
 
 import config
 
-# import config
-
 quote_url = "https://sideshift.ai/api/v1/quotes"
 swap_url = "https://sideshift.ai/api/v1/orders"
 affiliate = "eK590V1Mh"
@@ -76,5 +74,3 @@ def swap_lnbtc_for_lusdt(node, amount_lnbtc, liquid_address):
 
     except Exception as e:
         logging.error("Error encountered during swap: {}".format(e))
-
-    return

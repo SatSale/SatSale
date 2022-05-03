@@ -25,10 +25,10 @@ def hook(satsale_secret, invoice, order_id):
     )
 
     # Calculate the hash
-    hash = hmac.new(key, message, hashlib.sha256).hexdigest()
+    calchash = hmac.new(key, message, hashlib.sha256).hexdigest()
     headers = {
         "Content-Type": "application/json",
-        "X-Signature": hash,
+        "X-Signature": calchash,
         "X-Secret": secret,
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 <head>
     <title>SatSale</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -28,15 +28,15 @@
                 <h1>Pay Bitcoin</h1>
             </div>
             <div id="right">
-                <a id="qrClick" target="_blank"><img class="logo" id="qrImage" width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
+                <a id="qrClick" target="_blank" rel="noreferrer noopener"><img class="logo" id="qrImage" width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
             </div>
         </div>
 
 
         <div id="paymentDetails" style="display:none; padding: 0;">
-            <p style="padding:0;">Send: <b><span id="amount_sats"></span></b> sats</p>
-            <p style="padding:0;">&nbsp&nbsp&nbsp&nbsp&nbsp(<b><span id="amount"></span></b> BTC)</p>
-            <p style="padding:0;">To: </p><b><p id="address" onclick="copyTextFromElement('address')"></p></b>
+            <p style="padding:0;">Send: <strong><span id="amount_sats"></span></strong> sats</p>
+            <p style="padding:0;">&nbsp&nbsp&nbsp&nbsp&nbsp(<strong><span id="amount"></span></strong> BTC)</p>
+            <p style="padding:0;">To: </p><strong><p id="address" onclick="copyTextFromElement('address')"></p></strong>
             <p style="padding:0;"><span id="status"></span></p>
             <p id="timerContainer" style="padding:0;visibility:hidden;"><span id="timer"></span> seconds remaining.</p>
         </div>

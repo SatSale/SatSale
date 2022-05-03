@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 import os
 import sys
 
+from node.xpub import xpub
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import config
@@ -65,7 +67,7 @@ def main():
     invoices = database.load_invoices_from_db(where)
 
     with open(args.report_file, "w", newline="") as csvfile:
-        reportwriter = csv.writer(csvfile)
+        reportwriter = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         reportwriter.writerow([
             "Date", "Invoice ID", "Fiat value", "BTC value",
             "BTC paid", "Payment method", "Address"

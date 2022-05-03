@@ -9,4 +9,11 @@ invoice/__pycache__/
 pay/__pycache__/
 SatSale_API_key
 .venv/
-database.db
+.vscode
+invoice.db
+bin
+include
+lib
+lib64
+pyvenv.cfg
+share

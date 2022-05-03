@@ -59,11 +59,11 @@ def insert_paynym_html(nym):
     </style>
     """
 
-    paynym_name_html = """
-    <small style="vertical-align:middle"><a href="{}" target="_blank">{}</a></small>
-    """.format(
-        paynym_site + nym, nym
-    )
+    # paynym_name_html = """
+    # <small style="vertical-align:middle"><a href="{}" target="_blank">{}</a></small>
+    # """.format(
+    #     paynym_site + nym, nym
+    # )
 
     nym_html = (
         """

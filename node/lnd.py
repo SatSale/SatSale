@@ -125,7 +125,6 @@ class lnd:
                 logging.error("Failed to copy tls and macaroon files to local machine.")
         else:
             logging.info("Found tls.cert and admin.macaroon.")
-        return
 
     # Create lightning invoice
     def create_lnd_invoice(self, btc_amount, memo=None, description_hash=None):
@@ -147,7 +146,6 @@ class lnd:
             MessageToJson(self.lnd.send_payment(invoice, fee_limit_msat=20 * 1000))
         )
         logging.info(ret)
-        return
 
     def get_info(self):
         return json.loads(MessageToJson(self.lnd.get_info()))

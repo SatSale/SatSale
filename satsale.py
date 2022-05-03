@@ -136,7 +136,6 @@ class create_payment(Resource):
         """Initiate a new payment with an `amount` in `config.base_currecy`."""
         base_amount = request.args.get("amount")
         currency = config.base_currency
-        label = ""  # request.args.get('label')
         payment_method = request.args.get("method")
         if payment_method is None:
             payment_method = enabled_payment_methods[0]
@@ -188,12 +187,10 @@ class create_payment(Resource):
 
         # Save invoice to database
         database.write_to_database(invoice)
-
         invoice["time_left"] = config.payment_timeout - (time.time() - invoice["time"])
         logging.info("Created invoice:")
         pprint(invoice)
         print()
-
         return {"invoice": invoice}, 200
 
 

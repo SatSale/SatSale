@@ -42,7 +42,6 @@ class xpub:
 
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
-        return
 
     def check_payment(self, address, slow=True):
         conf_paid, unconf_paid = 0, 0
@@ -85,7 +84,7 @@ class xpub:
         address = child_key.PublicKey().ToAddress()
         return address
 
-    def get_address(self, amount, label):
+    def get_address(self):
         while True:
             n = self.get_next_address_index(self.config["xpub"])
             address = self.get_address_at_index(n)
@@ -115,4 +114,3 @@ def test():
     assert pseudonode2.get_address_at_index(0) == "1LLNwhAMsS3J9tZR2T4fFg2ibuZyRSxFZg"
     assert pseudonode2.get_address_at_index(1) == "1EaEuwMRVKdWBoKeJZzJ8abUzVbWNhGhtC"
     print("BIP44 test succeded")
-    return

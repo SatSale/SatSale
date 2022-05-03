@@ -7,7 +7,7 @@ import config
 from node import bitcoind
 
 
-def open_tunnel(host, port):
+def open_tunnel(port):
     # If tunnel is required (might make things easier)
     try:
         command = [
@@ -61,7 +61,6 @@ def clightning_unix_domain_socket_ssh(rpc_file, rpc_store_dir=None):
 def rm_lightning_rpc_file():
     if os.path.exists("lightning-rpc"):
         os.remove("lightning-rpc")
-    return
 
 def close_tunnels(ssh_processes):
     if ssh_processes is not None:
@@ -73,8 +72,6 @@ def close_tunnels(ssh_processes):
 
     if "clightning" in config.payment_methods:
         rm_lightning_rpc_file()
-    return
-
 
 # Open tunnel
 def open_tunnels():

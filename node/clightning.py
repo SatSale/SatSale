@@ -11,13 +11,6 @@ import logging
 from payments.price_feed import get_btc_value
 import config
 
-# if False:  # config.tor_clightningrpc_host is not None:
-#     from gateways.tor import session
-# else:
-#     import requests
-#
-#     session = None
-
 
 class clightning:
     def __init__(self, node_config):
@@ -64,13 +57,11 @@ class clightning:
             )
 
         logging.info("Ready for payments requests.")
-        return
 
-    def create_qr(self, uuid, address, value):
+    def create_qr(self, uuid, address):
         qr_str = "{}".format(address.upper())
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
-        return
 
     def get_info(self):
         return self.clightning.getinfo()
