@@ -11,9 +11,3 @@ SatSale_API_key
 .venv/
 .vscode
 invoice.db
-bin
-include
-lib
-lib64
-pyvenv.cfg
-share
