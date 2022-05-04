@@ -1,15 +1,13 @@
-import subprocess
-import pathlib
-import time
-import os
 import json
-import uuid
-import qrcode
 import logging
+import os
+import pathlib
+import subprocess
+import time
+import uuid
 
-
-from payments.price_feed import get_btc_value
 import config
+import qrcode
 
 # if False:  # config.tor_clightningrpc_host is not None:
 #     from gateways.tor import session

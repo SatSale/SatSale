@@ -1,16 +1,15 @@
+import json
+import logging
+import os
 import time
 import uuid
-import qrcode
-import json
-import os
-import logging
-import requests
-from bip_utils import Bip84, Bip44Changes, Bip84Coins, Bip44, Bip44Coins
 
 import config
-from payments.price_feed import get_btc_value
-from utils import btc_amount_format
+import qrcode
+import requests
+from bip_utils import Bip44, Bip44Changes, Bip44Coins, Bip84, Bip84Coins
 from payments import database
+from utils import btc_amount_format
 
 
 class xpub:

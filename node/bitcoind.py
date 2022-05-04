@@ -1,13 +1,13 @@
 import json
 import logging
 import os
-import qrcode
 import time
 import uuid
 
 import config
-from payments.price_feed import get_btc_value
+import qrcode
 from utils import btc_amount_format
+
 
 class btcd:
     def __init__(self, node_config):

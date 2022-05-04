@@ -1,17 +1,15 @@
-import subprocess
-import pathlib
-import time
-import os
 import json
-from base64 import b64decode
-from google.protobuf.json_format import MessageToJson
-import uuid
-import qrcode
 import logging
+import os
+import pathlib
+import subprocess
+import time
+import uuid
+from base64 import b64decode
 
-
-from payments.price_feed import get_btc_value
 import config
+import qrcode
+from google.protobuf.json_format import MessageToJson
 
 
 class lnd:
