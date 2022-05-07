@@ -1,16 +1,15 @@
-from flask import (
-    Flask,
-    render_template,
-    request,
-    make_response
-)
-from flask_restplus import Resource, Api, fields
-import time
+import json
+import logging
 import os
+import sqlite3
+import time
 import uuid
 from pprint import pprint
+
 import qrcode
-import logging
+from flask import (Blueprint, Flask, make_response, redirect, render_template,
+                   request, url_for)
+from flask_restplus import Api, Namespace, Resource, fields
 
 import config
 
@@ -21,16 +20,11 @@ logging.basicConfig(
     level=getattr(logging, config.loglevel),
 )
 
-from gateways import paynym
+from gateways import paynym, ssh_tunnel, woo_webhook
+from node import bitcoind, clightning, lnd, xpub
 from payments import database, weakhands
-from payments.price_feed import get_btc_value
-from node import bitcoind
-from node import xpub
-from node import lnd
-from node import clightning
+from payments.price_feed import PriceFeed
 from utils import btc_amount_format
-
-from gateways import woo_webhook
 
 app = Flask(__name__)
 
@@ -57,13 +51,12 @@ database.migrate_database()
 @app.route("/")
 def index():
     params = dict(request.args)
-    params["currency"] = config.base_currency
     params["node_info"] = config.node_info
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("donate.html", params=params), 200, headers)
 
 
-# /pay is the main page for initiating a payment, takes a GET request with ?amount=
+# /pay is the main page for initiating a payment, takes a GET request with ?amount=[x]&currency=[x]
 @app.route("/pay")
 def pay():
     params = dict(request.args)
@@ -115,7 +108,8 @@ status_model = api.model(
 
 @api.doc(
     params={
-        "amount": "An amount in `config.base_currency`.",
+        "amount": "Amount of money to be paid",
+        "currency": "Currency units of the amount",
         "method": "(Optional) Specify a payment method: `bitcoind` for onchain, `lnd` for lightning).",
         "w_url": "(Optional) Specify a webhook url to call after successful payment. Currently only supports WooCommerce plugin.",
     }
@@ -129,7 +123,8 @@ class create_payment(Resource):
         "Create Payment"
         """Initiate a new payment with an `amount` in `config.base_currecy`."""
         base_amount = request.args.get("amount")
-        currency = config.base_currency
+        currency = request.args.get("currency")
+        label = ""  # request.args.get('label')
         payment_method = request.args.get("method")
         if payment_method is None:
             payment_method = enabled_payment_methods[0]
@@ -146,7 +141,7 @@ class create_payment(Resource):
             logging.warning("Invalid payment method {}".format(payment_method))
             return {"message": "Invalid payment method."}, 400
 
-        btc_value = get_btc_value(base_amount, currency)
+        btc_value = PriceFeed().get_price(base_amount, currency)
         if node.is_onchain and btc_value < config.onchain_dust_limit:
             logging.warning(
                 "Requested onchain payment for {} {} below dust limit ({} < {})".format(
