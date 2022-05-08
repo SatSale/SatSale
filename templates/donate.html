@@ -47,7 +47,17 @@
             <form id="pay" action='/pay'>
                 <div style="display:block;text-align: center;">
                     <h2 style="margin:0;">Amount:
-                    <input id="amountenter" style="display:inline" size="4" type="float" name="amount" id="amount" placeholder="{{ params.currency }}" required>
+                    <input id="amountenter" style="display:inline" size="4" type="float" name="amount" id="amount" placeholder="{{ 0 }}" required>
+                    </h2>
+                    <h2 style="margin:0;">Currency:
+                    <select style="display:inline" size="4" name="currency" id="currency" required>
+                        <option value="sats">sats</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="JPY">JPY</option>
+                        <option value="GBP">GBP</option>
+                        <option value="AUD">AUD</option>
+                    </select>
                     </h2>
                     <br>
                     <input class="button button1" style="width:40%" type="submit" value="Donate">
