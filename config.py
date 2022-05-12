@@ -1,6 +1,8 @@
 import sys
 import toml
 
+from extensions.errorhandling import PaymentMethodUnknown
+
 
 for i, arg in enumerate(sys.argv):
     if arg == "--conf":
@@ -26,8 +28,6 @@ def check_set_node_conf(name, default, node_conf):
         if default is not None and default != "":
             print("using default {}: {}".format(name, default))
         node_conf[name] = default
-    return
-
 
 payment_methods = []
 # This could be cleaned up into a single function that takes args, defaults, and required args.
@@ -79,7 +79,7 @@ for method_name in config["payment_methods"]:
             raise KeyError("Mising {}: config {}".format(method_name, "xpub"))
 
     else:
-        Exception("Unknown payment method: {}".format(method_name))
+        raise PaymentMethodUnknown()
 
     payment_methods.append(method_config)
 
@@ -102,5 +102,3 @@ paynym = get_opt("paynym", None)
 free_mode = get_opt("free_mode", False)
 loglevel = get_opt("loglevel", "DEBUG")
 
-#print(config)
-#print(tunnel_host)

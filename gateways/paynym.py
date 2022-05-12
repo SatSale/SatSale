@@ -58,13 +58,7 @@ def insert_paynym_html(nym):
           }
     </style>
     """
-
-    # paynym_name_html = """
-    # <small style="vertical-align:middle"><a href="{}" target="_blank">{}</a></small>
-    # """.format(
-    #     paynym_site + nym, nym
-    # )
-
+    
     nym_html = (
         """
     <div class="paynym">
@@ -95,5 +89,3 @@ def insert_paynym_html(nym):
         f.write(modified_html)
 
     logging.info("Wrote donate.html with paynym tags")
-
-    return

@@ -11,6 +11,7 @@ import logging
 
 
 from payments.price_feed import get_btc_value
+from extensions.errorhandling import LNDConnErr
 import config
 
 
@@ -66,19 +67,14 @@ class lnd:
                     )
                 )
         else:
-            raise Exception(
-                "Could not connect to lnd. Check your gRPC / port tunneling settings and try again."
-            )
+            raise LNDConnErr()
 
         logging.info("Ready for payments requests.")
-        return
 
     def create_qr(self, uuid, address, value):
         qr_str = "{}".format(address.upper())
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
-        return
-
     # Copy tls and macaroon certs from remote machine.
     def copy_certs(self):
         self.certs = {"tls": "tls.cert", "macaroon": self.config['lnd_macaroon']}

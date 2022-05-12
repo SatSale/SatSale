@@ -8,6 +8,7 @@ import uuid
 import config
 from payments.price_feed import get_btc_value
 from utils import btc_amount_format
+from extensions.errorhandling import MissingRPCCookieFile, BitcoindConnErr
 
 class btcd:
     def __init__(self, node_config):
@@ -24,9 +25,7 @@ class btcd:
                 rpc_credentials_str = open(self.config['rpc_cookie_file'], "r").read()
                 (username, password) = rpc_credentials_str.split(":")
             else:
-                raise Exception(
-                    "rpc_cookie_file {} not found".format(self.config['rpc_cookie_file'])
-                )
+                raise MissingRPCCookieFile()
         else:
             username = self.config['username']
             password = self.config['password']
@@ -79,10 +78,7 @@ class btcd:
                     )
                 )
         else:
-            raise Exception(
-                "Could not connect to bitcoind. \
-                Check your RPC / port tunneling settings and try again."
-            )
+            raise BitcoindConnErr()
 
     def call_tor_bitcoin_rpc(self, method, params):
         url = "{}:{}".format(self.config['tor_bitcoinrpc_host'], config.rpcport)

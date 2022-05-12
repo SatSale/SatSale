@@ -9,6 +9,7 @@ import logging
 
 
 from payments.price_feed import get_btc_value
+from extensions.errorhandling import ClightningConnErr
 import config
 
 
@@ -52,9 +53,7 @@ class clightning:
                     )
                 )
         else:
-            raise Exception(
-                "Could not connect to clightning. Check your port tunneling settings and try again."
-            )
+            raise ClightningConnErr()
 
         logging.info("Ready for payments requests.")
 

@@ -20,7 +20,7 @@ def open_tunnel(port):
             "-p {}".format(config.tunnel_port),
         ]
         print("Opening tunnel to {}.".format(" ".join(command)))
-        return subprocess.Popen(command)
+        return subprocess.Popen("ssh","-q","-N","-L","{}:localhost:{}".format(port, port),config.tunnel_host,"-p {}".format(config.tunnel_port))
 
 
     except Exception as e:
@@ -46,7 +46,7 @@ def clightning_unix_domain_socket_ssh(rpc_file, rpc_store_dir=None):
             "-p {}".format(config.tunnel_port),
             ]
         print("Opening tunnel to {}.".format(" ".join(command)))
-        tunnel_proc = subprocess.Popen(command)
+        tunnel_proc = subprocess.Popen("ssh","-nNT","-L","{}:{}".format(local_file, rpc_file),"{}".format(config.tunnel_host),"-p {}".format(config.tunnel_port))
         return tunnel_proc
 
 
