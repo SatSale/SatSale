@@ -3,6 +3,7 @@ import logging
 
 import config
 
+from extensions.errorhandling import XchangeUnreachable, XchangeCurrencyUnavailable
 
 def get_currency_provider(currency, currency_provider):
     # Define some currency_provider-specific settings
@@ -38,16 +39,14 @@ def get_price(currency, currency_provider=config.currency_provider):
             )
 
     else:
-        raise ("Failed to reach {}.".format(price_feed))
+        raise XchangeUnreachable()
 
     try:
         price = prices[provider["ticker"]][provider["value_attribute"]]
         return price
 
-    except:
-        logging.error(
-            "Failed to find currency {} from {}.".format(currency, price_feed)
-        )
+    except XchangeCurrencyUnavailable as e:
+        logging.error(e)
         return None
 
 
@@ -58,7 +57,7 @@ def get_btc_value(base_amount, currency):
         try:
             float_value = float(base_amount) / float(price)
             if not isinstance(float_value, float):
-                raise Exception("Fiat value should be a float.")
+                raise TypeError("Fiat value should be a float.")
         except Exception as e:
             logging.error(e)
 

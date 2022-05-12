@@ -7,5 +7,5 @@ def on_reload(server):
     ssh_tunnel.close_tunnels(server.ssh_processes)
     server.ssh_processes = ssh_tunnel.open_tunnels()
 
-def worker_exit(server, worker):
+def worker_exit(server):
     ssh_tunnel.close_tunnels(server.ssh_processes)
