@@ -12,7 +12,7 @@ def _get_database_schema_version():
         return cur.execute("SELECT version FROM schema_version").fetchone()[0]
 
 def _set_database_schema_version(version):
-        cur.execute("UPDATE schema_version SET version = {}".format(version))        
+        cur.execute("UPDATE schema_version SET version = '%s'", (version))
 
 def _log_migrate_database(from_version, to_version, message):
     logging.info(
@@ -64,7 +64,7 @@ db.commit()
 
 def load_invoices_from_db(where):
         cur.row_factory = sqlite3.Row
-        rows = cur.execute("SELECT * FROM payments WHERE {}".format(where)).fetchall()
+        rows = cur.execute("SELECT * FROM payments WHERE '%s'", (where)).fetchall()
         return rows
 
 def load_invoice_from_db(uuid):
@@ -90,7 +90,7 @@ def get_next_address_index(xpub):
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         addresses = cur.execute(
-            "SELECT n FROM addresses WHERE xpub='{}' ORDER BY n DESC LIMIT 1".format(xpub)
+            "SELECT n FROM addresses WHERE xpub='%s' ORDER BY n DESC LIMIT 1", (xpub)
         ).fetchall()
 
     if len(addresses) == 0:
