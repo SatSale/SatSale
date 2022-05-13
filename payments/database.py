@@ -75,8 +75,6 @@ def load_invoice_from_db(uuid):
         return None
 
 def add_generated_address(index, address, xpub):
-    with sqlite3.connect("database.db") as conn:
-        cur = conn.cursor()
         cur.execute(
             "INSERT INTO addresses (n, address, xpub) VALUES (?,?,?)",
             (
@@ -86,14 +84,12 @@ def add_generated_address(index, address, xpub):
             ),
         )
 def get_next_address_index(xpub):
-    with sqlite3.connect("database.db") as conn:
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
+        cur.row_factory = sqlite3.Row
         addresses = cur.execute(
             "SELECT n FROM addresses WHERE xpub='%s' ORDER BY n DESC LIMIT 1", (xpub)
         ).fetchall()
 
-    if len(addresses) == 0:
-        return 0
-    else:
-        return max([dict(addr)["n"] for addr in addresses]) + 1        
+        if len(addresses) == 0:
+            return 0
+        else:
+            return max([dict(addr)["n"] for addr in addresses]) + 1        
