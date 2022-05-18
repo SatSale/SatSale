@@ -2,18 +2,13 @@ from flask import (
     Flask,
     render_template,
     request,
-    redirect,
-    Blueprint,
-    make_response,
-    url_for,
+    make_response
 )
-from flask_restplus import Resource, Api, Namespace, fields
+from flask_restplus import Resource, Api, fields
 import time
 import os
 import uuid
-import sqlite3
 from pprint import pprint
-import json
 import qrcode
 import logging
 
@@ -26,7 +21,6 @@ logging.basicConfig(
     level=getattr(logging, config.loglevel),
 )
 
-from gateways import ssh_tunnel
 from gateways import paynym
 from payments import database, weakhands
 from payments.price_feed import get_btc_value
@@ -136,7 +130,6 @@ class create_payment(Resource):
         """Initiate a new payment with an `amount` in `config.base_currecy`."""
         base_amount = request.args.get("amount")
         currency = config.base_currency
-        label = ""  # request.args.get('label')
         payment_method = request.args.get("method")
         if payment_method is None:
             payment_method = enabled_payment_methods[0]
@@ -260,7 +253,7 @@ class complete_payment(Resource):
             )
 
         # Call webhook to confirm payment with merchant
-        if (invoice["webhook"] != None) and (invoice["webhook"] != ""):
+        if (invoice["webhook"] is not None) and (invoice["webhook"] != ""):
             logging.info("Calling webhook {}".format(invoice["webhook"]))
             response = woo_webhook.hook(app.config["SECRET_KEY"], invoice, order_id)
 
@@ -374,7 +367,7 @@ for method in config.payment_methods:
 if config.node_info is not None:
     @app.route("/node/")
     def node():
-        if config.node_info == True:
+        if config.node_info is True:
             uri = lightning_node.get_uri()
         else:
             uri = config.node_info
@@ -385,7 +378,7 @@ if config.node_info is not None:
             render_template("node.html", params={"uri": uri}), 200, headers
         )
 
-# Add lightning address 
+# Add lightning address
 try:
     if lightning_node.config['lightning_address'] is not None:
         from gateways import lightning_address

@@ -38,15 +38,15 @@ def get_price(currency, currency_provider=config.currency_provider):
             )
 
     else:
-        raise ("Failed to reach {}.".format(price_feed))
+        raise ("Failed to reach {}.".format(provider["price_feed"]))
 
     try:
         price = prices[provider["ticker"]][provider["value_attribute"]]
         return price
 
-    except:
+    except Exception:
         logging.error(
-            "Failed to find currency {} from {}.".format(currency, price_feed)
+            "Failed to find currency {} from {}.".format(currency, provider["price_feed"])
         )
         return None
 

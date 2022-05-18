@@ -1,10 +1,8 @@
 import subprocess
-import time
 import os
 import logging
 
 import config
-from node import bitcoind
 
 
 def open_tunnel(host, port):
@@ -19,12 +17,11 @@ def open_tunnel(host, port):
             config.tunnel_host,
             "-p {}".format(config.tunnel_port),
         ]
-        print("Opening tunnel to {}.".format(" ".join(command)))
+        logging.info("Opening tunnel to {}.".format(" ".join(command)))
         return subprocess.Popen(command)
 
-
     except Exception as e:
-        print("FAILED TO OPEN TUNNEL. Exception: {}".format(e))
+        logging.error("FAILED TO OPEN TUNNEL. Exception: {}".format(e))
 
     return None
 
@@ -45,13 +42,12 @@ def clightning_unix_domain_socket_ssh(rpc_file, rpc_store_dir=None):
             "{}".format(config.tunnel_host),
             "-p {}".format(config.tunnel_port),
             ]
-        print("Opening tunnel to {}.".format(" ".join(command)))
+        logging.info("Opening tunnel to {}.".format(" ".join(command)))
         tunnel_proc = subprocess.Popen(command)
         return tunnel_proc
 
-
     except Exception as e:
-        print(
+        logging.error(
             "FAILED TO OPEN UNIX DOMAIN SOCKET OVER SSH. Exception: {}".format(e)
         )
 
@@ -63,12 +59,13 @@ def rm_lightning_rpc_file():
         os.remove("lightning-rpc")
     return
 
+
 def close_tunnels(ssh_processes):
     if ssh_processes is not None:
         for proc in ssh_processes:
             try:
                 proc.kill()
-            except Exception as e:
+            except Exception:
                 continue
 
     if "clightning" in config.payment_methods:
