@@ -1,16 +1,12 @@
 import subprocess
-import pathlib
 import time
 import os
 import json
 from base64 import b64decode
 from google.protobuf.json_format import MessageToJson
-import uuid
 import qrcode
 import logging
 
-
-from payments.price_feed import get_btc_value
 import config
 
 

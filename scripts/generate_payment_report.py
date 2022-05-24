@@ -8,9 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import config
 from payments import database
-from node import bitcoind
-from node import lnd
-from node import clightning
+from node import bitcoind, clightning, lnd, xpub
 
 
 def valid_date(s):
@@ -26,9 +24,9 @@ def main():
         description="Generate CSV report about received payments.")
     parser.add_argument("report_file")
     parser.add_argument("--date-from", required=False, dest="date_from",
-        help="from date (YYYY-MM-DD)", type=valid_date)
+                        help="from date (YYYY-MM-DD)", type=valid_date)
     parser.add_argument("--date-to", required=False, dest="date_to",
-        help="to date (YYYY-MM-DD)", type=valid_date)
+                        help="to date (YYYY-MM-DD)", type=valid_date)
 
     try:
         args = parser.parse_args()

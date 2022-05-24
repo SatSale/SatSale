@@ -1,9 +1,6 @@
 import requests
 import logging
 
-import config
-
-# import config
 
 quote_url = "https://sideshift.ai/api/v1/quotes"
 swap_url = "https://sideshift.ai/api/v1/orders"

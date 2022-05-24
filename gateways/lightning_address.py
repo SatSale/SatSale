@@ -1,5 +1,5 @@
 from flask import request
-from flask_restplus import Resource, Api, Namespace, fields
+from flask_restplus import Resource
 import hashlib
 import logging
 
@@ -7,6 +7,7 @@ min_sats = 10 ** 2
 max_sats = 10 ** 6
 
 # Following https://github.com/andrerfneves/lightning-address/blob/master/DIY.md
+
 
 def add_ln_address_decorators(app, api, node):
     description = node.config['lightning_address_comment']
