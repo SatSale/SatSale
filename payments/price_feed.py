@@ -22,7 +22,7 @@ def get_currency_provider(currency, currency_provider):
         }
 
 
-def get_price(currency, currency_provider=config.currency_provider):
+def get_price(currency, currency_provider=config.currency_provider, bitcoin_rate_multiplier=config.bitcoin_rate_multiplier):
     provider = get_currency_provider(currency, currency_provider)
     for i in range(config.connection_attempts):
         try:
@@ -42,6 +42,10 @@ def get_price(currency, currency_provider=config.currency_provider):
 
     try:
         price = prices[provider["ticker"]][provider["value_attribute"]]
+        if bitcoin_rate_multiplier != 1.00:
+            logging.debug("Adjusting BTC price from {} to {} because of rate multiplier {}.".format(
+                price, price * bitcoin_rate_multiplier, bitcoin_rate_multiplier))
+            price = price * bitcoin_rate_multiplier
         return price
 
     except Exception:
