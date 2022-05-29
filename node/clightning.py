@@ -66,7 +66,22 @@ class clightning:
         return
 
     def get_info(self):
-        return self.clightning.getinfo()
+        for i in range(config.connection_attempts):
+            try:
+                return self.clightning.getinfo()
+
+            except Exception as e:
+                logging.error(e)
+                logging.info(
+                    "Attempting again... {}/{}...".format(
+                        i + 1, config.connection_attempts
+                    )
+                )
+            if config.connection_attempts - i == 1:
+                logging.info("Reconnecting...")
+                self.__init__()
+
+        return None
 
     def get_uri(self):
         info = self.get_info()
@@ -75,12 +90,27 @@ class clightning:
 
     # Create lightning invoice
     def create_clightning_invoice(self, btc_amount, label):
-        # Multiplying by 10^8 to convert to satoshi units
-        msats_amount = int(float(btc_amount) * 10 ** (3 + 8))
-        lnd_invoice = self.clightning.invoice(
-            msats_amount, label, "SatSale-{}".format(label)
-        )
-        return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
+        for i in range(config.connection_attempts):
+            try:
+                # Multiplying by 10^8 to convert to satoshi units
+                msats_amount = int(float(btc_amount) * 10 ** (3 + 8))
+                lnd_invoice = self.clightning.invoice(
+                    msats_amount, label, "SatSale-{}".format(label)
+                )
+                return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
+
+            except Exception as e:
+                logging.error(e)
+                logging.info(
+                    "Attempting again... {}/{}...".format(
+                        i + 1, config.connection_attempts
+                    )
+                )
+            if config.connection_attempts - i == 1:
+                logging.info("Reconnecting...")
+                self.__init__()
+        return None
+
 
     def get_address(self, amount, label):
         address, r_hash = self.create_clightning_invoice(amount, label)
@@ -88,20 +118,33 @@ class clightning:
 
     # Check whether the payment has been paid
     def check_payment(self, uuid):
-        invoices = self.clightning.listinvoices(uuid)["invoices"]
+        for i in range(config.connection_attempts):
+            try:
+                invoices = self.clightning.listinvoices(uuid)["invoices"]
+                if len(invoices) == 0:
+                    logging.error("Could not find invoice on node. Something's wrong.")
+                    return 0, 0
 
-        if len(invoices) == 0:
-            logging.error("Could not find invoice on node. Something's wrong.")
-            return 0, 0
+                invoice = invoices[0]
 
-        invoice = invoices[0]
+                if invoice["status"] != "paid":
+                    conf_paid = 0
+                    unconf_paid = 0
+                else:
+                    # Store amount paid and convert to BTC units
+                    conf_paid = int(invoice["msatoshi_received"]) / 10 ** (3 + 8)
+                    unconf_paid = 0
 
-        if invoice["status"] != "paid":
-            conf_paid = 0
-            unconf_paid = 0
-        else:
-            # Store amount paid and convert to BTC units
-            conf_paid = int(invoice["msatoshi_received"]) / 10 ** (3 + 8)
-            unconf_paid = 0
+                return conf_paid, unconf_paid
 
-        return conf_paid, unconf_paid
+
+            except Exception as e:
+                logging.error(e)
+                logging.info(
+                    "Attempting again... {}/{}...".format(
+                        i + 1, config.connection_attempts
+                    )
+                )
+            if config.connection_attempts - i == 1:
+                logging.info("Reconnecting...")
+                self.__init__()
