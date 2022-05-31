@@ -120,3 +120,11 @@ function copyTextFromElement(elementID) {
   copyText(elementText); //use the copyText function below
   alert("Copied address:" + elementText)
 }
+
+function display_currencies() {
+    var currency = ['USD', 'GBP']
+    var option = ""
+    for(var i =0;i<currency.length; i++)
+        option += '<option value="' + currency[i] + '">' + currency[i] + "</option>"
+    document.getElementById('currency').innerHTML = option
+}
