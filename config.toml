@@ -94,6 +94,10 @@ redirect = "https://github.com/nickfarrow/satsale"
 base_currency = "USD"
 currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
 
+# Multiplier added on top of BTC / fiat exchange rate. Allows to give discount or add extra commission.
+# Values above 1.00 gives discount, values below add extra comission.
+bitcoin_rate_multiplier = 1.00
+
 # Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
 # https://blockstream.com/liquid/
 # Change lnd_macaroon='admin.macaroon', as you will also need to be able to spend with your lnd certificates.
