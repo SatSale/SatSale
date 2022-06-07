@@ -3,6 +3,7 @@ import qrcode
 import logging
 
 import config
+from gateways import ssh_tunnel
 
 # if False:  # config.tor_clightningrpc_host is not None:
 #     from gateways.tor import session
@@ -15,6 +16,8 @@ import config
 class clightning:
     def __init__(self, node_config):
         from pyln.client import LightningRpc
+        if node.tunnel_host is not None:
+            ssh_tunnel.open_tunnels()
 
         self.config = node_config
         self.is_onchain = False
@@ -125,6 +128,7 @@ class clightning:
                     logging.error("Could not find invoice on node. Something's wrong.")
                     return 0, 0
 
+
                 invoice = invoices[0]
 
                 if invoice["status"] != "paid":
@@ -148,3 +152,4 @@ class clightning:
             if config.connection_attempts - i == 1:
                 logging.info("Reconnecting...")
                 self.__init__()
+
