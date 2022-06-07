@@ -10,16 +10,23 @@ import os
 import uuid
 from pprint import pprint
 import qrcode
-import logging
 
 import config
+import logging
 
-# Initialise logging before importing other modules
-logging.basicConfig(
-    format="[%(asctime)s] [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S %z",
-    level=getattr(logging, config.loglevel),
-)
+logger = logging.getLogger("")
+logger.setLevel(getattr(logging, config.loglevel.upper()))
+
+
+if (logger.hasHandlers()):
+    logger.handlers.clear()
+
+ch = logging.StreamHandler()
+formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s")
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+app = Flask(__name__)
 
 from gateways import paynym
 from payments import database, weakhands
@@ -32,7 +39,6 @@ from utils import btc_amount_format
 
 from gateways import woo_webhook
 
-app = Flask(__name__)
 
 # Load a SatSale API key or create a new one
 if os.path.exists("SatSale_API_key"):
@@ -396,6 +402,7 @@ except NameError:
 # Add Paynym
 if config.paynym is not None:
     paynym.insert_paynym_html(config.paynym)
+
 
 if __name__ == "__main__":
     app.run(debug=False)

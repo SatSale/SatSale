@@ -1,6 +1,7 @@
 import requests
 import time
 import logging
+logger = logging.getLogger(__name__)
 
 import config
 

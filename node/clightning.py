@@ -1,8 +1,8 @@
 import time
 import qrcode
-import logging
-
 import config
+import logging
+logger = logging.getLogger(__name__)
 
 # if False:  # config.tor_clightningrpc_host is not None:
 #     from gateways.tor import session

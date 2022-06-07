@@ -1,8 +1,9 @@
 import json
-import logging
 import os
 import qrcode
 import time
+import logging
+logger = logging.getLogger(__name__)
 
 import config
 from utils import btc_amount_format
