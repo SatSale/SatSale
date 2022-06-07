@@ -30,7 +30,7 @@ from node import lnd
 from node import clightning
 from utils import btc_amount_format
 
-from gateways import woo_webhook
+from gateways import satsale_webhook
 
 app = Flask(__name__)
 
@@ -255,7 +255,7 @@ class complete_payment(Resource):
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] is not None) and (invoice["webhook"] != ""):
             logging.info("Calling webhook {}".format(invoice["webhook"]))
-            response = woo_webhook.hook(app.config["SECRET_KEY"], invoice, order_id)
+            response = satsale_webhook.woo_webhook(app.config["SECRET_KEY"], invoice, order_id)
 
             if response.status_code != 200:
                 err = "Failed to confirm order payment via webhook {}, please contact the store to ensure the order has been confirmed, error response is: {}".format(
