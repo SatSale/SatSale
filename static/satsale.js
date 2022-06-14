@@ -122,9 +122,12 @@ function copyTextFromElement(elementID) {
 }
 
 function display_currencies() {
-    var currency = ['USD', 'GBP']
-    var option = ""
-    for(var i =0;i<currency.length; i++)
-        option += '<option value="' + currency[i] + '">' + currency[i] + "</option>"
-    document.getElementById('currency').innerHTML = option
+    var currencies = ['USD', 'GBP']
+    var currencyDropdown = document.getElementById("currency");
+    for(const curr of currencies) {
+        let currencyOption = document.createElement('option');   
+        currencyOption.text = curr;      
+        currencyOption.value = curr;        
+        currencyDropdown.add(currencyOption);
+    }
 }
