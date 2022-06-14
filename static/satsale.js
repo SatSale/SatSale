@@ -122,7 +122,10 @@ function copyTextFromElement(elementID) {
 }
 
 function display_currencies() {
-    var currencies = ['USD', 'GBP']
+    const fs = require('fs');
+    const toml = require('toml');
+    const config = toml.parse(fs.readFileSync('../config.toml', 'utf-8'));
+    var currencies = config.supported_currencies;
     var currencyDropdown = document.getElementById("currency");
     for(const curr of currencies) {
         let currencyOption = document.createElement('option');   

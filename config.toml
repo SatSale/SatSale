@@ -93,6 +93,7 @@ redirect = "https://github.com/nickfarrow/satsale"
 # Currency and exchange rate provider
 base_currency = "USD"
 currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
+supported_currencies = ['USD', 'GBP'] # Currencies to display on donation dropdown
 
 # Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
 # https://blockstream.com/liquid/
