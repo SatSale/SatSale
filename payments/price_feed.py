@@ -41,14 +41,23 @@ class PriceFeed:
                 )
         return prices
 
-    def get_btc_price(self, currency):
+    def apply_btc_rate_multiplier(self, price, multiplier):
+        if multiplier != 1.00:
+            logging.debug("Adjusting BTC price from {} to {} because of rate multiplier {}.".format(
+                price, price * multiplier, multiplier))
+            price = price * multiplier
+        return price
+    
+    def get_btc_price(self, currency, bitcoin_rate_multiplier=config.bitcoin_rate_multiplier):
         ticker_case = self.currency_provider_data['ticker_case']
         value_attribute = self.currency_provider_data['value_attribute']
         if ticker_case == 'lower':
             btc_price = self.api_results[currency.lower()][value_attribute]
+            transformed_btc_price = self.apply_btc_rate_multiplier(btc_price, bitcoin_rate_multiplier)
         elif ticker_case == 'upper':
             btc_price = self.api_results[currency.upper()][value_attribute]
-        return btc_price
+            transformed_btc_price = self.apply_btc_rate_multiplier(btc_price, bitcoin_rate_multiplier)
+        return transformed_btc_price
 
     def get_price(self, amount, currency_from, currency_to='btc'):
         currency_from_price = self.get_btc_price(currency_from)
