@@ -134,8 +134,9 @@ class lnd:
 
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
 
-    def get_address(self, amount, label):
-        address, r_hash = self.create_lnd_invoice(amount, memo=label)
+    def get_address(self, amount, label, expiry):
+        address, r_hash = self.create_lnd_invoice(amount,
+            memo=label, expiry=expiry)
         return address, r_hash
 
     def pay_invoice(self, invoice):

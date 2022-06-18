@@ -171,7 +171,7 @@ class create_payment(Resource):
         # Get an address / invoice, and create a QR code
         try:
             invoice["address"], invoice["rhash"] = node.get_address(
-                invoice["btc_value"], invoice["uuid"]
+                invoice["btc_value"], invoice["uuid"], config.payment_timeout
             )
         except Exception as e:
             logging.error("Failed to fetch address: {}".format(e))
