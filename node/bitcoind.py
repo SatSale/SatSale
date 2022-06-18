@@ -121,7 +121,7 @@ class btcd:
 
         return conf_paid, unconf_paid
 
-    def get_address(self, amount, label):
+    def get_address(self, amount, label, expiry):
         for i in range(config.connection_attempts):
             try:
                 if not self.tor:

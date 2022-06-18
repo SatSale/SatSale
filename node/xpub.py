@@ -80,7 +80,7 @@ class xpub:
         address = child_key.PublicKey().ToAddress()
         return address
 
-    def get_address(self, amount, label):
+    def get_address(self, amount, label, expiry):
         while True:
             n = self.get_next_address_index(self.config["xpub"])
             address = self.get_address_at_index(n)
