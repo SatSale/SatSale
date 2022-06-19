@@ -120,17 +120,3 @@ function copyTextFromElement(elementID) {
   copyText(elementText); //use the copyText function below
   alert("Copied address:" + elementText)
 }
-
-function display_currencies() {
-    const fs = require('fs');
-    const toml = require('toml');
-    const config = toml.parse(fs.readFileSync('../config.toml', 'utf-8'));
-    var currencies = config.supported_currencies;
-    var currencyDropdown = document.getElementById("currency");
-    for(const curr of currencies) {
-        let currencyOption = document.createElement('option');   
-        currencyOption.text = curr;      
-        currencyOption.value = curr;        
-        currencyDropdown.add(currencyOption);
-    }
-}

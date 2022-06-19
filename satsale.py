@@ -51,6 +51,7 @@ database.migrate_database()
 @app.route("/")
 def index():
     params = dict(request.args)
+    params["currency"] = config.supported_currencies
     params["node_info"] = config.node_info
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("donate.html", params=params), 200, headers)
