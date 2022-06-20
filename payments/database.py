@@ -50,7 +50,7 @@ def migrate_database(name="database.db"):
         _set_database_schema_version(2)
 
     if schema_version < 3:
-        _log_migrate_database(2, 3, "Adding a new column to payments table")
+        _log_migrate_database(2, 3, "Adding fiat currency column to payments table")
         with sqlite3.connect(name) as conn:
             conn.execute("ALTER TABLE payments ADD fiat_currency TEXT")
         _set_database_schema_version(3)
