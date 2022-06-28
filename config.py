@@ -98,10 +98,14 @@ redirect = get_opt("redirect", "https://github.com/nickfarrow/satsale")
 base_currency = get_opt("base_currency", "USD")
 currency_provider = get_opt("currency_provider", "COINGECKO")
 bitcoin_rate_multiplier = get_opt("bitcoin_rate_multiplier", 1.00)
+allowed_underpay_amount = get_opt("allowed_underpay_amount", 0.00000001)
 liquid_address = get_opt("liquid_address", None)
 paynym = get_opt("paynym", None)
 free_mode = get_opt("free_mode", False)
 loglevel = get_opt("loglevel", "DEBUG")
+
+if allowed_underpay_amount < 0:
+    raise Exception("allowed_underpay_amount cannot be negative")
 
 #print(config)
 #print(tunnel_host)

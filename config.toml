@@ -98,6 +98,11 @@ currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
 # Values above 1.00 gives discount, values below add extra comission.
 bitcoin_rate_multiplier = 1.00
 
+# BTC amount allowed to be underpaid to consider invoice paid.
+# It's recommended to keep it at least 0.00000001 BTC currently,
+# due to https://github.com/SatSale/SatSale/issues/77 bug.
+allowed_underpay_amount = 0.00000001
+
 # Weak Hands Mode - Automatically swap LN-BTC -> L-USDT using sideshift.ai
 # https://blockstream.com/liquid/
 # Change lnd_macaroon='admin.macaroon', as you will also need to be able to spend with your lnd certificates.

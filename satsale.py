@@ -300,7 +300,7 @@ def check_payment_status(uuid):
         dbg_free_mode_cond = config.free_mode and (time.time() - invoice["time"] > 5)
 
         # If payment is paid
-        if (conf_paid >= float(invoice["btc_value"])) or dbg_free_mode_cond:
+        if (conf_paid >= float(invoice["btc_value"]) - config.allowed_underpay_amount) or dbg_free_mode_cond:
             status.update(
                 {
                     "payment_complete": 1,
