@@ -1,6 +1,6 @@
 import sys
-import toml
 
+import toml
 
 for i, arg in enumerate(sys.argv):
     if arg == "--conf":
@@ -95,7 +95,7 @@ payment_timeout = get_opt("payment_timeout", 60 * 60)
 required_confirmations = get_opt("required_confirmations", 2)
 connection_attempts = get_opt("connection_attempts", 3)
 redirect = get_opt("redirect", "https://github.com/nickfarrow/satsale")
-base_currency = get_opt("base_currency", "USD")
+supported_currencies = get_opt("supported_currencies", ['USD', 'GBP'])
 currency_provider = get_opt("currency_provider", "COINGECKO")
 bitcoin_rate_multiplier = get_opt("bitcoin_rate_multiplier", 1.00)
 liquid_address = get_opt("liquid_address", None)
