@@ -50,7 +50,11 @@
                     <input id="amountenter" style="display:inline" size="4" type="float" name="amount" id="amount" placeholder="{{ 0 }}" required>
                     </h2>
                     <h2 style="margin:0;">Currency:
-                    <select name="currency" id="currency" required></select>
+                    <select name="currency" id="currency" required>
+                        {% for currency_option in params.currency %}
+                            <option>{{currency_option}}</option>
+                        {% endfor %}
+                    </select>
                     </h2>
                     <br>
                     <input class="button button1" style="width:40%" type="submit" value="Donate">
