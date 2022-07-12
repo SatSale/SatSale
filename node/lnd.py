@@ -124,18 +124,19 @@ class lnd:
         return
 
     # Create lightning invoice
-    def create_lnd_invoice(self, btc_amount, memo=None, description_hash=None):
+    def create_lnd_invoice(self, btc_amount, memo=None, description_hash=None, expiry=3600):
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(float(btc_amount) * 10 ** 8)
         res = self.lnd.add_invoice(
-            value=sats_amount, memo=memo, description_hash=description_hash
+            value=sats_amount, memo=memo, description_hash=description_hash, expiry=expiry
         )
         lnd_invoice = json.loads(MessageToJson(res))
 
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
 
-    def get_address(self, amount, label):
-        address, r_hash = self.create_lnd_invoice(amount, memo=label)
+    def get_address(self, amount, label, expiry):
+        address, r_hash = self.create_lnd_invoice(amount,
+            memo=label, expiry=expiry)
         return address, r_hash
 
     def pay_invoice(self, invoice):
