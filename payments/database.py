@@ -49,7 +49,13 @@ def migrate_database(name="database.db"):
             conn.execute("CREATE TABLE addresses (n INTEGER, address TEXT, xpub TEXT)")
         _set_database_schema_version(2)
 
-    #if schema_version < 2:
+    if schema_version < 3:
+        _log_migrate_database(2, 3, "Adding fiat currency column to payments table")
+        with sqlite3.connect(name) as conn:
+            conn.execute("ALTER TABLE payments ADD fiat_currency TEXT")
+        _set_database_schema_version(3)
+
+    #if schema_version < 4:
     #   do next migration
 
     new_version = _get_database_schema_version(name)
@@ -65,9 +71,10 @@ def write_to_database(invoice, name="database.db"):
     with sqlite3.connect(name) as conn:
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO payments (uuid,fiat_value,btc_value,method,address,time,webhook,rhash) VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO payments (uuid,fiat_currency,fiat_value,btc_value,method,address,time,webhook,rhash) VALUES (?,?,?,?,?,?,?,?,?)",
             (
                 invoice["uuid"],
+                invoice["fiat_currency"],
                 invoice["fiat_value"],
                 invoice["btc_value"],
                 invoice["method"],

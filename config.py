@@ -79,9 +79,22 @@ for method_name in config["payment_methods"]:
             raise KeyError("Mising {}: config {}".format(method_name, "xpub"))
 
     else:
-        Exception("Unknown payment method: {}".format(method_name))
+        raise Exception("Unknown payment method: {}".format(method_name))
 
     payment_methods.append(method_config)
+
+supported_currencies = get_opt("supported_currencies", ["USD"])
+if "BTC" in supported_currencies:
+    supported_currencies.append("sats")
+
+base_currency = get_opt("base_currency", "USD")
+if base_currency not in supported_currencies:
+    raise Exception("base_currency must be one of supported_currencies")
+
+currency_provider = get_opt("currency_provider", "COINGECKO")
+if currency_provider not in ["COINDESK","COINGECKO"]:
+    raise Exception("Unsupported currency price feed provider: {}".format(
+        currency_provider))
 
 host = get_opt("host", "127.0.0.1")
 api_key_path = get_opt("api_key_path", "SatSale_API_key")
@@ -95,8 +108,6 @@ payment_timeout = get_opt("payment_timeout", 60 * 60)
 required_confirmations = get_opt("required_confirmations", 2)
 connection_attempts = get_opt("connection_attempts", 3)
 redirect = get_opt("redirect", "https://github.com/nickfarrow/satsale")
-base_currency = get_opt("base_currency", "USD")
-currency_provider = get_opt("currency_provider", "COINGECKO")
 bitcoin_rate_multiplier = get_opt("bitcoin_rate_multiplier", 1.00)
 allowed_underpay_amount = get_opt("allowed_underpay_amount", 0.00000001)
 liquid_address = get_opt("liquid_address", None)

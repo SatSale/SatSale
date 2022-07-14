@@ -101,11 +101,12 @@ h1 {
     transform: scale(3);
 }
 
-#amountenter {
+.donate_input {
     background-color: black;
     color: white;
     font-size: 16px;
     border-radius:5px;
+    display: inline;
 }
 
 #qrImage {
