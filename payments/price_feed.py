@@ -56,6 +56,11 @@ def get_price(currency, currency_provider=config.currency_provider, bitcoin_rate
 
 
 def get_btc_value(base_amount, currency):
+    if currency == "BTC":
+        return float(base_amount)
+    elif currency == "sats":
+        return float(base_amount) / 10**8
+
     price = get_price(currency)
 
     if price is not None:

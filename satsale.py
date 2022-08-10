@@ -57,13 +57,14 @@ database.migrate_database()
 @app.route("/")
 def index():
     params = dict(request.args)
-    params["currency"] = config.base_currency
+    params["supported_currencies"] = config.supported_currencies
+    params["base_currency"] = config.base_currency
     params["node_info"] = config.node_info
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("donate.html", params=params), 200, headers)
 
 
-# /pay is the main page for initiating a payment, takes a GET request with ?amount=
+# /pay is the main page for initiating a payment, takes a GET request with ?amount=[x]&currency=[x]
 @app.route("/pay")
 def pay():
     params = dict(request.args)
@@ -92,6 +93,7 @@ invoice_model = api.model(
     "invoice",
     {
         "uuid": fields.String(),
+        "fiat_currency": fields.String(),
         "fiat_value": fields.Float(),
         "btc_value": fields.Float(),
         "method": fields.String(),
@@ -115,7 +117,8 @@ status_model = api.model(
 
 @api.doc(
     params={
-        "amount": "An amount in `config.base_currency`.",
+        "amount": "An amount.",
+        "currency": "(Opional) Currency units of the amount (defaults to `config.base_currency`).",
         "method": "(Optional) Specify a payment method: `bitcoind` for onchain, `lnd` for lightning).",
         "w_url": "(Optional) Specify a webhook url to call after successful payment. Currently only supports WooCommerce plugin.",
     }
@@ -127,9 +130,11 @@ class create_payment(Resource):
     @api.response(522, "Error fetching address from node")
     def get(self):
         "Create Payment"
-        """Initiate a new payment with an `amount` in `config.base_currecy`."""
+        """Initiate a new payment with an `amount` in specified currency."""
         base_amount = request.args.get("amount")
-        currency = config.base_currency
+        currency = request.args.get("currency")
+        if currency is None:
+            currency = config.base_currency
         payment_method = request.args.get("method")
         if payment_method is None:
             payment_method = enabled_payment_methods[0]
@@ -160,6 +165,7 @@ class create_payment(Resource):
 
         invoice = {
             "uuid": str(uuid.uuid4().hex),
+            "fiat_currency": currency,
             "fiat_value": base_amount,
             "btc_value": btc_amount_format(btc_value),
             "method": payment_method,

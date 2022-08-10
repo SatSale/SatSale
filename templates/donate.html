@@ -47,7 +47,12 @@
             <form id="pay" action='/pay'>
                 <div style="display:block;text-align: center;">
                     <h2 style="margin:0;">Amount:
-                    <input id="amountenter" style="display:inline" size="4" type="float" name="amount" id="amount" placeholder="{{ params.currency }}" required>
+                    <input class="donate_input" size="4" type="float" name="amount" placeholder="0" required>
+                    <select class="donate_input" name="currency" required>
+                        {% for currency_option in params.supported_currencies %}
+                        <option value="{{currency_option}}"{% if currency_option == params.base_currency %} selected{% endif %}>{{currency_option}}</option>
+                        {% endfor %}
+                    </select>
                     </h2>
                     <br>
                     <input class="button button1" style="width:40%" type="submit" value="Donate">

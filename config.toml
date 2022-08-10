@@ -91,8 +91,9 @@ loglevel = "DEBUG"
 redirect = "https://github.com/nickfarrow/satsale"
 
 # Currency and exchange rate provider
-base_currency = "USD"
-currency_provider = "COINGECKO"   # Supported: COINDESK | COINGECKO
+supported_currencies = ["BTC", "USD"]   # Currencies to display on donation dropdown
+base_currency = "USD"                   # Selection default for that dropdown
+currency_provider = "COINGECKO"         # Supported: COINDESK | COINGECKO
 
 # Multiplier added on top of BTC / fiat exchange rate. Allows to give discount or add extra commission.
 # Values above 1.00 gives discount, values below add extra comission.
