@@ -88,7 +88,7 @@ def main():
                     datetime.utcfromtimestamp(
                         int(invoice["time"])).strftime("%Y-%m-%d"),
                     invoice["uuid"],
-                    invoice["fiat_value"],
+                    invoice["base_value"],
                     "%.8f" % float(invoice["btc_value"]),
                     "%.8f" % float(conf_paid),
                     invoice["method"],

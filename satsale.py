@@ -93,8 +93,8 @@ invoice_model = api.model(
     "invoice",
     {
         "uuid": fields.String(),
-        "fiat_currency": fields.String(),
-        "fiat_value": fields.Float(),
+        "base_currency": fields.String(),
+        "base_value": fields.Float(),
         "btc_value": fields.Float(),
         "method": fields.String(),
         "address": fields.String(),
@@ -165,8 +165,8 @@ class create_payment(Resource):
 
         invoice = {
             "uuid": str(uuid.uuid4().hex),
-            "fiat_currency": currency,
-            "fiat_value": base_amount,
+            "base_currency": currency,
+            "base_value": base_amount,
             "btc_value": btc_amount_format(btc_value),
             "method": payment_method,
             "time": time.time(),

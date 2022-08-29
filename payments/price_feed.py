@@ -73,4 +73,4 @@ def get_btc_value(base_amount, currency):
 
         return float_value
 
-    raise Exception("Failed to get fiat value.")
+    raise Exception("Failed to get base currency value.")
