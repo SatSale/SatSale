@@ -1,6 +1,6 @@
 import requests
 import logging
-
+logger = logging.getLogger(__name__)
 
 quote_url = "https://sideshift.ai/api/v1/quotes"
 swap_url = "https://sideshift.ai/api/v1/orders"

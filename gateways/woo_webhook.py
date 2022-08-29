@@ -5,6 +5,7 @@ import codecs
 import time
 import requests
 import logging
+logger = logging.getLogger(__name__)
 
 
 def hook(satsale_secret, invoice, order_id):

@@ -6,6 +6,7 @@ from base64 import b64decode
 from google.protobuf.json_format import MessageToJson
 import qrcode
 import logging
+logger = logging.getLogger(__name__)
 
 import config
 

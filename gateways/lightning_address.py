@@ -2,6 +2,7 @@ from flask import request
 from flask_restplus import Resource
 import hashlib
 import logging
+logger = logging.getLogger(__name__)
 
 min_sats = 10 ** 2
 max_sats = 10 ** 6

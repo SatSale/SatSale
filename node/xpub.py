@@ -1,8 +1,9 @@
 import time
 import qrcode
-import logging
 import requests
 from bip_utils import Bip84, Bip44Changes, Bip84Coins, Bip44, Bip44Coins
+import logging
+logger = logging.getLogger(__name__)
 
 from utils import btc_amount_format
 from payments import database

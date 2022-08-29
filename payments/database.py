@@ -1,6 +1,6 @@
 import sqlite3
 import logging
-
+logger = logging.getLogger(__name__)
 
 def create_database(name="database.db"):
     with sqlite3.connect(name) as conn:
