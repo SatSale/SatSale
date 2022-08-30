@@ -10,5 +10,10 @@ def on_reload(server):
     server.ssh_processes = ssh_tunnel.open_tunnels()
 
 
+def pre_fork(server, worker):
+    if server.ssh_processes is None:
+        server.ssh_processes = ssh_tunnel.open_tunnels()
+
 def worker_exit(server, worker):
-    ssh_tunnel.close_tunnels(server.ssh_processes)
+    if server.ssh_processes is not None:
+        ssh_tunnel.close_tunnels(server.ssh_processes)
