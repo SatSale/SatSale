@@ -163,8 +163,12 @@ class create_payment(Resource):
             )
             return {"message": "Amount below dust limit."}, 406
 
+        if config.store_name:
+            invoice_uuid = "{}-{}".format(config.store_name, str(uuid.uuid4().hex))
+        else:
+            invoice_uuid = str(uuid.uuid4().hex)
         invoice = {
-            "uuid": str(uuid.uuid4().hex),
+            "uuid": invoice_uuid,
             "base_currency": currency,
             "base_value": base_amount,
             "btc_value": btc_amount_format(btc_value),

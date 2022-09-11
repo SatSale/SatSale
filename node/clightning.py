@@ -78,7 +78,7 @@ class clightning:
         # Multiplying by 10^8 to convert to satoshi units
         msats_amount = int(float(btc_amount) * 10 ** (3 + 8))
         lnd_invoice = self.clightning.invoice(
-            msats_amount, label, "SatSale-{}".format(label), expiry
+            msats_amount, label, label, expiry
         )
         return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
 
