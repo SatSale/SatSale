@@ -87,6 +87,10 @@ connection_attempts = 15
 # Console log level (DEBUG, INFO, WARNING, ERROR)
 loglevel = "DEBUG"
 
+# This can be set to store name or whatever. Will be used as a prefix
+# for invoice ids.
+store_name = "SatSale"
+
 # Generic redirect url after payment
 redirect = "https://github.com/nickfarrow/satsale"
 
