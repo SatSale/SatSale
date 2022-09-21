@@ -4,7 +4,7 @@ from flask import (
     request,
     make_response
 )
-from flask_restplus import Resource, Api, fields
+from flask_restx import Resource, Api, fields
 import time
 import os
 import uuid

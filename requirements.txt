@@ -6,7 +6,7 @@ requests==2.26.0
 gunicorn==20.0.4
 Pillow==9.0.0
 protobuf==3.19.1
-flask_restplus==0.13.0
+flask_restx==0.5.1
 Werkzeug==0.16.1
 PySocks==1.7.1
 toml==0.10.2
