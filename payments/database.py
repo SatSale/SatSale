@@ -47,20 +47,20 @@ def migrate_database(name="database.db"):
         _log_migrate_database(1, 2, "Creating new table for generated addresses")
         with sqlite3.connect(name) as conn:
             conn.execute("CREATE TABLE addresses (n INTEGER, address TEXT, xpub TEXT)")
-        _set_database_schema_version(2)
+        _set_database_schema_version(2, name)
 
     if schema_version < 3:
         _log_migrate_database(2, 3, "Adding base currency column to payments table")
         with sqlite3.connect(name) as conn:
             conn.execute("ALTER TABLE payments ADD fiat_currency TEXT")
-        _set_database_schema_version(3)
+        _set_database_schema_version(3, name)
 
     if schema_version < 4:
         _log_migrate_database(3, 4, "Renaming fiat to base in payments table")
         with sqlite3.connect(name) as conn:
             conn.execute("ALTER TABLE payments RENAME fiat_value TO base_value")
             conn.execute("ALTER TABLE payments RENAME fiat_currency TO base_currency")
-        _set_database_schema_version(4)
+        _set_database_schema_version(4, name)
 
     #if schema_version < 5:
     #   do next migration
