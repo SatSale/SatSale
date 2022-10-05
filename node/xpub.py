@@ -5,6 +5,7 @@ import sys
 import time
 from bip_utils import Bip84, Bip44Changes, Bip84Coins, Bip44, Bip44Coins
 
+from node.bip21 import encode_bip21_uri
 from utils import btc_amount_format
 from payments import database
 
@@ -34,10 +35,10 @@ class xpub:
             logging.info("Next address shown to users is #{}".format(next_n))
 
     def create_qr(self, uuid, address, value):
-        qr_str = "bitcoin:{}?amount={}&label={}".format(
-            address, btc_amount_format(value), uuid
-        )
-
+        qr_str = encode_bip21_uri(address, {
+            "amount": btc_amount_format(value),
+            "label": uuid
+        })
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
         return
