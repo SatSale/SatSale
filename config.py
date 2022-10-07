@@ -92,7 +92,7 @@ if base_currency not in supported_currencies:
     raise Exception("base_currency must be one of supported_currencies")
 
 currency_provider = get_opt("currency_provider", "COINGECKO")
-if currency_provider not in ["COINDESK","COINGECKO"]:
+if currency_provider not in ["COINDESK", "COINGECKO"]:
     raise Exception("Unsupported currency price feed provider: {}".format(
         currency_provider))
 
