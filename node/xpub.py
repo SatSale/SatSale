@@ -15,22 +15,23 @@ class xpub:
         self.config = node_config
         self.api = "https://mempool.space/api"
 
-        next_n = self.get_next_address_index(self.config["xpub"])
-        # Warning will be printed for production runs, but not when running tests.
-        if next_n == 0 and "pytest" not in sys.modules:
-            logging.info(
-                "Deriving addresses for first time from xpub: {}".format(
-                    self.config["xpub"]
+        if "pytest" not in sys.modules:
+            next_n = self.get_next_address_index(self.config["xpub"])
+            # Warning will be printed for production runs, but not when running tests.
+            if next_n == 0:
+                logging.info(
+                    "Deriving addresses for first time from xpub: {}".format(
+                        self.config["xpub"]
+                    )
                 )
-            )
-            logging.warn(
-                "YOU MUST CHECK THIS MATCHES THE FIRST ADDRESS IN YOUR WALLET:"
-            )
-            logging.warn(self.get_address_at_index(next_n))
-            time.sleep(10)
+                logging.warn(
+                    "YOU MUST CHECK THIS MATCHES THE FIRST ADDRESS IN YOUR WALLET:"
+                )
+                logging.warn(self.get_address_at_index(next_n))
+                time.sleep(10)
 
-        logging.info("Fetching blockchain info from {}".format(self.api))
-        logging.info("Next address shown to users is #{}".format(next_n))
+            logging.info("Fetching blockchain info from {}".format(self.api))
+            logging.info("Next address shown to users is #{}".format(next_n))
 
     def create_qr(self, uuid, address, value):
         qr_str = "bitcoin:{}?amount={}&label={}".format(
