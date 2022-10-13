@@ -1,0 +1,5 @@
+# Bare minimum config for tests
+
+payment_methods = []
+
+[satsale]

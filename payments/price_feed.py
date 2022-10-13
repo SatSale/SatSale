@@ -1,76 +1,107 @@
 import requests
 import logging
+from abc import ABC, abstractmethod
 
 import config
 
 
-def get_currency_provider(currency, currency_provider):
-    # Define some currency_provider-specific settings
-    if currency_provider == "COINDESK":
-        return {
-            "price_feed": "https://api.coindesk.com/v1/bpi/currentprice.json",
-            "result_root": "bpi",
-            "value_attribute": "rate_float",
-            "ticker": currency.upper(),
-        }
-    else:
-        return {
-            "price_feed": "https://api.coingecko.com/api/v3/exchange_rates",
-            "result_root": "rates",
-            "value_attribute": "value",
-            "ticker": currency.lower(),
-        }
+class PriceFeed(ABC):
 
+    def __init__(self, price_feed_url: str = None) -> None:
+        self._price_data = None
+        self._price_feed_url = price_feed_url
 
-def get_price(currency, currency_provider=config.currency_provider, bitcoin_rate_multiplier=config.bitcoin_rate_multiplier):
-    provider = get_currency_provider(currency, currency_provider)
-    for i in range(config.connection_attempts):
+    @abstractmethod
+    def _get_rate(self, base_currency: str) -> float:
+        pass
+
+    def _fetch_price_data(self) -> None:
+        if self._price_feed_url is not None:
+            for i in range(config.connection_attempts):
+                try:
+                    r = requests.get(self._price_feed_url)
+                    self._price_data = r.json()
+                    return
+                except Exception as e:
+                    logging.error(e)
+                logging.info(
+                    "Attempting again... {}/{}...".format(
+                        i + 1, config.connection_attempts)
+                )
+
+            else:
+                raise RuntimeError("Failed to reach {}.".format(
+                    self._price_feed_url))
+
+    # used by tests
+    def set_price_data(self, price_data: dict) -> None:
+        self._price_data = price_data
+
+    def _get_btc_exchange_rate(self, base_currency: str, bitcoin_rate_multiplier: float) -> float:
+        self._fetch_price_data()
         try:
-            r = requests.get(provider["price_feed"])
-            price_data = r.json()
-            prices = price_data[provider["result_root"]]
-            break
-
-        except Exception as e:
-            logging.error(e)
-            logging.info(
-                "Attempting again... {}/{}...".format(i + 1, config.connection_attempts)
+            rate = self._get_rate(base_currency)
+            if bitcoin_rate_multiplier != 1.00:
+                logging.debug(
+                    "Adjusting BTC/{} exchange rate from {} to {} " +
+                    "because of rate multiplier {}.".format(
+                        base_currency, rate, rate * bitcoin_rate_multiplier,
+                        bitcoin_rate_multiplier))
+                rate = rate * bitcoin_rate_multiplier
+            return rate
+        except Exception:
+            logging.error(
+                "Failed to find currency {} from {}.".format(
+                    base_currency, self._price_feed_url)
             )
+            return None
 
+    def get_btc_value(self, base_amount: float, base_currency: str) -> float:
+        if base_currency == "BTC":
+            return float(base_amount)
+        elif base_currency == "sats":
+            return float(base_amount) / 10**8
+
+        exchange_rate = self._get_btc_exchange_rate(
+            base_currency, config.bitcoin_rate_multiplier)
+
+        if exchange_rate is not None:
+            try:
+                float_value = float(base_amount) / exchange_rate
+            except Exception as e:
+                logging.error(e)
+
+            return round(float_value, 8)
+
+        raise RuntimeError("Failed to get base currency value.")
+
+
+class CoinDeskPriceFeed(PriceFeed):
+
+    def __init__(self, price_feed_url: str = "https://api.coindesk.com/v1/bpi/currentprice.json") -> None:
+        super().__init__(price_feed_url)
+
+    def _get_rate(self, base_currency: str) -> float:
+        return float(self._price_data["bpi"][base_currency.upper()]["rate_float"])
+
+
+class CoinGeckoPriceFeed(PriceFeed):
+
+    def __init__(self, price_feed_url: str = "https://api.coingecko.com/api/v3/exchange_rates") -> None:
+        super().__init__(price_feed_url)
+
+    def _get_rate(self, base_currency: str) -> float:
+        return float(self._price_data["rates"][base_currency.lower()]["value"])
+
+
+def get_btc_value(base_amount: float, base_currency: str) -> float:
+    if config.currency_provider == "COINDESK":
+        provider = CoinDeskPriceFeed()
+    elif config.currency_provider == "COINGECKO":
+        provider = CoinGeckoPriceFeed()
     else:
-        raise ("Failed to reach {}.".format(provider["price_feed"]))
-
-    try:
-        price = prices[provider["ticker"]][provider["value_attribute"]]
-        if bitcoin_rate_multiplier != 1.00:
-            logging.debug("Adjusting BTC price from {} to {} because of rate multiplier {}.".format(
-                price, price * bitcoin_rate_multiplier, bitcoin_rate_multiplier))
-            price = price * bitcoin_rate_multiplier
-        return price
-
-    except Exception:
-        logging.error(
-            "Failed to find currency {} from {}.".format(currency, provider["price_feed"])
+        raise Exception(
+            "Unsupported exchange rate provider (currency_provider): " +
+            config.currency_provider
         )
-        return None
-
-
-def get_btc_value(base_amount, currency):
-    if currency == "BTC":
-        return float(base_amount)
-    elif currency == "sats":
-        return float(base_amount) / 10**8
-
-    price = get_price(currency)
-
-    if price is not None:
-        try:
-            float_value = float(base_amount) / float(price)
-            if not isinstance(float_value, float):
-                raise Exception("Fiat value should be a float.")
-        except Exception as e:
-            logging.error(e)
-
-        return float_value
-
-    raise Exception("Failed to get base currency value.")
+    return provider.get_btc_value(base_amount, base_currency)
