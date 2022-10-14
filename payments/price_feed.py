@@ -43,7 +43,7 @@ class PriceFeed(ABC):
             rate = self._get_rate(base_currency)
             if bitcoin_rate_multiplier != 1.00:
                 logging.debug(
-                    "Adjusting BTC/{} exchange rate from {} to {} " +
+                    "Adjusting BTC/{} exchange rate from {} to {} "
                     "because of rate multiplier {}.".format(
                         base_currency, rate, rate * bitcoin_rate_multiplier,
                         bitcoin_rate_multiplier))
