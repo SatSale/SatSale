@@ -44,8 +44,8 @@ def test_invalid_base_currency(price_feed: dict) -> None:
     ])
 def test_btc_btc_price(price_feed: dict) -> None:
     provider = price_feed["class"](price_feed_url=None)
-    assert(provider.get_btc_value(1, "BTC") == 1)
-    assert(provider.get_btc_value(1000000, "sats") == 0.01)
+    assert (provider.get_btc_value(1, "BTC") == 1)
+    assert (provider.get_btc_value(1000000, "sats") == 0.01)
 
 
 @pytest.mark.parametrize(
@@ -74,7 +74,7 @@ def test_fiat_btc_price(price_feed: dict) -> None:
     provider = price_feed["class"](price_feed_url=None)
     provider.set_price_data(read_price_feed_data(price_feed["data_file"]))
     for conv in price_feed["conversions"]:
-        assert(
+        assert (
             provider.get_btc_value(conv["base_value"], conv["base_currency"]) ==
             conv["btc_value"]
         )
