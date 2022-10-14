@@ -1,0 +1,28 @@
+name: Python package
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Lint with flake8
+        run: |
+          sudo apt install python3-pip
+          pip3 install flake8
+          ./test/lint/lint-python.sh
+      - name: Install SatSale
+        run: pip3 install -r requirements.txt
+      - name: Run tests
+        run: |
+          pip3 install pytest
+          ./test/run_tests.sh
