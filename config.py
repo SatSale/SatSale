@@ -8,7 +8,10 @@ for i, arg in enumerate(sys.argv):
         conf_path = sys.argv[i + 1]
         break
 else:
-    conf_path = "config.toml"
+    if "pytest" in sys.modules:
+        conf_path = "test/config.toml"
+    else:
+        conf_path = "config.toml"
 
 with open(conf_path, "r") as config_file:
     config = toml.load(config_file)
