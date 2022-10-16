@@ -256,7 +256,7 @@ class complete_payment(Resource):
             return {"message": "You havent paid you stingy bastard"}
 
         if (config.liquid_address is not None) and (
-            invoice["method"] in ["lnd", "clightning"]
+            invoice["method"] == "lightning"
         ):
             weakhands.swap_lnbtc_for_lusdt(
                 lightning_node, invoice["btc_value"], config.liquid_address
