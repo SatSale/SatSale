@@ -8,6 +8,8 @@ payment_methods = ["bitcoind"]
 # wallet (empty "" if your bitcoind node has a single wallet, OR wallet name/path as shown in `bitcoin-cli listwallets`)
 [bitcoind]
 host = "127.0.0.1"
+# Use this instead of host to connect over Tor
+#tor_bitcoinrpc_host = ""
 username = "bitcoinrpc"
 password = ""
 rpcport = "8332"
