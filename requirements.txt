@@ -16,3 +16,4 @@ bip-utils==2.3.0
 setuptools==50.3.2
 lnd-grpc-client==0.3.22
 pyln-client==0.10.1
+blue_wallet_client==0.0.13

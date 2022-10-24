@@ -27,6 +27,7 @@ from payments.price_feed import get_btc_value
 from node import bitcoind
 from node import xpub
 from node import lnd
+from node import lndhub
 from node import clightning
 from utils import btc_amount_format
 
@@ -295,7 +296,7 @@ def check_payment_status(uuid):
     # If payment has not expired, then we're going to check for any transactions
     if status["time_left"] > 0:
         node = get_node(invoice["method"])
-        if node.config['name'] == "lnd":
+        if (node.config['name'] == "lnd") or (node.config['name'] == "lndhub"):
             conf_paid, unconf_paid = node.check_payment(invoice["rhash"])
         elif (node.config['name'] == "bitcoind") or (node.config['name'] == "clightning"):
             # Lookup bitcoind / clightning invoice based on label (uuid)
@@ -361,6 +362,11 @@ for method in config.payment_methods:
         if lightning_node.config['lightning_address'] is not None:
             from gateways import lightning_address
             lightning_address.add_ln_address_decorators(app, api, lightning_node)
+        enabled_payment_methods.append("lightning")
+
+    elif method['name'] == "lndhub":
+        lightning_node = lndhub.lndhub(method)
+        logging.info("Connection to lightning node (lndhub) successful.")
         enabled_payment_methods.append("lightning")
 
     elif method['name'] == "clightning":
