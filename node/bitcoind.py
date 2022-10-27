@@ -5,6 +5,7 @@ import qrcode
 import time
 
 import config
+from node.bip21 import encode_bip21_uri
 from utils import btc_amount_format
 
 
@@ -97,10 +98,10 @@ class btcd:
         return json.loads(response.text)
 
     def create_qr(self, uuid, address, value):
-        qr_str = "bitcoin:{}?amount={}&label={}".format(
-            address, btc_amount_format(value), uuid
-        )
-
+        qr_str = encode_bip21_uri(address, {
+            "amount": btc_amount_format(value),
+            "label": uuid
+        })
         img = qrcode.make(qr_str)
         img.save("static/qr_codes/{}.png".format(uuid))
         return
