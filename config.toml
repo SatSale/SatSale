@@ -20,6 +20,7 @@ wallet = ""
 [xpub]
 xpub = ""
 bip = "BIP84" # For bc1q addresses (xpub will start like `zpub..`). Can use BIP44 for 1egacy.
+#api_url = "https://mempool.space/api"
 
 ## LND :: Add "lnd" to payment_methods
 # You can display your node connection so users can open channels with you by setting

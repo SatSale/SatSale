@@ -3,18 +3,30 @@ import qrcode
 import requests
 import sys
 import time
-from bip_utils import Bip84, Bip44Changes, Bip84Coins, Bip44, Bip44Coins
+from bip_utils import \
+    Bip44, Bip44Changes, Bip44Coins, \
+    Bip84, Bip84Coins, \
+    Bip86, Bip86Coins
+from typing import Tuple
 
 from node.bip21 import encode_bip21_uri
 from utils import btc_amount_format
 from payments import database
 
 
+class InvalidExtendedPublicKeyError(RuntimeError):
+
+    def __init__(self, xpub: str, bip: str) -> None:
+        self.message = "Invalid extended public key {} for {}".format(
+            xpub, bip)
+        super().__init__(self.message)
+
+
 class xpub:
-    def __init__(self, node_config):
+
+    def __init__(self, node_config: dict) -> None:
         self.is_onchain = True
         self.config = node_config
-        self.api = "https://mempool.space/api"
 
         if "pytest" not in sys.modules:
             next_n = self.get_next_address_index(self.config["xpub"])
@@ -31,10 +43,11 @@ class xpub:
                 logging.warn(self.get_address_at_index(next_n))
                 time.sleep(10)
 
-            logging.info("Fetching blockchain info from {}".format(self.api))
+            logging.info("Fetching blockchain info from {}".format(
+                self.config["api_url"]))
             logging.info("Next address shown to users is #{}".format(next_n))
 
-    def create_qr(self, uuid, address, value):
+    def create_qr(self, uuid: str, address: str, value: float) -> None:
         qr_str = encode_bip21_uri(address, {
             "amount": btc_amount_format(value),
             "label": uuid
@@ -43,10 +56,11 @@ class xpub:
         img.save("static/qr_codes/{}.png".format(uuid))
         return
 
-    def check_payment(self, address, slow=True):
+    def check_payment(self, address: str, slow: bool = True) -> Tuple[float, float]:
         conf_paid, unconf_paid = 0, 0
         try:
-            r = requests.get(self.api + "/address/{}".format(address))
+            r = requests.get("{}/address/{}".format(
+                self.config["api_url"], address))
             r.raise_for_status()
             stats = r.json()
             conf_paid = stats["chain_stats"]["funded_txo_sum"] / (10 ** 8)
@@ -65,17 +79,44 @@ class xpub:
 
         return 0, 0
 
-    def get_next_address_index(self, xpub):
+    def get_next_address_index(self, xpub: str) -> int:
         n = database.get_next_address_index(xpub)
         return n
 
-    def get_address_at_index(self, index):
-        if self.config["bip"] == "BIP84":
-            bip84_acc = Bip84.FromExtendedKey(self.config["xpub"], Bip84Coins.BITCOIN)
-            child_key = bip84_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
-        elif self.config["bip"] == "BIP44":
-            bip44_acc = Bip44.FromExtendedKey(self.config["xpub"], Bip44Coins.BITCOIN)
+    def get_address_at_index(self, index: int) -> str:
+        if self.config["bip"] == "BIP44":
+            if self.config["xpub"].startswith("xpub"):
+                bip44_acc = Bip44.FromExtendedKey(self.config["xpub"],
+                                                  Bip44Coins.BITCOIN)
+            elif self.config["xpub"].startswith("tpub"):
+                bip44_acc = Bip44.FromExtendedKey(self.config["xpub"],
+                                                  Bip44Coins.BITCOIN_TESTNET)
+            else:
+                raise InvalidExtendedPublicKeyError(
+                    self.config["xpub"], self.config["bip"])
             child_key = bip44_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
+        elif self.config["bip"] == "BIP84":
+            if self.config["xpub"].startswith("zpub"):
+                bip84_acc = Bip84.FromExtendedKey(self.config["xpub"],
+                                                  Bip84Coins.BITCOIN)
+            elif self.config["xpub"].startswith("vpub"):
+                bip84_acc = Bip84.FromExtendedKey(self.config["xpub"],
+                                                  Bip84Coins.BITCOIN_TESTNET)
+            else:
+                raise InvalidExtendedPublicKeyError(
+                    self.config["xpub"], self.config["bip"])
+            child_key = bip84_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
+        elif self.config["bip"] == "BIP86":
+            if self.config["xpub"].startswith("xpub"):
+                bip86_acc = Bip86.FromExtendedKey(self.config["xpub"],
+                                                  Bip86Coins.BITCOIN)
+            elif self.config["xpub"].startswith("tpub"):
+                bip86_acc = Bip86.FromExtendedKey(self.config["xpub"],
+                                                  Bip86Coins.BITCOIN_TESTNET)
+            else:
+                raise InvalidExtendedPublicKeyError(
+                    self.config["xpub"], self.config["bip"])
+            child_key = bip86_acc.Change(Bip44Changes.CHAIN_EXT).AddressIndex(index)
         else:
             raise NotImplementedError(
                 "{} is not yet implemented!".format(self.config["bip"])
@@ -84,7 +125,7 @@ class xpub:
         address = child_key.PublicKey().ToAddress()
         return address
 
-    def get_address(self, amount, label, expiry):
+    def get_address(self, amount: float, label: str, expiry: int) -> Tuple[str, str]:
         while True:
             n = self.get_next_address_index(self.config["xpub"])
             address = self.get_address_at_index(n)

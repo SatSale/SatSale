@@ -80,6 +80,7 @@ for method_name in config["payment_methods"]:
         check_set_node_conf("xpub", None, method_config)
         if method_config["xpub"] == "" or method_config["xpub"] is None:
             raise KeyError("Mising {}: config {}".format(method_name, "xpub"))
+        check_set_node_conf("api_url", "https://mempool.space/api", method_config)
 
     else:
         raise Exception("Unknown payment method: {}".format(method_name))
