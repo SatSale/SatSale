@@ -5,6 +5,7 @@ from flask import (
     make_response
 )
 from flask_restx import Resource, Api, fields
+from flask_cors import CORS
 import time
 import os
 import uuid
@@ -35,6 +36,7 @@ from utils import btc_amount_format
 from gateways import woo_webhook
 
 app = Flask(__name__)
+CORS(app)
 
 # Load a SatSale API key or create a new one
 if os.path.exists("SatSale_API_key"):
