@@ -55,6 +55,39 @@ def test_bip21_encode() -> None:
         ]) ==
         "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?somethingyoudontunderstand=50&somethingelseyoudontget=999"
     )
+    # Test removal of trailing zeros after decimal point for amounts
+    assert (
+        encode_bip21_uri("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W", {
+            "amount": "50.00000000"
+        }) ==
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=50"
+    )
+    assert (
+        encode_bip21_uri("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W", {
+            "amount": "20.30000000"
+        }) ==
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=20.3"
+    )
+    # Test that zeros from the right side of integers aren't removed
+    assert (
+        encode_bip21_uri("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W", {
+            "amount": "5000.00000000"
+        }) ==
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=5000"
+    )
+    assert (
+        encode_bip21_uri("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W", {
+            "amount": "5000"
+        }) ==
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=5000"
+    )
+    # Test very small amounts
+    assert (
+        encode_bip21_uri("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W", {
+            "amount": "0.00000001"
+        }) ==
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=0.00000001"
+    )
     # Invalid amounts must raise ValueError
     with pytest.raises(ValueError):
         # test dicts
