@@ -187,6 +187,10 @@ class create_payment(Resource):
             logging.error("Failed to fetch address: {}".format(e))
             return {"message": "Error fetching address. Check config.."}, 522
 
+        if not invoice["address"]:
+            logging.error("Failed to fetch address")
+            return {"message": "Error fetching address. Check config.."}, 522
+
         node.create_qr(invoice["uuid"], invoice["address"], invoice["btc_value"])
 
         # Save invoice to database

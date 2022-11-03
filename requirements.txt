@@ -1,4 +1,3 @@
-python_bitcoinrpc==1.0
 qrcode==7.3
 Flask==1.1.4
 MarkupSafe==2.0.1
