@@ -1,8 +1,9 @@
 import time
-import qrcode
 import logging
+from typing import Tuple
 
 import config
+from node import node
 
 # if False:  # config.tor_clightningrpc_host is not None:
 #     from gateways.tor import session
@@ -12,12 +13,12 @@ import config
 #     session = None
 
 
-class clightning:
-    def __init__(self, node_config):
+class clightning(node.node):
+
+    def __init__(self, node_config: dict):
         from pyln.client import LightningRpc
 
-        self.config = node_config
-        self.is_onchain = False
+        super().__init__(node_config, False)
 
         for i in range(config.connection_attempts):
             try:
@@ -59,22 +60,16 @@ class clightning:
         logging.info("Ready for payments requests.")
         return
 
-    def create_qr(self, uuid, address, value):
-        qr_str = "{}".format(address.upper())
-        img = qrcode.make(qr_str)
-        img.save("static/qr_codes/{}.png".format(uuid))
-        return
-
     def get_info(self):
         return self.clightning.getinfo()
 
-    def get_uri(self):
+    def get_uri(self) -> str:
         info = self.get_info()
         address = info["address"][0]
         return info["id"] + "@" + address["address"] + ":" + str(address["port"])
 
     # Create lightning invoice
-    def create_clightning_invoice(self, btc_amount, label, expiry):
+    def _create_clightning_invoice(self, btc_amount, label, expiry):
         # Multiplying by 10^8 to convert to satoshi units
         msats_amount = int(float(btc_amount) * 10 ** (3 + 8))
         lnd_invoice = self.clightning.invoice(
@@ -82,12 +77,13 @@ class clightning:
         )
         return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
 
-    def get_address(self, amount, label, expiry):
-        address, r_hash = self.create_clightning_invoice(amount, label, expiry)
-        return address, r_hash
+    def get_address(self, amount: float, label: str,
+                    expiry: int) -> Tuple[str, str, str]:
+        address, r_hash = self._create_clightning_invoice(amount, label, expiry)
+        return None, address, r_hash
 
     # Check whether the payment has been paid
-    def check_payment(self, uuid):
+    def check_payment(self, uuid: str) -> Tuple[float, float]:
         invoices = self.clightning.listinvoices(uuid)["invoices"]
 
         if len(invoices) == 0:

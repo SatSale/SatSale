@@ -4,21 +4,22 @@ import os
 import json
 from base64 import b64decode
 from google.protobuf.json_format import MessageToJson
-import qrcode
-import logging
+from typing import Tuple
 
 import config
+import logging
+from node import node
 
 
-class lnd:
-    def __init__(self, node_config):
+class lnd(node.node):
+
+    def __init__(self, node_config: dict) -> None:
         from lndgrpc import LNDClient
 
-        self.config = node_config
-        self.is_onchain = False
+        super().__init__(node_config, False)
 
         # Copy admin macaroon and tls cert to local machine
-        self.copy_certs()
+        self._copy_certs()
 
         # Conect to lightning node
         connection_str = "{}:{}".format(config.host, self.config['lnd_rpcport'])
@@ -69,14 +70,8 @@ class lnd:
         logging.info("Ready for payments requests.")
         return
 
-    def create_qr(self, uuid, address, value):
-        qr_str = "{}".format(address.upper())
-        img = qrcode.make(qr_str)
-        img.save("static/qr_codes/{}.png".format(uuid))
-        return
-
     # Copy tls and macaroon certs from remote machine.
-    def copy_certs(self):
+    def _copy_certs(self) -> None:
         self.certs = {"tls": "tls.cert", "macaroon": self.config['lnd_macaroon']}
 
         if (not os.path.isfile("tls.cert")) or (
@@ -124,7 +119,9 @@ class lnd:
         return
 
     # Create lightning invoice
-    def create_lnd_invoice(self, btc_amount, memo=None, description_hash=None, expiry=3600):
+    def _create_lnd_invoice(self, btc_amount: float, memo: str = None,
+                            description_hash: str = None,
+                            expiry: int = 3600) -> Tuple[str, str]:
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(float(btc_amount) * 10 ** 8)
         res = self.lnd.add_invoice(
@@ -134,14 +131,15 @@ class lnd:
 
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
 
-    def get_address(self, amount, label, expiry):
+    def get_address(self, amount: float, label: str,
+                    expiry: int) -> Tuple[str, str, str]:
         address, r_hash = self.create_lnd_invoice(
             amount, memo=label, expiry=expiry)
-        return address, r_hash
+        return None, address, r_hash
 
-    def pay_invoice(self, invoice):
+    def pay_invoice(self, bolt11_invoice: str) -> None:
         ret = json.loads(
-            MessageToJson(self.lnd.send_payment(invoice, fee_limit_msat=20 * 1000))
+            MessageToJson(self.lnd.send_payment(bolt11_invoice, fee_limit_msat=20 * 1000))
         )
         logging.info(ret)
         return
@@ -149,12 +147,12 @@ class lnd:
     def get_info(self):
         return json.loads(MessageToJson(self.lnd.get_info()))
 
-    def get_uri(self):
+    def get_uri(self) -> str:
         info = self.get_info()
         return info["uris"][0]
 
     # Check whether the payment has been paid
-    def check_payment(self, rhash):
+    def check_payment(self, rhash: str) -> Tuple[float, float]:
         invoice_status = json.loads(
             MessageToJson(self.lnd.lookup_invoice(r_hash_str=b64decode(rhash).hex()))
         )

@@ -40,7 +40,7 @@ def main():
     for method in config.payment_methods:
         print("Connecting to {} node...".format(method["name"]))
         if method["name"] == "bitcoind":
-            nodes["bitcoind"] = bitcoind.btcd(method)
+            nodes["bitcoind"] = bitcoind.bitcoind(method)
             onchain = "bitcoind"
         elif method["name"] == "lnd":
             nodes["lnd"] = lnd.lnd(method)
@@ -66,7 +66,7 @@ def main():
         reportwriter = csv.writer(csvfile)
         reportwriter.writerow([
             "Date", "Invoice ID", "Base value", "Base currency", "BTC value",
-            "BTC paid", "Payment method", "Address"
+            "BTC paid", "Payment method", "Address / invoice"
         ])
         num_rows = 0
         for invoice in invoices:
@@ -84,6 +84,10 @@ def main():
                     invoice["uuid"])
 
             if conf_paid > 0:
+                if invoice["method"] == "lightning":
+                    address = invoice["bolt11_invoice"]
+                else:
+                    address = invoice["address"]
                 reportwriter.writerow([
                     datetime.utcfromtimestamp(
                         int(invoice["time"])).strftime("%Y-%m-%d"),
@@ -93,7 +97,7 @@ def main():
                     "%.8f" % float(invoice["btc_value"]),
                     "%.8f" % float(conf_paid),
                     invoice["method"],
-                    invoice["address"]
+                    address
                 ])
                 num_rows = num_rows + 1
 
