@@ -62,6 +62,14 @@ for method_name in config["payment_methods"]:
         check_set_node_conf("lightning_address", None, method_config)
         check_set_node_conf("lightning_address_comment", None, method_config)
 
+    elif method_name == "lndhub":
+        method_config["name"] = "lndhub"
+        check_set_node_conf("bw_login", None, method_config)
+        check_set_node_conf("bw_password", None, method_config)
+        check_set_node_conf("backend_url", "https://lndhub.herokuapp.com", method_config)
+        check_set_node_conf("lightning_address", None, method_config)
+        check_set_node_conf("lightning_address_comment", None, method_config)
+
     elif method_name == "clightning":
         method_config["name"] = "clightning"
         check_set_node_conf("clightning_rpc_file", None, method_config)
