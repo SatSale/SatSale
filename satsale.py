@@ -151,6 +151,8 @@ class create_payment(Resource):
         else:
             logging.info("Webhook payment: {}".format(webhook))
         payment_message = request.args.get("message")
+        if payment_message is not None and len(payment_message) > 35:
+            payment_message = payment_message[:35]
 
         # Create the payment using one of the connected nodes as a base
         # ready to recieve the invoice.
