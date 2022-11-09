@@ -105,7 +105,8 @@ invoice_model = api.model(
         "rhash": fields.String(),
         "bolt11_invoice": fields.String(),
         "time_left": fields.Float(),
-        "onchain_dust_limit": fields.Float()
+        "onchain_dust_limit": fields.Float(),
+        "message": fields.String()
     },
 )
 status_model = api.model(
@@ -122,7 +123,8 @@ status_model = api.model(
 @api.doc(
     params={
         "amount": "An amount.",
-        "currency": "(Opional) Currency units of the amount (defaults to `config.base_currency`).",
+        "currency": "(Optional) Currency units of the amount (defaults to `config.base_currency`).",
+        "message": "(Optional) Message to send among payment (purpose).",
         "method": "(Optional) Specify a payment method: `bitcoind` for onchain, `lnd` for lightning).",
         "w_url": "(Optional) Specify a webhook url to call after successful payment. Currently only supports WooCommerce plugin.",
     }
@@ -148,6 +150,7 @@ class create_payment(Resource):
             webhook = None
         else:
             logging.info("Webhook payment: {}".format(webhook))
+        payment_message = request.args.get("message")
 
         # Create the payment using one of the connected nodes as a base
         # ready to recieve the invoice.
@@ -193,6 +196,7 @@ class create_payment(Resource):
             "webhook": webhook,
             "onchain_dust_limit": config.onchain_dust_limit,
             "ln_upper_limit": config.ln_upper_limit,
+            "message": payment_message,
         }
 
         # Get an address / invoice, and create a QR code

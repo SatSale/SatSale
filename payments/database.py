@@ -89,8 +89,14 @@ def migrate_database(name: str = DEFAULT_DATABASE) -> None:
                     "SET bolt11_invoice = address, address = NULL "
                     "WHERE uuid = '{}'".format(uuid))
         _set_database_schema_version(5, name)
+        
+    if schema_version < 6:
+        _log_migrate_database(4, 5, "Add message column to payments table")
+        with sqlite3.connect(name) as conn:
+            conn.execute("ALTER TABLE payments ADD message TEXT")
+        _set_database_schema_version(6, name)
 
-    #if schema_version < 6:
+    #if schema_version < 7:
     #   do next migration
 
     new_version = _get_database_schema_version(name)
@@ -108,8 +114,8 @@ def write_to_database(invoice: dict, name: str = DEFAULT_DATABASE) -> None:
         cur.execute(
             "INSERT INTO payments (uuid, base_currency, base_value, "
             "btc_value, method, address, time, webhook, rhash, "
-            "bolt11_invoice) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "bolt11_invoice, message) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (
                 invoice["uuid"],
                 invoice["base_currency"],
@@ -120,7 +126,8 @@ def write_to_database(invoice: dict, name: str = DEFAULT_DATABASE) -> None:
                 invoice["time"],
                 invoice["webhook"],
                 invoice["rhash"],
-                invoice["bolt11_invoice"]
+                invoice["bolt11_invoice"],
+                invoice["message"]
             ),
         )
     return
