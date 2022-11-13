@@ -128,6 +128,7 @@ class create_payment(Resource):
     @api.response(200, "Success", invoice_model)
     @api.response(400, "Invalid payment method")
     @api.response(406, "Amount below dust limit")
+    @api.response(406, "Amount too large")
     @api.response(522, "Error fetching address from node")
     def get(self):
         "Create Payment"
@@ -153,6 +154,17 @@ class create_payment(Resource):
             return {"message": "Invalid payment method."}, 400
 
         btc_value = get_btc_value(base_amount, currency)
+
+        if btc_value > 21000000:
+            logging.warning(
+                "Requested payment for {} {} BTC value {} too large (above 21M cap)".format(
+                    base_amount,
+                    currency,
+                    btc_value
+                )
+            )
+            return {"message": "Amount too large."}, 406
+
         if node.is_onchain and btc_value < config.onchain_dust_limit:
             logging.warning(
                 "Requested onchain payment for {} {} below dust limit ({} < {})".format(
