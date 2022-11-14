@@ -43,6 +43,15 @@ lnd_macaroon = "invoice.macaroon"
 [clightning]
 clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
 
+## LNDHUB :: Use BlueWallet (LNDHub) backend for Lightning Network payments
+# With default backend_url will use custodial Blue Wallet backend.
+# To get username / password, look at Wallet Export / Backup in Blue Wallet,
+# it will have URL in format lndhub://bw_login:bw_password@https://lndhub.io
+[lndhub]
+bw_login = ""
+bw_password = ""
+#backend_url = "https://lndhub.herokuapp.com"
+
 [satsale]
 #### Connect To Remote Node ####
 # Either SSH or TOR should be used to 

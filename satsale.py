@@ -27,6 +27,7 @@ from payments.price_feed import get_btc_value
 from node import bitcoind
 from node import xpub
 from node import lnd
+from node import lndhub
 from node import clightning
 from utils import btc_amount_format
 
@@ -127,6 +128,7 @@ class create_payment(Resource):
     @api.response(200, "Success", invoice_model)
     @api.response(400, "Invalid payment method")
     @api.response(406, "Amount below dust limit")
+    @api.response(406, "Amount too large")
     @api.response(522, "Error fetching address from node")
     def get(self):
         "Create Payment"
@@ -152,6 +154,17 @@ class create_payment(Resource):
             return {"message": "Invalid payment method."}, 400
 
         btc_value = get_btc_value(base_amount, currency)
+
+        if btc_value > 21000000:
+            logging.warning(
+                "Requested payment for {} {} BTC value {} too large (above 21M cap)".format(
+                    base_amount,
+                    currency,
+                    btc_value
+                )
+            )
+            return {"message": "Amount too large."}, 406
+
         if node.is_onchain and btc_value < config.onchain_dust_limit:
             logging.warning(
                 "Requested onchain payment for {} {} below dust limit ({} < {})".format(
@@ -299,7 +312,7 @@ def check_payment_status(uuid):
     # If payment has not expired, then we're going to check for any transactions
     if status["time_left"] > 0:
         node = get_node(invoice["method"])
-        if node.config['name'] == "lnd":
+        if (node.config['name'] == "lnd") or (node.config['name'] == "lndhub"):
             conf_paid, unconf_paid = node.check_payment(invoice["rhash"])
         elif (node.config['name'] == "bitcoind") or (node.config['name'] == "clightning"):
             # Lookup bitcoind / clightning invoice based on label (uuid)
@@ -365,6 +378,11 @@ for method in config.payment_methods:
         if lightning_node.config['lightning_address'] is not None:
             from gateways import lightning_address
             lightning_address.add_ln_address_decorators(app, api, lightning_node)
+        enabled_payment_methods.append("lightning")
+
+    elif method['name'] == "lndhub":
+        lightning_node = lndhub.lndhub(method)
+        logging.info("Connection to lightning node (lndhub) successful.")
         enabled_payment_methods.append("lightning")
 
     elif method['name'] == "clightning":
