@@ -43,9 +43,7 @@ def insert_paynym_html(nym):
     <style>
         .imageInn img {
             border-radius:50px;
-            z-index: 9;
             position: relative;
-
         }
 
         .paynym {
@@ -60,17 +58,13 @@ def insert_paynym_html(nym):
             visibility: hidden;
             object-fit: cover;
             transition: transform .2s;
-            z-index: 5;
         }
 
         .paynym:hover .hoverImg {
             visibility: visible;
-            z-index: 10;
-            /* transition: display 2s; */
             -ms-transform: scale(2.5); 
             -webkit-transform: scale(2.5); 
-            transform: scale(3) translate(38px, -25px);
-        
+            transform: scale(3) translate(38px, -25px);    
         }
     </style>
     """
