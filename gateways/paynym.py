@@ -1,5 +1,6 @@
-import requests
 import logging
+
+import requests
 
 paynym_site = "https://paynym.is/"
 
@@ -82,7 +83,7 @@ def insert_paynym_html(nym):
             <img width="100px" style="border-radius:50px;" src="{{ url_for('static', filename='avatar.png') }}">
         </div>
         <div class="hoverImg">
-            <img id qrImage width="100px" src="{{ url_for('static', filename='codeimage.png') }}">
+            <img id="qrImage" width="100px" src="{{ url_for('static', filename='codeimage.png') }}">
         </div>
         """
         + """
