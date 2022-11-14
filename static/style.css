@@ -2,8 +2,8 @@
     --preset--font--family: "Lucida Console", "Courier New", monospace;
     --preset--html--background: #fff;
     --preset--primary--background: #f7931a;
-    --preset--primary--font--color: #fff;
-    --preset--secondary--font--color: #000;
+    --preset--primary--font--color: #000;
+    --preset--secondary--font--color: #fff;
 }
 
 html, body {
@@ -16,6 +16,10 @@ body {
     background-color: inherit;
     overflow: hidden;
     font-family: var(--preset--font--family)
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--preset--primary--font--color);
 }
 
 #paybox {
@@ -60,6 +64,7 @@ body {
 
 /* Text style (addresses) */
 p {
+    color: var(--preset--primary--font--color);
     overflow-wrap: break-word;
     word-wrap: break-word;
     margin: 0;
@@ -77,7 +82,7 @@ h1 {
     font-family: var(--preset--font--family);
     border: none;
     border-radius: 12px;
-    color: var(--preset--primary--font--color);
+    color: var(--preset--secondary--font--color);
 
     padding: 10px 15px;
     text-align: center;
@@ -111,7 +116,7 @@ h1 {
 
 .donate_input {
     background-color: black;
-    color: var(--preset--primary--font--color);
+    color: var(--preset--secondary--font--color);
     font-size: 16px;
     border-radius:5px;
     display: inline;
@@ -119,7 +124,7 @@ h1 {
 
 #qrImage {
     float: right;
-    /* margin: auto; */
+    margin: auto;
     padding-right:15px;
     padding-top:25px;
 }
@@ -142,5 +147,5 @@ h1 {
     text-align: right;
 }
 #about {
-    color: var(--preset--secondary--font--color);
+    color: var(--preset--primary--font--color);
 }
