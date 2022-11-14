@@ -1,6 +1,5 @@
-import logging
-
 import requests
+import logging
 
 paynym_site = "https://paynym.is/"
 
