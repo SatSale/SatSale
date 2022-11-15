@@ -96,9 +96,8 @@ for method_name in config["payment_methods"]:
     payment_methods.append(method_config)
 
 supported_currencies = get_opt("supported_currencies", ["USD"])
-if "BTC" and not "sats" in supported_currencies:
-    BTC_index = supported_currencies.index("BTC")
-    supported_currencies.insert(BTC_index, "sats")
+if "BTC" in supported_currencies:
+    supported_currencies.append("sats")
 
 base_currency = get_opt("base_currency", "USD")
 if base_currency not in supported_currencies:
