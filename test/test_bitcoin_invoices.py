@@ -19,6 +19,16 @@ from node.invoices import encode_bitcoin_invoice, InvoiceType
             "invoice_str": "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=20.3&label=Luke-Jr"
         },
         {
+            "uuid": "Luke-Jr",
+            "invoice": {
+                "address": "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W",
+                "btc_value": 50,
+                "message": "Donation for project xyz"
+            },
+            "invoice_type": InvoiceType.BIP21,
+            "invoice_str": "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=50&label=Luke-Jr&message=Donation%20for%20project%20xyz"
+        },
+        {
             "uuid": "bolt11_example",
             "invoice": {
                 "bolt11_invoice": "lnbc2500u1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpquwpc4curk03c9wlrswe78q4eyqc7d8d0xqzpu9qrsgqhtjpauu9ur7fw2thcl4y9vfvh4m9wlfyz2gem29g5ghe2aak2pm3ps8fdhtceqsaagty2vph7utlgj48u0ged6a337aewvraedendscp573dxr"
