@@ -29,6 +29,7 @@ from node import xpub
 from node import lnd
 from node import lndhub
 from node import clightning
+from node.invoices import create_qr, encode_bitcoin_invoice, InvoiceType
 from utils import btc_amount_format
 
 from gateways import woo_webhook
@@ -102,7 +103,9 @@ invoice_model = api.model(
         "time": fields.Float(),
         "webhook": fields.String(),
         "rhash": fields.String(),
+        "bolt11_invoice": fields.String(),
         "time_left": fields.Float(),
+        "onchain_dust_limit": fields.Float()
     },
 )
 status_model = api.model(
@@ -193,18 +196,27 @@ class create_payment(Resource):
 
         # Get an address / invoice, and create a QR code
         try:
-            invoice["address"], invoice["rhash"] = node.get_address(
-                invoice["btc_value"], invoice["uuid"], config.payment_timeout
-            )
+            invoice["address"], invoice["bolt11_invoice"], invoice["rhash"] = \
+                node.get_address(
+                    invoice["btc_value"], invoice["uuid"],
+                    config.payment_timeout
+                )
         except Exception as e:
             logging.error("Failed to fetch address: {}".format(e))
             return {"message": "Error fetching address. Check config.."}, 522
 
-        if not invoice["address"]:
+        if not invoice["address"] and not invoice["bolt11_invoice"]:
             logging.error("Failed to fetch address")
             return {"message": "Error fetching address. Check config.."}, 522
 
-        node.create_qr(invoice["uuid"], invoice["address"], invoice["btc_value"])
+        if invoice["method"] == "lightning":
+            invoice_type = InvoiceType.BOLT11
+        else:
+            invoice_type = InvoiceType.BIP21
+
+        btc_invoice_str = encode_bitcoin_invoice(
+            invoice["uuid"], invoice, invoice_type)
+        create_qr(invoice["uuid"], btc_invoice_str)
 
         # Save invoice to database
         database.write_to_database(invoice)
@@ -368,7 +380,7 @@ enabled_payment_methods = []
 for method in config.payment_methods:
     #print(method)
     if method['name'] == "bitcoind":
-        bitcoin_node = bitcoind.btcd(method)
+        bitcoin_node = bitcoind.bitcoind(method)
         logging.info("Connection to bitcoin node successful.")
         enabled_payment_methods.append("onchain")
 

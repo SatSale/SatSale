@@ -1,5 +1,4 @@
 import logging
-import qrcode
 import requests
 import sys
 import time
@@ -9,8 +8,7 @@ from bip_utils import \
     Bip86, Bip86Coins
 from typing import Tuple
 
-from node.bip21 import encode_bip21_uri
-from utils import btc_amount_format
+from node import node
 from payments import database
 
 
@@ -22,11 +20,11 @@ class InvalidExtendedPublicKeyError(RuntimeError):
         super().__init__(self.message)
 
 
-class xpub:
+class xpub(node.node):
 
     def __init__(self, node_config: dict) -> None:
-        self.is_onchain = True
-        self.config = node_config
+
+        super().__init__(node_config, True)
 
         if "pytest" not in sys.modules:
             next_n = self.get_next_address_index(self.config["xpub"])
@@ -47,14 +45,8 @@ class xpub:
                 self.config["api_url"]))
             logging.info("Next address shown to users is #{}".format(next_n))
 
-    def create_qr(self, uuid: str, address: str, value: float) -> None:
-        qr_str = encode_bip21_uri(address, {
-            "amount": btc_amount_format(value),
-            "label": uuid
-        })
-        img = qrcode.make(qr_str)
-        img.save("static/qr_codes/{}.png".format(uuid))
-        return
+    def get_info(self):
+        return self.config["api_url"]
 
     def check_payment(self, address: str, slow: bool = True) -> Tuple[float, float]:
         conf_paid, unconf_paid = 0, 0
@@ -125,7 +117,8 @@ class xpub:
         address = child_key.PublicKey().ToAddress()
         return address
 
-    def get_address(self, amount: float, label: str, expiry: int) -> Tuple[str, str]:
+    def get_address(self, amount: float, label: str,
+                    expiry: int) -> Tuple[str, str, str]:
         while True:
             n = self.get_next_address_index(self.config["xpub"])
             address = self.get_address_at_index(n)
@@ -133,4 +126,4 @@ class xpub:
             conf_paid, unconf_paid = self.check_payment(address, slow=False)
             if conf_paid == 0 and unconf_paid == 0:
                 break
-        return address, None
+        return address, None, None

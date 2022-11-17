@@ -49,7 +49,8 @@ def test_database_invoices() -> None:
         "webhook": None,
         "onchain_dust_limit": 0.00000546,
         "address": "testaddr",
-        "rhash": "test"
+        "rhash": None,
+        "bolt11_invoice": None
     }, DB_NAME)
     invoices = load_invoices_from_db("1", DB_NAME)
     invoice0 = load_invoice_from_db(invoice_uuid, DB_NAME)
@@ -63,6 +64,8 @@ def test_database_invoices() -> None:
     assert (invoice0["btc_value"] > 0)
     assert (invoices[0]["address"] == "testaddr")
     assert (invoice0["address"] == "testaddr")
-    assert (invoices[0]["rhash"] == "test")
-    assert (invoice0["rhash"] == "test")
+    assert (invoices[0]["rhash"] is None)
+    assert (invoice0["rhash"] is None)
+    assert (invoices[0]["bolt11_invoice"] is None)
+    assert (invoice0["bolt11_invoice"] is None)
     _drop_test_db()

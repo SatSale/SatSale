@@ -13,7 +13,12 @@ function payment(payment_data) {
             invoice = data.invoice;
             payment_uuid = invoice.uuid;
 
-            $('#address').text(invoice.address).html();
+            if (invoice.payment_method == 'lightning') {
+                $('#address').text(invoice.bolt11_invoice).html();
+            }
+            else {
+                $('#address').text(invoice.address).html();
+            }
             $('#amount').text(invoice.btc_value).html();
             $('#amount_sats').text(Math.round(invoice.btc_value * 10**8)).html();
             $('#timer').text(Math.round(invoice.time_left)).html();

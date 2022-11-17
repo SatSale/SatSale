@@ -1,20 +1,18 @@
 import json
 import logging
 import os
-import qrcode
 import requests
 import time
 from typing import Tuple
 
 import config
-from node.bip21 import encode_bip21_uri
-from utils import btc_amount_format
+from node import node
 
 
-class btcd:
+class bitcoind(node.node):
+
     def __init__(self, node_config: dict) -> None:
-        self.config = node_config
-        self.is_onchain = True
+        super().__init__(node_config, True)
 
         if self.config['tor_bitcoinrpc_host'] is not None:
             from gateways.tor import session
@@ -53,9 +51,7 @@ class btcd:
                 )
 
             try:
-                info = self.call_bitcoin_rpc("getblockchaininfo")
-
-                logging.info(info)
+                logging.info(self.get_info())
                 logging.info("Successfully contacted bitcoind.")
                 break
 
@@ -76,7 +72,10 @@ class btcd:
                 Check your RPC / port tunneling settings and try again."
             )
 
-    def call_bitcoin_rpc(self, method: str, params: list = None) -> dict:
+    def get_info(self):
+        return self._call_bitcoin_rpc("getblockchaininfo")
+
+    def _call_bitcoin_rpc(self, method: str, params: list = None) -> dict:
         payload = json.dumps({"method": method, "params": params})
         logging.debug(payload)
         headers = {
@@ -98,17 +97,8 @@ class btcd:
             raise RuntimeError("Bitcoin RPC failed: {}".format(response_data["error"]))
         return response_data["result"]
 
-    def create_qr(self, uuid: str, address: str, value: float) -> None:
-        qr_str = encode_bip21_uri(address, {
-            "amount": btc_amount_format(value),
-            "label": uuid
-        })
-        img = qrcode.make(qr_str)
-        img.save("static/qr_codes/{}.png".format(uuid))
-        return
-
     def check_payment(self, uuid: str) -> Tuple[float, float]:
-        transactions = self.call_bitcoin_rpc("listtransactions", [uuid])
+        transactions = self._call_bitcoin_rpc("listtransactions", [uuid])
 
         conf_paid = 0
         unconf_paid = 0
@@ -121,12 +111,12 @@ class btcd:
         return conf_paid, unconf_paid
 
     def get_address(self, amount: float, label: str,
-                    expiry: int) -> Tuple[str, str]:
+                    expiry: int) -> Tuple[str, str, str]:
         for i in range(config.connection_attempts):
             try:
-                address = self.call_bitcoin_rpc("getnewaddress", [label])
+                address = self._call_bitcoin_rpc("getnewaddress", [label])
 
-                return address, None
+                return address, None, None
 
             except Exception as e:
                 logging.error(e)
