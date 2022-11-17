@@ -89,7 +89,7 @@ def migrate_database(name: str = DEFAULT_DATABASE) -> None:
                     "SET bolt11_invoice = address, address = NULL "
                     "WHERE uuid = '{}'".format(uuid))
         _set_database_schema_version(5, name)
-        
+
     if schema_version < 6:
         _log_migrate_database(4, 5, "Add message column to payments table")
         with sqlite3.connect(name) as conn:
