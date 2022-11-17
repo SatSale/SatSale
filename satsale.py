@@ -158,9 +158,9 @@ class create_payment(Resource):
 
         btc_value = get_btc_value(base_amount, currency)
 
-        if btc_value > 21000000:
+        if btc_value > 21000000 or (not node.is_onchain and btc_value > config.ln_upper_limit):
             logging.warning(
-                "Requested payment for {} {} BTC value {} too large (above 21M cap)".format(
+                "Requested payment for {} {} BTC value {} too large".format(
                     base_amount,
                     currency,
                     btc_value
@@ -192,6 +192,7 @@ class create_payment(Resource):
             "time": time.time(),
             "webhook": webhook,
             "onchain_dust_limit": config.onchain_dust_limit,
+            "ln_upper_limit": config.ln_upper_limit,
         }
 
         # Get an address / invoice, and create a QR code

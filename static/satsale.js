@@ -24,7 +24,7 @@ function payment(payment_data) {
             $('#timer').text(Math.round(invoice.time_left)).html();
             $('#paymentDetails').show();
 
-            if (invoice.btc_value >= invoice.onchain_dust_limit) {
+            if (invoice.btc_value >= invoice.onchain_dust_limit && invoice.btc_value <= invoice.ln_upper_limit) {
                 $('#paymentMethodSwitchButton').show();
             }
 

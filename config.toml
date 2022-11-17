@@ -79,6 +79,10 @@ api_key_path = "SatSale_API_key"
 # below this value.
 onchain_dust_limit = 0.00000546
 
+# Upper limit for LN payments in BTC. Don't generate Lightning invoices above
+# this value.
+ln_upper_limit = 0.10000000
+
 # You can display your node uri so users can open channels with you by setting
 # node_info="uri" (manually) or true (use `admin.macaroon` to fetch `getinfo`)
 #node_info = "uri"
