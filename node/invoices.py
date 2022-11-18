@@ -20,6 +20,8 @@ def encode_bitcoin_invoice(uuid: str, invoice: dict,
             "amount": btc_amount_format(invoice["btc_value"]),
             "label": uuid
         }
+        if "message" in invoice:
+            bip21_params["message"] = invoice["message"]
         if "bolt11_invoice" in invoice and invoice["bolt11_invoice"]:
             bip21_params["lightning"] = invoice["bolt11_invoice"]
         return encode_bip21_uri(invoice["address"], bip21_params)

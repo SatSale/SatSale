@@ -50,7 +50,8 @@ def test_database_invoices() -> None:
         "onchain_dust_limit": 0.00000546,
         "address": "testaddr",
         "rhash": None,
-        "bolt11_invoice": None
+        "bolt11_invoice": None,
+        "message": "Keep BUIDLing!"
     }, DB_NAME)
     invoices = load_invoices_from_db("1", DB_NAME)
     invoice0 = load_invoice_from_db(invoice_uuid, DB_NAME)

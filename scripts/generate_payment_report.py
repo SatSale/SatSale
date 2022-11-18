@@ -66,7 +66,7 @@ def main():
         reportwriter = csv.writer(csvfile)
         reportwriter.writerow([
             "Date", "Invoice ID", "Base value", "Base currency", "BTC value",
-            "BTC paid", "Payment method", "Address / invoice"
+            "BTC paid", "Payment method", "Address / invoice", "Message"
         ])
         num_rows = 0
         for invoice in invoices:
@@ -97,7 +97,8 @@ def main():
                     "%.8f" % float(invoice["btc_value"]),
                     "%.8f" % float(conf_paid),
                     invoice["method"],
-                    address
+                    address,
+                    invoice["message"]
                 ])
                 num_rows = num_rows + 1
 
