@@ -41,21 +41,35 @@ def insert_paynym_html(nym):
 
     css_html = """
     <style>
-        .paynym {
-          position: relative;
-          float: left;
+        .imageInn img {
+            border-radius:50px;
+            position: relative;
         }
 
-        .paynym .hoverImg {
-          position: absolute;
-          left: 0;
-          top: 0;
-          display: none;
+        .paynym {
+            position: relative;
+            float: left;
+        }
+
+        .hoverImg {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            visibility: hidden;
+            object-fit: cover;
+            transition: transform .2s;
+        }
+
+        .paynym-qr {
+            box-shadow: 0 8px 20px 0 rgba(0,0,0,0.45);
         }
 
         .paynym:hover .hoverImg {
-          display: block;
-          }
+            visibility: visible;
+            -ms-transform: scale(2.5);
+            -webkit-transform: scale(2.5);
+            transform: scale(3) translate(38px, -25px);
+        }
     </style>
     """
 
@@ -66,7 +80,9 @@ def insert_paynym_html(nym):
             <img width="100px" style="border-radius:50px;" src="{{ url_for('static', filename='avatar.png') }}">
         </div>
         <div class="hoverImg">
-            <img width="100px" src="{{ url_for('static', filename='codeimage.png') }}">
+            <a href="{}" target="_blank">
+                <img id="qrImage" class="paynym-qr" width="100px" src="{{ url_for('static', filename='codeimage.png') }}">
+            </a>
         </div>
         """
         + """

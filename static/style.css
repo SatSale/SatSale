@@ -1,18 +1,30 @@
+:root {
+    --preset--font--family: "Lucida Console", "Courier New", monospace;
+    --preset--html--background: #fff;
+    --preset--primary--background: #f7931a;
+    --preset--primary--font--color: #000;
+    --preset--secondary--font--color: #fff;
+}
+
 html, body {
     display: flex;
+    background-color: var(--preset--html--background);
 }
 
 body {
     /* Background color */
     background-color: inherit;
-
     overflow: hidden;
-    font-family: "Lucida Console", "Courier New", monospace;
+    font-family: var(--preset--font--family)
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--preset--primary--font--color);
 }
 
 #paybox {
     /* SatSale Box color */
-    background-color: #f7931a;
+    background-color: var(--preset--primary--background);
     /* Rounded Corners */
     border-radius: 25px;
 
@@ -52,6 +64,7 @@ body {
 
 /* Text style (addresses) */
 p {
+    color: var(--preset--primary--font--color);
     overflow-wrap: break-word;
     word-wrap: break-word;
     margin: 0;
@@ -66,10 +79,10 @@ h1 {
 .button {
     /* Button color then font and font color etc.. */
     background-color: black;
-    font-family: "Lucida Console", "Courier New", monospace;
+    font-family: var(--preset--font--family);
     border: none;
     border-radius: 12px;
-    color: white;
+    color: var(--preset--secondary--font--color);
 
     padding: 10px 15px;
     text-align: center;
@@ -98,12 +111,12 @@ h1 {
 .qr:hover {
     -ms-transform: scale(2.5); /* IE 9 */
     -webkit-transform: scale(2.5); /* Safari 3-8 */
-    transform: scale(3);
+    transform: scale(3) translate(-25px, 21px);
 }
 
 .donate_input {
     background-color: black;
-    color: white;
+    color: var(--preset--secondary--font--color);
     font-size: 16px;
     border-radius:5px;
     display: inline;
@@ -111,7 +124,7 @@ h1 {
 
 #qrImage {
     float: right;
-    /* margin: auto; */
+    margin: auto;
     padding-right:15px;
     padding-top:25px;
 }
@@ -119,7 +132,7 @@ h1 {
 #row {
     display: flex;
 }
- #left {
+#left {
     width: 60%;
     padding: 0 0 0 0;
     float: left;
@@ -134,5 +147,5 @@ h1 {
     text-align: right;
 }
 #about {
-    color:#000;
+    color: var(--preset--primary--font--color);
 }
