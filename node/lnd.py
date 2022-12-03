@@ -41,7 +41,7 @@ class lnd(node.node):
 
                 if "invoice" in self.certs["macaroon"]:
                     logging.info("Testing we can fetch invoices...")
-                    inv, _ = self.create_lnd_invoice(1)
+                    inv, _ = self.create_lnd_invoice(0)
                     logging.info(inv)
                 else:
                     logging.info("Getting lnd info...")
@@ -119,7 +119,7 @@ class lnd(node.node):
         return
 
     # Create lightning invoice
-    def _create_lnd_invoice(self, btc_amount: float, memo: str = None,
+    def create_lnd_invoice(self, btc_amount: float, memo: str = None,
                             description_hash: str = None,
                             expiry: int = 3600) -> Tuple[str, str]:
         # Multiplying by 10^8 to convert to satoshi units
