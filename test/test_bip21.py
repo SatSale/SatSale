@@ -3,7 +3,69 @@ import pytest
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from node.bip21 import encode_bip21_uri
+from node.bip21 import decode_bip21_uri, encode_bip21_uri
+
+
+def test_bip21_decode() -> None:
+
+    # These should raise exception because of not being valid BIP21 URIs
+    with pytest.raises(ValueError):
+        decode_bip21_uri("")
+        decode_bip21_uri("nfdjksnfjkdsnfjkds")
+        decode_bip21_uri("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+        decode_bip21_uri(
+            "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=20.3")
+        decode_bip21_uri("bitcoin:")
+        decode_bip21_uri("bitcoin:?amount=20.3")
+        decode_bip21_uri(
+            "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=")
+        decode_bip21_uri(
+            "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=XYZ")
+        decode_bip21_uri(
+            "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=100'000")
+        decode_bip21_uri(
+            "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=100,000")
+        decode_bip21_uri(
+            "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=100000000")
+
+    assert (decode_bip21_uri(
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")["address"] ==
+        "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+    assert (decode_bip21_uri(
+        "BITCOIN:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")["address"] ==
+        "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+    assert (decode_bip21_uri(
+        "BitCoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")["address"] ==
+        "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+
+    parsed = decode_bip21_uri(
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?label=Luke-Jr")
+    assert (parsed["address"] == "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+    assert (parsed["label"] == "Luke-Jr")
+
+    parsed = decode_bip21_uri(
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=20.3&label=Luke-Jr")
+    assert (parsed["address"] == "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+    assert (parsed["amount"] == "20.30000000")
+    assert (parsed["label"] == "Luke-Jr")
+
+    parsed = decode_bip21_uri(
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?amount=50&label=Luke-Jr&message=Donation%20for%20project%20xyz")
+    assert (parsed["address"] == "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+    assert (parsed["amount"] == "50.00000000")
+    assert (parsed["label"] == "Luke-Jr")
+    assert (parsed["message"] == "Donation for project xyz")
+
+    # This should raise exception because of unknown req-* parameters
+    with pytest.raises(ValueError):
+        decode_bip21_uri(
+            "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?req-somethingyoudontunderstand=50&req-somethingelseyoudontget=999")
+
+    parsed = decode_bip21_uri(
+        "bitcoin:175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W?somethingyoudontunderstand=50&somethingelseyoudontget=999")
+    assert (parsed["address"] == "175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W")
+    assert (parsed["somethingyoudontunderstand"] == "50")
+    assert (parsed["somethingelseyoudontget"] == "999")
 
 
 def test_bip21_encode() -> None:
