@@ -119,9 +119,13 @@ class lnd(node.node):
         return
 
     # Create lightning invoice
-    def create_lnd_invoice(self, btc_amount: float, memo: str = None,
-                            description_hash: str = None,
-                            expiry: int = 3600) -> Tuple[str, str]:
+    def create_lnd_invoice(
+        self,
+        btc_amount: float,
+        memo: str = None,
+        description_hash: str = None,
+        expiry: int = 3600,
+    ) -> Tuple[str, str]:
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(float(btc_amount) * 10 ** 8)
         res = self.lnd.add_invoice(
