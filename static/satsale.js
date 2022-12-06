@@ -13,7 +13,7 @@ function payment(payment_data) {
             invoice = data.invoice;
             payment_uuid = invoice.uuid;
 
-            if (invoice.payment_method == 'lightning') {
+            if (invoice.method == 'lightning') {
                 $('#address').text(invoice.bolt11_invoice).html();
             }
             else {
