@@ -10,6 +10,7 @@ Werkzeug==0.16.1
 PySocks==1.7.1
 toml==0.10.2
 bip-utils==2.7.0
+base58==2.1.1
 
 # For lightning (optional)
 setuptools==50.3.2

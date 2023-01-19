@@ -2,6 +2,7 @@ import logging
 import requests
 import sys
 import time
+from base58 import b58decode_check, b58encode_check
 from bip_utils import \
     Bip44, Bip44Changes, Bip44Coins, \
     Bip84, Bip84Coins, \
@@ -75,6 +76,21 @@ class xpub(node.node):
         n = database.get_next_address_index(xpub)
         return n
 
+    # Converts xpub/tpub to zpub/vpub (for BIP84).
+    # Some wallets (JoinMarket, Wasabi Wallet, descriptor wallets) will show
+    # xpub/tpub instead of zpub/vpub for BIP84.
+    def _zpub_from_xpub(self, xpub: str) -> str:
+        zpub_prefix = b"\x04\xb2\x47\x46"
+        vpub_prefix = b"\x04\x5f\x1c\xf6"
+        if xpub.startswith("xpub"):
+            return b58encode_check(zpub_prefix +
+                                   b58decode_check(xpub)[4:]).decode("ascii")
+        elif xpub.startswith("tpub"):
+            return b58encode_check(vpub_prefix +
+                                   b58decode_check(xpub)[4:]).decode("ascii")
+        else:
+            raise InvalidExtendedPublicKeyError(xpub, "BIP84")
+
     def get_address_at_index(self, index: int) -> str:
         if self.config["bip"] == "BIP44":
             if self.config["xpub"].startswith("xpub"):
@@ -93,6 +109,12 @@ class xpub(node.node):
                                                   Bip84Coins.BITCOIN)
             elif self.config["xpub"].startswith("vpub"):
                 bip84_acc = Bip84.FromExtendedKey(self.config["xpub"],
+                                                  Bip84Coins.BITCOIN_TESTNET)
+            elif self.config["xpub"].startswith("xpub"):
+                bip84_acc = Bip84.FromExtendedKey(self._zpub_from_xpub(self.config["xpub"]),
+                                                  Bip84Coins.BITCOIN)
+            elif self.config["xpub"].startswith("tpub"):
+                bip84_acc = Bip84.FromExtendedKey(self._zpub_from_xpub(self.config["xpub"]),
                                                   Bip84Coins.BITCOIN_TESTNET)
             else:
                 raise InvalidExtendedPublicKeyError(
