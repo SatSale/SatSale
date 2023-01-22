@@ -7,6 +7,7 @@ from typing import Tuple
 
 import config
 from node import node
+from node.bip21 import decode_bip21_uri
 
 
 class bitcoind(node.node):
@@ -68,8 +69,11 @@ class bitcoind(node.node):
                 )
         else:
             raise Exception(
-                "Could not connect to bitcoind. \
-                Check your RPC / port tunneling settings and try again."
+                "Could not connect to bitcoind ({}:{} with user {}) after {} attempts. "
+                "Check your RPC / port tunneling settings and try again.".format(
+                    self.host, self.config['rpcport'], self.username,
+                    config.connection_attempts
+                )
             )
 
     def get_info(self):
@@ -131,5 +135,17 @@ class bitcoind(node.node):
                 )
             if config.connection_attempts - i == 1:
                 logging.info("Reconnecting...")
-                self.__init__()
+                self.__init__(self.config)
         return None
+
+    def pay_invoice(self, bip21_uri: str) -> None:
+        invoice = decode_bip21_uri(bip21_uri)
+        assert (invoice["amount"])
+        self._call_bitcoin_rpc("sendtoaddress", [
+            invoice["address"], invoice["amount"]
+        ])
+
+    # used by tests
+    def mine_coins(self, num_blocks: int, address: str) -> None:
+        res = self._call_bitcoin_rpc("generatetoaddress", [num_blocks, address])
+        assert (len(res) > 0)

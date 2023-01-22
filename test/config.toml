@@ -3,3 +3,4 @@
 payment_methods = []
 
 [satsale]
+connection_attempts = 15
