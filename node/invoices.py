@@ -1,4 +1,5 @@
 import qrcode
+import os
 from enum import Enum
 
 from node.bip21 import encode_bip21_uri
@@ -35,7 +36,8 @@ def encode_bitcoin_invoice(uuid: str, invoice: dict,
             "Unsupported Bitcoin invoice type {}".format(invtype))
 
 
-def create_qr(uuid: str, qr_str: str) -> None:
+def create_qr(uuid: str, qr_str: str, base_path: str = ".") -> None:
     img = qrcode.make(qr_str)
-    img.save("static/qr_codes/{}.png".format(uuid))
+    img.save(os.path.join(
+        base_path, "static", "qr_codes", "{}.png".format(uuid)))
     return

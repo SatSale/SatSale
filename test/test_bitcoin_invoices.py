@@ -1,9 +1,14 @@
 import os
 import pytest
 import sys
+import tempfile
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from node.invoices import encode_bitcoin_invoice, InvoiceType
+from node.invoices import create_qr, encode_bitcoin_invoice, InvoiceType
+
+tempdir = tempfile.TemporaryDirectory().name
+qr_base_path = os.path.join(tempdir, "static", "qr_codes")
+os.makedirs(qr_base_path, exist_ok=True)
 
 
 @pytest.mark.parametrize(
@@ -58,8 +63,12 @@ from node.invoices import encode_bitcoin_invoice, InvoiceType
         },
     ]
     )
-def test_encode_bitcoin_invoice(invoice_data: list) -> None:
+def test_bitcoin_invoice(invoice_data: list) -> None:
     assert (
         encode_bitcoin_invoice(
             invoice_data["uuid"], invoice_data["invoice"],
             invoice_data["invoice_type"]) == invoice_data["invoice_str"])
+    create_qr(invoice_data["uuid"], invoice_data["invoice_str"], tempdir)
+    qr_filename = os.path.join(qr_base_path,
+                               "{}.png".format(invoice_data["uuid"]))
+    assert (os.path.exists(qr_filename))
