@@ -42,6 +42,22 @@ from node.xpub import xpub
                 "tb1qv3fngl0tlhensu6rr3n8wwrskpxx7wweq4ypj4"
             ]
         },
+        {
+            "xpub": "xpub6CatWdiZiodmUeTDp8LT5or8nmbKNcuyvz7WyksVFkKB4RHwCD3XyuvPEbvqAQY3rAPshWcMLoP2fMFMKHPJ4ZeZXYVUhLv1VMrjPC7PW6V",
+            "bip": "BIP84",
+            "addresses": [
+                "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu",
+                "bc1qnjg0jd8228aq7egyzacy8cys3knf9xvrerkf9g"
+            ]
+        },
+        {
+            "xpub": "tpubDCbYw7PJTRqnWCzhKPfgKN73ubkAD2yLhTFxBWYxPLufcgCezQfQJsAcRKKnSHddZAFVV27F7tJnKzafeu4irce8beH2qK6wkK1cc4DJ9nb",
+            "bip": "BIP84",
+            "addresses": [
+                "tb1qjwg87jdkl52rv0djjqxa5fmaawdsssfjmx3sj5",
+                "tb1qv3fngl0tlhensu6rr3n8wwrskpxx7wweq4ypj4"
+            ]
+        },
         # https://github.com/bitcoin/bips/blob/master/bip-0086.mediawiki
         {
             "xpub": "xpub6BgBgsespWvERF3LHQu6CnqdvfEvtMcQjYrcRzx53QJjSxarj2afYWcLteoGVky7D3UKDP9QyrLprQ3VCECoY49yfdDEHGCtMMj92pReUsQ",
