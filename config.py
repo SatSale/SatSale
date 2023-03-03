@@ -66,7 +66,7 @@ for method_name in config["payment_methods"]:
         method_config["name"] = "lndhub"
         check_set_node_conf("bw_login", None, method_config)
         check_set_node_conf("bw_password", None, method_config)
-        check_set_node_conf("backend_url", "https://lndhub.herokuapp.com", method_config)
+        check_set_node_conf("backend_url", "", method_config)
         check_set_node_conf("lightning_address", None, method_config)
         check_set_node_conf("lightning_address_comment", None, method_config)
 

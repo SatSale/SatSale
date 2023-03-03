@@ -14,6 +14,12 @@ class lndhub(node.node):
 
         super().__init__(node_config, False)
 
+        if (not self.config["bw_login"] or not self.config["bw_password"] or
+                not self.config["backend_url"]):
+            raise Exception(
+                "bw_login, bw_password and backend_url must be configured "
+                "for LNDHub backend!")
+
         for i in range(config.connection_attempts):
             try:
                 logging.info("Attempting to initialize LNDHub client...")
