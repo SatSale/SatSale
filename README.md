@@ -29,7 +29,7 @@ Satsale can be used as a
 2. Bitcoin payment gateway, including a Woocommerce plugin that easily turns any Wordpress site into a Bitcoin accepting store.
 3. Versatile API and payments platform for both on-chain and lightning payments (supporting both clightning and lnd).
 
-Other Bitcoin payment processors is small, easy to install and self-host. SatSale is also a great building block for python lightning applications.
+Compared to other Bitcoin payment processors, SatSale is lightweight, easy to install and self-host. SatSale is also a great building block for python lightning applications.
 
 SatSale makes donation buttons simple - an easy copy and paste of the one line HTML iframe into your site.
 
