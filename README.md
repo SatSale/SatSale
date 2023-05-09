@@ -1,6 +1,6 @@
 # SatSale
 
-SatSale is a lightweight Bitcoin payment processor that connects to your own Bitcoin node or Lightning network node.
+SatSale is a lightweight Bitcoin payment processor with the option of connecting to your own Bitcoin node or Lightning network node.
 
 |                                                                                                Donation Button ----->                                                                                                 |                                                                                       Bitcoin Payment Gateway                                                                                        |
 | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
