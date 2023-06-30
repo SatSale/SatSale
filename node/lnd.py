@@ -22,7 +22,7 @@ class lnd(node.node):
         self._copy_certs()
 
         # Conect to lightning node
-        connection_str = "{}:{}".format(config.host, self.config['lnd_rpcport'])
+        connection_str = "{}:{}".format(self.config['host'], self.config['lnd_rpcport'])
         logging.info(
             "Attempting to connect to lightning node {}. This may take a few seconds...".format(
                 connection_str
@@ -34,7 +34,7 @@ class lnd(node.node):
                 logging.info("Attempting to initialise lnd rpc client...")
                 time.sleep(3)
                 self.lnd = LNDClient(
-                    "{}:{}".format(config.host, self.config['lnd_rpcport']),
+                    "{}:{}".format(self.config['host'], self.config['lnd_rpcport']),
                     macaroon_filepath=self.certs["macaroon"],
                     cert_filepath=self.certs["tls"],
                 )
