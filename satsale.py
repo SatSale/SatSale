@@ -409,6 +409,9 @@ for method in config.payment_methods:
     elif method['name'] == "clightning":
         lightning_node = clightning.clightning(method)
         logging.info("Connection to lightning node (clightning) successful.")
+        if lightning_node.config['lightning_address'] is not None:
+            from gateways import lightning_address
+            lightning_address.add_ln_address_decorators(app, api, lightning_node)
         enabled_payment_methods.append("lightning")
 
     elif method['name'] == "xpub":

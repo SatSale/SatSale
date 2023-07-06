@@ -5,6 +5,7 @@ import json
 from base64 import b64decode
 from google.protobuf.json_format import MessageToJson
 from typing import Tuple
+import hashlib
 
 import config
 import logging
@@ -136,9 +137,15 @@ class lnd(node.node):
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
 
     def get_address(self, amount: float, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
+                    expiry: int, description: str = None) -> Tuple[str, str, str]:
+
+        if description is not None:
+            description_hash = hashlib.sha256(description.encode()).digest()
+        else:
+            description_hash = None
+
         address, r_hash = self.create_lnd_invoice(
-            amount, memo=label, expiry=expiry)
+            amount, memo=label, description_hash=description_hash, expiry=expiry)
         return None, address, r_hash
 
     def pay_invoice(self, bolt11_invoice: str) -> None:
