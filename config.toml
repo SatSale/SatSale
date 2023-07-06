@@ -32,7 +32,7 @@ host = "127.0.0.1"
 lnd_dir = "~/.lnd/"
 lnd_rpcport = "10009"
 lnd_macaroon = "invoice.macaroon"
-#lightning_address = None #e.g name@your.satsale.domain (think this requires https url)
+#lightning_address = None #e.g "name@your.satsale.domain" (think this requires https url)
 #lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
 ## CLIGHTNING :: Add "clightning" to payment_methods
@@ -42,6 +42,8 @@ lnd_macaroon = "invoice.macaroon"
 # node_info="uri" (manually) or true (fetch if macaroon has access to `getinfo`)
 [clightning]
 clightning_rpc_file = "/home/user/.lightning/bitcoin/lightning-rpc"
+#lightning_address = None #e.g "name@your.satsale.domain" (think this requires https url)
+#lightning_address_comment = None # Defaults to: "Thank you for your support <3"
 
 ## LNDHUB :: Use BlueWallet (LNDHub) backend for Lightning Network payments
 # To get username / password, look at Wallet Export / Backup in Blue Wallet,

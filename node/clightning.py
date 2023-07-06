@@ -69,17 +69,21 @@ class clightning(node.node):
         return info["id"] + "@" + address["address"] + ":" + str(address["port"])
 
     # Create lightning invoice
-    def _create_clightning_invoice(self, btc_amount, label, expiry):
+    def _create_clightning_invoice(self, btc_amount, label, expiry, description=None):
         # Multiplying by 10^8 to convert to satoshi units
         msats_amount = int(float(btc_amount) * 10 ** (3 + 8))
+        deschashonly = description is not None
+        if description is None:
+            description = label
+
         lnd_invoice = self.clightning.invoice(
-            msats_amount, label, label, expiry
+            msats_amount, label, description, expiry, deschashonly=deschashonly
         )
         return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
 
     def get_address(self, amount: float, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
-        address, r_hash = self._create_clightning_invoice(amount, label, expiry)
+                    expiry: int, description: str = None) -> Tuple[str, str, str]:
+        address, r_hash = self._create_clightning_invoice(amount, label, expiry, description)
         return None, address, r_hash
 
     # Check whether the payment has been paid
