@@ -70,10 +70,8 @@ then edit the xpub configuration:
 ```
 [xpub]
 xpub = "xpub..."
-bip = "BIP84"
+bip = "BIP84" # BIP84 for bc1q addresses (xpub will start like `zpub..`).
 ```
-
-Currently supported derivations with `xpub` payment method are [BIP44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki) (legacy), [BIP84](https://github.com/bitcoin/bips/blob/master/bip-0084.mediawiki) (native segwit) and [BIP86](https://github.com/bitcoin/bips/blob/master/bip-0086.mediawiki) (taproot).
 
 **You should strongly consider running a node and using it to verify payments rather than trusting block explorers.**.
 

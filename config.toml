@@ -21,11 +21,7 @@ wallet = ""
 # You MUST ensure you manually confirm the first address matches what you expect in your wallet! See output.
 [xpub]
 xpub = ""
-# Supported derivations:
-#   BIP44 - 1egacy addresses, xpub...
-#   BIP84 - native segwit addresses (bc1q...), xpub... or zpub...
-#   BIP86 - taproot (bc1p...), xpub...
-bip = "BIP84"
+bip = "BIP84" # For bc1q addresses (xpub will start like `zpub..`). Can use BIP44 for 1egacy.
 #api_url = "https://mempool.space/api"
 
 ## LND :: Add "lnd" to payment_methods
