@@ -36,8 +36,8 @@ host = "127.0.0.1"
 lnd_dir = "~/.lnd/"
 lnd_rpcport = "10009"
 lnd_macaroon = "invoice.macaroon"
-#lightning_address = None #e.g name@your.satsale.domain (think this requires https url)
-#lightning_address_comment = None # Defaults to: "Thank you for your support <3"
+#lightning_address = "name@your.satsale.domain" # (think this requires https url)
+#lightning_address_comment = "Thank you for your support <3"
 
 ## CLIGHTNING :: Add "clightning" to payment_methods
 # If remote clightning, make sure `ssh -nNT -L {local_lightning-rpc}:{remote_lightning-rpc} {tunnel_host} -p {tunnel_port}`
@@ -63,14 +63,14 @@ backend_url = ""
 # SSH tunnel to node (recommended)
 # Make sure this command works `ssh HOST@IP -q -N -L 8332:localhost:8332 -p PORT`
 # Leave host="127.0.0.1" and you will be able to see your node as if it were local
-#tunnel_host = None # Format: "HOST@IP"
+#tunnel_host = "HOST@IP"
 #tunnel_port = "PORT"  #defaults to 22, if left blank
 
 # TOR hidden service to node (see docs for how to set up), 
 # Currently only works for bitcoind. 
 # Set `tor_bitcoinrpc_host="http://if...dwr.onion"` in bitcoind section above:
-# A tor proxy, default 127.0.0.1:9050 (for Tor Browser use "127.0.0.1:9150")
-#tor_proxy = None
+# A tor proxy, tor default 127.0.0.1:9050 (alongside Tor Browser use "127.0.0.1:9150")
+#tor_proxy = "127.0.0.1:9050"
 
 ## !! Once up to here, you should now test your node configuration !!
 
@@ -131,7 +131,7 @@ allowed_underpay_amount = 0.00000001
 # https://blockstream.com/liquid/
 # Change lnd_macaroon='admin.macaroon', as you will also need to be able to spend with your lnd certificates.
 # This is NOT a trustless swap. Exchange is carried out using sideshift.ai, you bear all associated exchange risks.
-#liquid_address = None
+#liquid_address = ""
 
 # Paynym - Display your paynym on your SatSale donation page
 #paynym = "+royalcell593"
