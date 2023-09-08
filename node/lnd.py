@@ -123,13 +123,11 @@ class lnd(node.node):
         self,
         btc_amount: float,
         memo: str = None,
-        description_hash: str = None,
-        expiry: int = 3600,
     ) -> Tuple[str, str]:
         # Multiplying by 10^8 to convert to satoshi units
         sats_amount = int(float(btc_amount) * 10 ** 8)
         res = self.lnd.add_invoice(
-            value=sats_amount, memo=memo, description_hash=description_hash, expiry=expiry
+            value=sats_amount, memo=memo
         )
         lnd_invoice = json.loads(MessageToJson(res))
 
