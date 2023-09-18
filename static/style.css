@@ -106,12 +106,17 @@ h1 {
 
 .qr {
     transition: transform .2s;
+    cursor: pointer;
     object-fit: cover;
+    margin-top:25px;
+    margin-right:15px;
+    box-shadow: 0 8px 20px 0 rgba(0,0,0,0.45);
 }
+
 .qr:hover {
     -ms-transform: scale(2.5); /* IE 9 */
     -webkit-transform: scale(2.5); /* Safari 3-8 */
-    transform: scale(3) translate(-25px, 21px);
+    transform: scale(3) translate(-30px, 29px);
 }
 
 .donate_input {
@@ -122,30 +127,26 @@ h1 {
     display: inline;
 }
 
-#qrImage {
-    float: right;
-    margin: auto;
-    padding-right:15px;
-    padding-top:25px;
-}
-
 #row {
     display: flex;
+    justify-content: space-between;
 }
+
 #left {
-    width: 60%;
     padding: 0 0 0 0;
     float: left;
 }
+
 #right {
-    width: 40%;
     padding: 0 0 0 0;
     float: right;
 }
+
 #address {
     overflow-wrap: break-word;
     text-align: right;
 }
+
 #about {
     color: var(--preset--primary--font--color);
 }
