@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+from decimal import Decimal
 from typing import Tuple
 
 import config
@@ -52,13 +53,13 @@ class lndhub(node.node):
     def get_info(self) -> dict:
         return self.lndhub.get_node_info()
 
-    def create_lndhub_invoice(self, btc_amount: float, memo: str = None,
+    def create_lndhub_invoice(self, btc_amount: Decimal, memo: str = None,
                               expiry: int = 3600) -> Tuple[str, str]:
-        sats_amount = int(float(btc_amount) * 10 ** 8)
+        sats_amount = int(Decimal(btc_amount) * 10 ** 8)
         ret = self.lndhub.create_invoice(amt=sats_amount, memo=memo)
         return ret["payment_request"], ret["r_hash"]
 
-    def get_address(self, btc_amount: float, label: str,
+    def get_address(self, btc_amount: Decimal, label: str,
                     expiry: int) -> Tuple[str, str, str]:
         address, r_hash = self.create_lndhub_invoice(
             btc_amount, label, expiry)
@@ -70,14 +71,14 @@ class lndhub(node.node):
         except Exception as e:
             logging.error(e.repr())
 
-    def check_payment(self, rhash: str) -> Tuple[float, float]:
+    def check_payment(self, rhash: str) -> Tuple[Decimal, Decimal]:
         invoice = self.lndhub.lookup_invoice(rhash)
 
         if invoice["ispaid"]:
-            conf_paid = (int(invoice["amt"]) + 1) / (10 ** 8)
-            unconf_paid = 0
+            conf_paid = Decimal((int(invoice["amt"]) + 1) / (10 ** 8))
+            unconf_paid = Decimal(0)
         else:
-            conf_paid = 0
-            unconf_paid = 0
+            conf_paid = Decimal(0)
+            unconf_paid = Decimal(0)
 
         return conf_paid, unconf_paid

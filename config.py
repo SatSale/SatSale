@@ -1,6 +1,9 @@
 import sys
 import toml
+from decimal import getcontext
 
+
+getcontext().prec = 9
 
 for i, arg in enumerate(sys.argv):
     if arg == "--conf":

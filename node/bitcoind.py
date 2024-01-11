@@ -3,6 +3,7 @@ import logging
 import os
 import requests
 import time
+from decimal import Decimal
 from typing import Tuple
 
 import config
@@ -101,20 +102,20 @@ class bitcoind(node.node):
             raise RuntimeError("Bitcoin RPC failed: {}".format(response_data["error"]))
         return response_data["result"]
 
-    def check_payment(self, uuid: str) -> Tuple[float, float]:
+    def check_payment(self, uuid: str) -> Tuple[Decimal, Decimal]:
         transactions = self._call_bitcoin_rpc("listtransactions", [uuid])
 
-        conf_paid = 0
-        unconf_paid = 0
+        conf_paid = Decimal("0")
+        unconf_paid = Decimal("0")
         for tx in transactions:
             if tx["confirmations"] >= config.required_confirmations:
-                conf_paid += tx["amount"]
+                conf_paid += Decimal(tx["amount"])
             else:
-                unconf_paid += tx["amount"]
+                unconf_paid += Decimal(tx["amount"])
 
         return conf_paid, unconf_paid
 
-    def get_address(self, amount: float, label: str,
+    def get_address(self, amount: Decimal, label: str,
                     expiry: int) -> Tuple[str, str, str]:
         for i in range(config.connection_attempts):
             try:
