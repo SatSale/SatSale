@@ -2,7 +2,7 @@ qrcode==7.3
 Flask==1.1.4
 flask_cors==3.0.10
 MarkupSafe==2.0.1
-requests==2.26.0
+requests==2.31.0
 gunicorn==20.0.4
 Pillow==9.3.0
 protobuf==3.19.1
