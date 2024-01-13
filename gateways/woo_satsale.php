@@ -71,8 +71,7 @@ function satsale_init_gateway_class() {
            	// $this->testmode = 'yes' === $this->get_option( 'testmode' );
            	$this->SatSale_API_Key = $this->get_option( 'SatSale_API_Key' );
 
-            $this->callback_URL = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'wc_satsale_gateway', home_url( '/' ) ) );
-            // $this->callback_URL = home_url( '/' ) . 'wc-api/' . 'WC_SatSale_Gateway/';
+            $this->callback_URL = add_query_arg( 'wc-api', 'wc_satsale_gateway', home_url( '/' ) );
 
            	// This action hook saves the settings
            	add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
