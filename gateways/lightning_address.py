@@ -1,6 +1,5 @@
 from flask import request
 from flask_restx import Resource
-import hashlib
 import logging
 
 min_sats = 10 ** 2
@@ -59,13 +58,10 @@ def add_ln_address_decorators(app, api, node):
                 )
             )
 
-            description_hash = hashlib.sha256(metadata.encode()).digest()
-
             try:
                 invoice, _ = node.create_lnd_invoice(
                     amount_btc,
-                    memo="lightning address payment",
-                    description_hash=description_hash,
+                    memo="lightning address payment"
                 )
                 logging.info("Responding with invoice {}".format(invoice))
                 return {"pr": invoice, "routes": []}
