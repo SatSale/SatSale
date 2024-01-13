@@ -1,5 +1,5 @@
 qrcode==7.3
-Flask==1.1.4
+Flask==2.2.5
 flask_cors==3.0.10
 MarkupSafe==2.0.1
 requests==2.31.0
