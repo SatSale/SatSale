@@ -1,13 +1,13 @@
 qrcode==7.3
-Flask==1.1.4
+Flask==2.2.5
 flask_cors==3.0.10
-MarkupSafe==2.0.1
+MarkupSafe==2.1.3
 requests==2.31.0
 gunicorn==20.0.4
 Pillow==10.0.1
 protobuf==3.19.5
-flask_restx==0.5.1
-Werkzeug==0.16.1
+flask_restx==1.3.0
+Werkzeug==2.3.8
 PySocks==1.7.1
 toml==0.10.2
 bip-utils==2.7.0
