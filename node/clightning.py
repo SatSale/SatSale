@@ -17,7 +17,6 @@ class clightning(node.node):
 
     def __init__(self, node_config: dict):
         from pyln.client import LightningRpc
-
         super().__init__(node_config, False)
 
         for i in range(config.connection_attempts):
@@ -61,7 +60,22 @@ class clightning(node.node):
         return
 
     def get_info(self):
-        return self.clightning.getinfo()
+        for i in range(config.connection_attempts):
+            try:
+                return self.clightning.getinfo()
+
+            except Exception as e:
+                logging.error(e)
+                logging.info(
+                    "Attempting again... {}/{}...".format(
+                        i + 1, config.connection_attempts
+                    )
+                )
+            if config.connection_attempts - i == 1:
+                logging.info("Reconnecting...")
+                self.__init__()
+
+        return None
 
     def get_uri(self) -> str:
         info = self.get_info()
