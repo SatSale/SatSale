@@ -1,8 +1,9 @@
 import argparse
 import csv
-from datetime import datetime, timedelta
 import os
 import sys
+from datetime import datetime, timedelta
+from decimal import Decimal
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -94,8 +95,8 @@ def main():
                     invoice["uuid"],
                     invoice["base_value"],
                     invoice["base_currency"],
-                    "%.8f" % float(invoice["btc_value"]),
-                    "%.8f" % float(conf_paid),
+                    "%.8f" % Decimal(invoice["btc_value"]),
+                    "%.8f" % Decimal(conf_paid),
                     invoice["method"],
                     address,
                     invoice["message"]

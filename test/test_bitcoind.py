@@ -3,6 +3,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from decimal import Decimal
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from node.bitcoind import bitcoind
@@ -44,11 +45,11 @@ def test_bitcoind_payment_flow() -> None:
         "wallet": TEST_RPC_WALLET_NAME
     }
     node = bitcoind(node_config)
-    coinbase_address, _, _ = node.get_address(1, "", 0)
+    coinbase_address, _, _ = node.get_address(Decimal(1), "", 0)
     node.mine_coins(121, coinbase_address)
     invoice_uuid = "test-invoice"
-    invoice_address, _, _ = node.get_address(1, invoice_uuid, 0)
-    invoice_amount = 1.23456789
+    invoice_address, _, _ = node.get_address(Decimal(1), invoice_uuid, 0)
+    invoice_amount = Decimal("1.23456789")
     # no payment made, should be no incoming UTXOs
     conf_paid, unconf_paid = node.check_payment(invoice_uuid)
     assert (conf_paid == 0)

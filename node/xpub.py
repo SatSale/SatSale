@@ -7,6 +7,7 @@ from bip_utils import \
     Bip44, Bip44Changes, Bip44Coins, \
     Bip84, Bip84Coins, \
     Bip86, Bip86Coins
+from decimal import Decimal
 from typing import Tuple
 
 from node import node
@@ -49,15 +50,15 @@ class xpub(node.node):
     def get_info(self):
         return self.config["api_url"]
 
-    def check_payment(self, address: str, slow: bool = True) -> Tuple[float, float]:
-        conf_paid, unconf_paid = 0, 0
+    def check_payment(self, address: str, slow: bool = True) -> Tuple[Decimal, Decimal]:
+        conf_paid, unconf_paid = Decimal(0), Decimal(0)
         try:
             r = requests.get("{}/address/{}".format(
                 self.config["api_url"], address))
             r.raise_for_status()
             stats = r.json()
-            conf_paid = stats["chain_stats"]["funded_txo_sum"] / (10 ** 8)
-            unconf_paid = stats["mempool_stats"]["funded_txo_sum"] / (10 ** 8)
+            conf_paid = Decimal(stats["chain_stats"]["funded_txo_sum"] / (10 ** 8))
+            unconf_paid = Decimal(stats["mempool_stats"]["funded_txo_sum"] / (10 ** 8))
 
             # Don't request too often
             if slow and (conf_paid == 0):
@@ -139,7 +140,7 @@ class xpub(node.node):
         address = child_key.PublicKey().ToAddress()
         return address
 
-    def get_address(self, amount: float, label: str,
+    def get_address(self, amount: Decimal, label: str,
                     expiry: int) -> Tuple[str, str, str]:
         while True:
             n = self.get_next_address_index(self.config["xpub"])
