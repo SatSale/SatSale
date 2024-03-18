@@ -133,6 +133,22 @@ allowed_underpay_amount = 0.00000001
 # This is NOT a trustless swap. Exchange is carried out using sideshift.ai, you bear all associated exchange risks.
 #liquid_address = ""
 
+# Paybox Styling
+# Custom donation page title
+#donate_title = "Send Some Sats"
+
+# Custom payment page title
+#index_title = "Send 'em over!"
+
+# Custom channel creation page title
+#node_title = "Let's be Node Runners"
+
+# Custom CSS styles
+#paybox_font_family = 'ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"'
+#paybox_background = "#679ad6"
+#paybox_primary_color = "#903949"
+#paybox_secondary_color = "#fdd901"
+
 # Paynym - Display your paynym on your SatSale donation page
 #paynym = "+royalcell593"
 

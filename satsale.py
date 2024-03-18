@@ -23,6 +23,8 @@ logging.basicConfig(
 )
 
 from gateways import paynym
+from styling import custom_title
+from styling import custom_css
 from payments import database, weakhands
 from payments.price_feed import get_btc_value
 from node import bitcoind
@@ -439,6 +441,29 @@ try:
 except NameError:
     # lightning_node is not defined if no LN support configured
     pass
+
+# Customize Titles
+if config.donate_title is not None:
+    custom_title.insert_donate_title_html(config.donate_title)
+
+if config.index_title is not None:
+    custom_title.insert_index_title_html(config.index_title)
+
+if config.node_title is not None:
+    custom_title.insert_node_title_html(config.node_title)
+
+# Customize Styling
+if config.paybox_font_family is not None:
+    custom_css.insert_font_family_css(config.paybox_font_family)
+
+if config.paybox_background is not None:
+    custom_css.insert_background_css(config.paybox_background)
+
+if config.paybox_primary_color is not None:
+    custom_css.insert_primary_color_css(config.paybox_primary_color)
+
+if config.paybox_secondary_color is not None:
+    custom_css.insert_secondary_color_css(config.paybox_secondary_color)
 
 # Add Paynym
 if config.paynym is not None:
