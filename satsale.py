@@ -185,6 +185,16 @@ class create_payment(Resource):
                 )
             )
             return {"message": "Amount below dust limit."}, 406
+        if btc_value <= config.allowed_underpay_amount:
+            logging.warning(
+                "Requested payment for {} {} below allowed underpay amount ({} < {})".format(
+                    base_amount,
+                    currency,
+                    btc_amount_format(btc_value),
+                    btc_amount_format(config.allowed_underpay_amount),
+                )
+            )
+            return {"message": "Amount below dust limit."}, 406
 
         if config.store_name:
             invoice_uuid = "{}-{}".format(config.store_name, str(uuid.uuid4().hex))
