@@ -1,9 +1,9 @@
 :root {
     --preset--font--family: "Lucida Console", "Courier New", monospace;
-    --preset--html--background: #fff;
-    --preset--primary--background: #f7931a;
-    --preset--primary--font--color: #000;
-    --preset--secondary--font--color: #fff;
+    --preset--html--background: inherit;
+    --preset--primary--background: #040f24;
+    --preset--primary--font--color: #ff9900;
+    --preset--secondary--font--color: #ffcb7c;
 }
 
 html, body {
