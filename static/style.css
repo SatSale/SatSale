@@ -25,14 +25,12 @@ h1, h2, h3, h4, h5, h6 {
 #paybox {
     /* SatSale Box color */
     background-color: var(--preset--primary--background);
-    /* Rounded Corners */
     border-radius: 25px;
 
-    font-size: 16px;
+    font-size: 1em;
 
     height: 275px;
     width:360px;
-
     padding-left: 20px;
     padding-right: 15px;
     padding-top: 10px;
@@ -117,6 +115,10 @@ h1 {
     -ms-transform: scale(2.5); /* IE 9 */
     -webkit-transform: scale(2.5); /* Safari 3-8 */
     transform: scale(3) translate(-30px, 29px);
+}
+
+.highlighted-payment-info {
+    color: var(--preset--secondary--font--color);
 }
 
 .donate_input {

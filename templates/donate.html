@@ -35,35 +35,32 @@
     <div id="paybox">
         <div id="row" height="50px">
             <div id="left" style="display:inline-block;" height="75px">
-                <h1>Donate Bitcoin</h>
+                <h1>Donate Bitcoin</h1>
             </div>
             <div id="right">
                 <a class="logo" target="_blank"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
-                <!-- <a id="qrClick" target="_blank"><img class="qr" id="qrImage" style="padding-top:25px;display:none" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a> -->
             </div>
         </div>
 
         <div id="paymentForm">
             <form id="pay" action='/pay'>
                 <div style="display:block;text-align: center;">
-                    <h2 style="margin:0;">Amount:
-                    <input class="donate_input" size="4" type="float" name="amount" placeholder="0" required>
+                    <input class="donate_input" style="padding: 7.5px; font-size: 1.25em;" size="6" type="float" name="amount" placeholder="0" required>
                     <select class="donate_input" name="currency" required>
                         {% for currency_option in params.supported_currencies %}
                         <option value="{{currency_option}}"{% if currency_option == params.base_currency %} selected{% endif %}>{{currency_option}}</option>
                         {% endfor %}
                     </select>
-                    </h2>
                     <br>
-                    <h3 style="margin:0;">Message (optional):<h3>
-                    <textarea class="donate_input" name="message" rows="2" maxlength="35"></textarea>
+                    <h3 style="margin-bottom: 5px;">Message</h3>
+                    <textarea class="donate_input" name="message" style="text-align: center; padding: 7.5px;" rows="2" maxlength="35" placeholder="(optional)"></textarea>
                     <br>
-                    <input class="button button1" style="width:40%" type="submit" value="Donate">
+                    <br>
+                    <input class="button button1" style="width:40%; font-size: 1.5em;" type="submit" value="Donate">
                 </div>
             </form>
             <div id="paybutton"></div>
         </div>
-        <br>
         <div id="row">
             <div id="left">
                 {% if params.node_info %}

@@ -42,25 +42,37 @@
         </div>
       </div>
 
-      <div id="paymentDetails" style="display: none; padding: 0">
+      <div id="paymentDetails" style="display: none">
         <p style="padding: 0">
-          Send: <b><span id="amount_sats"></span></b> sats
+          Send:
+          <b><span id="amount_sats" class="highlighted-payment-info"></span></b>
+          sats
         </p>
         <p style="padding: 0">
-          &nbsp&nbsp&nbsp&nbsp&nbsp(<b><span id="amount"></span></b> BTC)
+          &nbsp&nbsp&nbsp&nbsp&nbsp(<b
+            ><span id="amount" class="highlighted-payment-info"></span
+          ></b>
+          BTC)
         </p>
         <p style="padding: 0">To:</p>
-        <b><p id="address" onclick="copyTextFromElement('address')"></p></b>
+        <b
+          ><p
+            id="address"
+            class="highlighted-payment-info"
+            onclick="copyTextFromElement('address')"
+          ></p
+        ></b>
         <p style="padding: 0">
           <span id="status">Waiting for payment...</span>
         </p>
-        <p id="timerContainer" style="padding: 0; visibility: hidden">
-          <span id="timer"></span> seconds remaining.
+        <p id="timerContainer" style="visibility: hidden">
+          <span id="timer" class="highlighted-payment-info"></span> seconds
+          remaining.
         </p>
       </div>
 
       <div id="error" style="display: none">
-        <p style="padding: 0">
+        <p>
           <span id="error_message">Error generating invoice!</span>
         </p>
       </div>
@@ -68,7 +80,7 @@
       <br />
 
       <div id="row">
-        <div id="left" style="width: 40%; text-align: left; padding: 0">
+        <div id="left" style="width: 40%">
           <div id="paymentMethodSwitchButton" style="display: none">
             {% if params.payment_methods|length > 1 %}
             <select
