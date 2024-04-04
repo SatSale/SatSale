@@ -32,9 +32,9 @@ h1, h2, h3, h4, h5, h6 {
     height: 275px;
     width:360px;
     padding-left: 20px;
-    padding-right: 15px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-right: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 
     /* Centering */
     position: absolute;
@@ -72,6 +72,9 @@ p {
 /* Heading style */
 h1 {
     font-size: 2em;
+    text-align: center;
+    padding: 10px;
+    margin: 0;
 }
 
 .button {
@@ -91,15 +94,19 @@ h1 {
     transition-duration: 0.4s;
 }
 
-.button1 {
+.button-centered {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 
 .logo {
-    padding-top:10px;
-    padding-left:30px;
     float:right;
+    right: 0;
+    position: absolute;
+    padding-right: 10px;
 }
 
 .qr {

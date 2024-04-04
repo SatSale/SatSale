@@ -33,13 +33,8 @@
 
 <body>
     <div id="paybox">
-        <div id="row" height="50px">
-            <div id="left" style="display:inline-block;" height="75px">
-                <h1>Donate Bitcoin</h1>
-            </div>
-            <div id="right">
-                <a class="logo" target="_blank"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
-            </div>
+        <div style="text-align: center;">
+            <h1>Donate Bitcoin</h1>
         </div>
 
         <div id="paymentForm">
@@ -47,25 +42,29 @@
                 <div style="display:block;text-align: center;">
                     <input class="donate_input" style="padding: 7.5px; font-size: 1.25em;" size="6" type="float" name="amount" placeholder="0" required>
                     <select class="donate_input" name="currency" required>
-                        {% for currency_option in params.supported_currencies %}
-                        <option value="{{currency_option}}"{% if currency_option == params.base_currency %} selected{% endif %}>{{currency_option}}</option>
-                        {% endfor %}
+                    {% for currency_option in params.supported_currencies %}
+                        <option value="{{currency_option}}" {% if currency_option == params.base_currency %}selected{% endif %}>{{currency_option}}</option>
+                    {% endfor %}
                     </select>
                     <br>
                     <h3 style="margin-bottom: 5px;">Message</h3>
                     <textarea class="donate_input" name="message" style="text-align: center; padding: 7.5px;" rows="2" maxlength="35" placeholder="(optional)"></textarea>
                     <br>
                     <br>
-                    <input class="button button1" style="width:40%; font-size: 1.5em;" type="submit" value="Donate">
+                    <div style="display: flex; justify-content: center; align-items: center; min-height: 40px">
+                        <input class="button button-centered" style="font-size: 1.5em;" type="submit" value="Donate">
+                        <a class="logo" href="https://github.com/nickfarrow/SatSale" target="_blank"><img width="70px" src="{{ url_for('static', filename='logo.svg') }}"></a>
+                    </div>
                 </div>
             </form>
             <div id="paybutton"></div>
         </div>
-        <div id="row">
+        <br>
+        <div id="row" style="padding-top: 0px">
             <div id="left">
                 {% if params.node_info %}
                 <small><a id="about" href="/node/" target="_blank">Open a Lightning channel with me!</a></small>
-                </br>
+                <br />
                 {% endif %}
             </div>
             <div id="right" style="text-align:right;">
