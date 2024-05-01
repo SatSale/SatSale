@@ -3,6 +3,7 @@ import time
 import os
 import json
 from base64 import b64decode
+from decimal import Decimal
 from google.protobuf.json_format import MessageToJson
 from typing import Tuple
 
@@ -121,12 +122,12 @@ class lnd(node.node):
     # Create lightning invoice
     def create_lnd_invoice(
         self,
-        btc_amount: float,
+        btc_amount: Decimal,
         memo: str = None,
         expiry: int = 3600,
     ) -> Tuple[str, str]:
         # Multiplying by 10^8 to convert to satoshi units
-        sats_amount = int(float(btc_amount) * 10 ** 8)
+        sats_amount = int(Decimal(btc_amount) * 10 ** 8)
         res = self.lnd.add_invoice(
             value=sats_amount, memo=memo, expiry=expiry
         )
@@ -134,7 +135,7 @@ class lnd(node.node):
 
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
 
-    def get_address(self, amount: float, label: str,
+    def get_address(self, amount: Decimal, label: str,
                     expiry: int) -> Tuple[str, str, str]:
         address, r_hash = self.create_lnd_invoice(
             amount, memo=label, expiry=expiry)
@@ -155,17 +156,18 @@ class lnd(node.node):
         return info["uris"][0]
 
     # Check whether the payment has been paid
-    def check_payment(self, rhash: str) -> Tuple[float, float]:
+    def check_payment(self, rhash: str) -> Tuple[Decimal, Decimal]:
         invoice_status = json.loads(
             MessageToJson(self.lnd.lookup_invoice(r_hash_str=b64decode(rhash).hex()))
         )
 
         if "amtPaidSat" not in invoice_status.keys():
-            conf_paid = 0
-            unconf_paid = 0
+            conf_paid = Decimal(0)
+            unconf_paid = Decimal(0)
         else:
             # Store amount paid and convert to BTC units
-            conf_paid = (int(invoice_status["amtPaidSat"]) + 1) / (10 ** 8)
-            unconf_paid = 0
+            conf_paid = Decimal(
+                (int(invoice_status["amtPaidSat"]) + 1) / (10 ** 8))
+            unconf_paid = Decimal(0)
 
         return conf_paid, unconf_paid
