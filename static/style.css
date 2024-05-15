@@ -1,9 +1,9 @@
 :root {
     --preset--font--family: "Lucida Console", "Courier New", monospace;
-    --preset--html--background: #fff;
-    --preset--primary--background: #f7931a;
-    --preset--primary--font--color: #000;
-    --preset--secondary--font--color: #fff;
+    --preset--html--background: inherit;
+    --preset--primary--background: #040f24;
+    --preset--primary--font--color: #ff9900;
+    --preset--secondary--font--color: #ffcb7c;
 }
 
 html, body {
@@ -25,18 +25,16 @@ h1, h2, h3, h4, h5, h6 {
 #paybox {
     /* SatSale Box color */
     background-color: var(--preset--primary--background);
-    /* Rounded Corners */
     border-radius: 25px;
 
-    font-size: 16px;
+    font-size: 1em;
 
     height: 275px;
     width:360px;
-
     padding-left: 20px;
-    padding-right: 15px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-right: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 
     /* Centering */
     position: absolute;
@@ -74,6 +72,9 @@ p {
 /* Heading style */
 h1 {
     font-size: 2em;
+    text-align: center;
+    padding: 10px;
+    margin: 0;
 }
 
 .button {
@@ -93,15 +94,19 @@ h1 {
     transition-duration: 0.4s;
 }
 
-.button1 {
+.button-centered {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 
 .logo {
-    padding-top:10px;
-    padding-left:30px;
     float:right;
+    right: 0;
+    position: absolute;
+    padding-right: 10px;
 }
 
 .qr {
@@ -117,6 +122,10 @@ h1 {
     -ms-transform: scale(2.5); /* IE 9 */
     -webkit-transform: scale(2.5); /* Safari 3-8 */
     transform: scale(3) translate(-30px, 29px);
+}
+
+.highlighted-payment-info {
+    color: var(--preset--secondary--font--color);
 }
 
 .donate_input {

@@ -2,9 +2,9 @@
 
 SatSale is a lightweight Bitcoin payment processor with the option of connecting to your own Bitcoin node or Lightning network node.
 
-|                                                                                                Donation Button ----->                                                                                                 |                                                                                       Bitcoin Payment Gateway                                                                                        |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [![Donate demo](https://user-images.githubusercontent.com/24557779/140633603-bc79de2d-741d-4dc2-8138-2615af53b0a3.png)](https://try.satsale.org/) <br />(Click for donation page demo)<br /> Initiates payment -----> | [![Store demo](https://user-images.githubusercontent.com/24557779/140633619-1110dc2f-62ac-4fc4-8c08-869cdec273b3.png)](https://store.btcpyment.com/) <br />(Click for WordPress store payments demo) |
+|                                                                                              Donation Page                                                                                              |                                               Payment Page                                               |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+| [![Donate demo](https://github.com/SatSale/SatSale/assets/24557779/aa8913b4-e9e8-4b3a-a083-7220453ff6bb)](https://try.satsale.org/) <br />(Click for donation page demo)<br /> Initiates payment -----> | ![Payment demo](https://github.com/SatSale/SatSale/assets/24557779/b9fa8d30-f5fe-42f9-9ce7-1678b8007a95) |
 
 - [Features](#features)
 - [Installation (short!)](#installation--short--)

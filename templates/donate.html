@@ -1,80 +1,140 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Donate Bitcoin</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
     <script src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Donate Bitcoin">
-    <meta name="description" content="Lightweight Bitcoin payment processor written in easily deployable Python. ">
+    <meta name="title" content="Donate Bitcoin" />
+    <meta
+      name="description"
+      content="Lightweight Bitcoin payment processor written in easily deployable Python. "
+    />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://try.SatSale.com/">
-    <meta property="og:title" content="Donate Bitcoin">
-    <meta property="og:description" content="Lightweight Bitcoin payment processor written in easily deployable Python. ">
-    <meta property="og:image" content="https://user-images.githubusercontent.com/24557779/109666538-60ee4800-7bc3-11eb-8615-2cb1b239cc11.png">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://try.SatSale.com/" />
+    <meta property="og:title" content="Donate Bitcoin" />
+    <meta
+      property="og:description"
+      content="Lightweight Bitcoin payment processor written in easily deployable Python. "
+    />
+    <meta
+      property="og:image"
+      content="https://user-images.githubusercontent.com/24557779/109666538-60ee4800-7bc3-11eb-8615-2cb1b239cc11.png"
+    />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://try.SatSale.com/">
-    <meta property="twitter:title" content="Donate Bitcoin">
-    <meta property="twitter:description" content="Lightweight Bitcoin payment processor written in easily deployable Python. ">
-    <meta property="twitter:image" content="https://user-images.githubusercontent.com/24557779/109666538-60ee4800-7bc3-11eb-8615-2cb1b239cc11.png">
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://try.SatSale.com/" />
+    <meta property="twitter:title" content="Donate Bitcoin" />
+    <meta
+      property="twitter:description"
+      content="Lightweight Bitcoin payment processor written in easily deployable Python. "
+    />
+    <meta
+      property="twitter:image"
+      content="https://user-images.githubusercontent.com/24557779/109666538-60ee4800-7bc3-11eb-8615-2cb1b239cc11.png"
+    />
+  </head>
 
-</head>
-
-
-<body>
+  <body>
     <div id="paybox">
-        <div id="row" height="50px">
-            <div id="left" style="display:inline-block;" height="75px">
-                <h1>Donate Bitcoin</h>
-            </div>
-            <div id="right">
-                <a class="logo" target="_blank"><img width="100px" src="{{ url_for('static', filename='logo.svg') }}"></a>
-                <!-- <a id="qrClick" target="_blank"><img class="qr" id="qrImage" style="padding-top:25px;display:none" width="65px" src="https://i.pinimg.com/originals/3a/dd/40/3add4023fa9b435e7da3c09156b88015.png"></a> -->
-            </div>
-        </div>
+      <div style="text-align: center">
+        <h1>Donate Bitcoin</h1>
+      </div>
 
-        <div id="paymentForm">
-            <form id="pay" action='/pay'>
-                <div style="display:block;text-align: center;">
-                    <h2 style="margin:0;">Amount:
-                    <input class="donate_input" size="4" type="float" name="amount" placeholder="0" required>
-                    <select class="donate_input" name="currency" required>
-                        {% for currency_option in params.supported_currencies %}
-                        <option value="{{currency_option}}"{% if currency_option == params.base_currency %} selected{% endif %}>{{currency_option}}</option>
-                        {% endfor %}
-                    </select>
-                    </h2>
-                    <br>
-                    <h3 style="margin:0;">Message (optional):<h3>
-                    <textarea class="donate_input" name="message" rows="2" maxlength="35"></textarea>
-                    <br>
-                    <input class="button button1" style="width:40%" type="submit" value="Donate">
-                </div>
-            </form>
-            <div id="paybutton"></div>
-        </div>
-        <br>
-        <div id="row">
-            <div id="left">
-                {% if params.node_info %}
-                <small><a id="about" href="/node/" target="_blank">Open a Lightning channel with me!</a></small>
-                </br>
-                {% endif %}
+      <div id="paymentForm">
+        <form id="pay" action="/pay">
+          <div style="display: block; text-align: center">
+            <input
+              class="donate_input"
+              style="padding: 7.5px; font-size: 1.25em"
+              size="6"
+              type="float"
+              name="amount"
+              placeholder="0"
+              required
+            />
+            <select class="donate_input" name="currency" required>
+            {% for currency_option in params.supported_currencies %}
+                <option value="{{currency_option}}" {% if currency_option == params.base_currency %}selected{% endif %}>{{currency_option}}</option>
+            {% endfor %}
+            </select>
+            <br />
+            <h3 style="margin-bottom: 5px">Message</h3>
+            <textarea
+              class="donate_input"
+              name="message"
+              style="text-align: center; padding: 7.5px"
+              rows="2"
+              maxlength="35"
+              placeholder="(optional)"
+            ></textarea>
+            <br />
+            <br />
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 40px;
+              "
+            >
+              <input
+                class="button button-centered"
+                style="font-size: 1.5em"
+                type="submit"
+                value="Donate"
+              />
+              <a
+                class="logo"
+                href="https://github.com/SatSale/SatSale"
+                target="_blank"
+                ><img
+                  width="65px"
+                  src="{{ url_for('static', filename='logo.svg') }}"
+              /></a>
             </div>
-            <div id="right" style="text-align:right;">
-                <small style="vertical-align:middle"><a id="about" href="https://github.com/nickfarrow/SatSale" target="_blank">SatSale</a></small>   
-            </div>
+          </div>
+        </form>
+        <div id="paybutton"></div>
+      </div>
+      <br />
+      <div id="row" style="padding-top: 0px">
+        <div id="left">
+          {% if params.node_info %}
+          <small
+            ><a id="about" href="/node/" target="_blank"
+              >Open a Lightning channel with me!</a
+            ></small
+          >
+          <br />
+          {% endif %}
         </div>
+        <div id="right" style="text-align: right">
+          <small style="vertical-align: middle"
+            ><a
+              id="about"
+              href="https://github.com/SatSale/SatSale"
+              target="_blank"
+              >SatSale</a
+            ></small
+          >
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
