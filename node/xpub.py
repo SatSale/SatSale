@@ -8,7 +8,7 @@ from bip_utils import \
     Bip84, Bip84Coins, \
     Bip86, Bip86Coins
 from decimal import Decimal
-from typing import Tuple
+from typing import Optional, Tuple
 
 from node import node
 from payments import database
@@ -140,8 +140,8 @@ class xpub(node.node):
         address = child_key.PublicKey().ToAddress()
         return address
 
-    def get_address(self, amount: Decimal, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
+    def get_address(self, amount: Optional[Decimal], label: str,
+                    expiry: Optional[int]) -> Tuple[str, str, str]:
         while True:
             n = self.get_next_address_index(self.config["xpub"])
             address = self.get_address_at_index(n)

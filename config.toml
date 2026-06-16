@@ -96,6 +96,12 @@ pollrate = 1
 # Payment expires after xx seconds
 payment_timeout = 3600
 
+# Deposit expires after xx seconds (0 = no expiry)
+deposit_timeout = 0
+
+# Default minimum deposit in BTC (0 = no minimum)
+deposit_min_btc = 0
+
 # Required confirmations for a payment
 required_confirmations = 2
 

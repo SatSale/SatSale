@@ -26,8 +26,9 @@ SatSale is a lightweight Bitcoin payment processor with the option of connecting
 Satsale can be used as a
 
 1. Donation page and button for your website that you can easily embed/link to anywhere.
-2. Bitcoin payment gateway, including a Woocommerce plugin that easily turns any Wordpress site into a Bitcoin accepting store.
-3. Versatile API and payments platform for both on-chain and lightning payments (supporting both clightning and lnd).
+2. Open-ended deposit page where users can send any amount of Bitcoin (with an optional minimum).
+3. Bitcoin payment gateway, including a Woocommerce plugin that easily turns any Wordpress site into a Bitcoin accepting store.
+4. Versatile API and payments platform for both on-chain and lightning payments (supporting both clightning and lnd).
 
 Compared to other Bitcoin payment processors, SatSale is lightweight, easy to install and self-host. SatSale is also a great building block for python lightning applications.
 
@@ -132,6 +133,20 @@ Now embed the donation button into your website HTML:
 ```
 
 Changing `YOUR_SERVER_IP` to the IP address of the machine you're running SatSale on, node or otherwise. Additionally, you could redirect a domain to that IP and use that instead.
+
+### Embed a Deposit Button
+
+SatSale also supports open-ended deposits. Embed the deposit button into your website HTML:
+
+```html
+<iframe
+  src="http://YOUR_SERVER_IP:8000/deposit"
+  style="margin: 0 auto;display:block;width:420px;height:460px;border:none;overflow:hidden;"
+  scrolling="no"
+></iframe>
+```
+
+Users can send any amount to a fresh on-chain address. You can optionally set a minimum amount before the deposit is considered complete.
 
 ### Using HTTPS & Domains
 

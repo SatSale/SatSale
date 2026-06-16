@@ -2,7 +2,7 @@ import json
 import logging
 import time
 from decimal import Decimal
-from typing import Tuple
+from typing import Optional, Tuple
 
 import config
 from node import node
@@ -59,8 +59,8 @@ class lndhub(node.node):
         ret = self.lndhub.create_invoice(amt=sats_amount, memo=memo)
         return ret["payment_request"], ret["r_hash"]
 
-    def get_address(self, btc_amount: Decimal, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
+    def get_address(self, btc_amount: Optional[Decimal], label: str,
+                    expiry: Optional[int]) -> Tuple[str, str, str]:
         address, r_hash = self.create_lndhub_invoice(
             btc_amount, label, expiry)
         return None, address, r_hash

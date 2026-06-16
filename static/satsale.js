@@ -46,6 +46,48 @@ function payment(payment_data) {
     });
 }
 
+// Deposit logic, talks to satsale.py
+function deposit(deposit_data) {
+    $('document').ready(function(){
+        var deposit_uuid;
+        var depositRequestData = {currency: deposit_data.currency, method: deposit_data.method, message: deposit_data.message};
+
+        if (deposit_data.min_amount) {
+            depositRequestData['min_amount'] = deposit_data.min_amount;
+        }
+        if (deposit_data.w_url) {
+            depositRequestData['w_url'] = deposit_data.w_url;
+        }
+
+        $.get("/api/createdeposit", depositRequestData).then(function(data) {
+            var deposit = data.deposit;
+            deposit_uuid = deposit.uuid;
+
+            $('#address').text(deposit.address).html();
+            if (deposit.min_btc_value) {
+                $('#min_amount_btc').text(deposit.min_btc_value).html();
+                $('#min_amount_sats').text(Math.round(deposit.min_btc_value * 10**8)).html();
+                $('#minAmountText').show();
+            }
+            $('#paymentDetails').show();
+
+            return deposit_uuid;
+        }, function(data) {
+            console.error(data["responseJSON"]["message"]);
+            $('#error').show();
+            $('#error_message').text(data["responseJSON"]["message"]).html();
+            return "";
+        }).then(function(deposit_uuid) {
+            if (deposit_uuid != "") {
+                load_qr(deposit_uuid);
+
+                // Pass deposit uuid and the interval process to check_deposit
+                var checkinterval = setInterval(function() {check_deposit(deposit_uuid, checkinterval, deposit_data);}, 1000);
+            }
+        })
+    });
+}
+
 function check_payment(payment_uuid, checkinterval, payment_data) {
     $.get("/api/checkpayment", {uuid: payment_uuid}).then(function(checkpayment_data) {
         payment_status = checkpayment_data.status;
@@ -71,6 +113,38 @@ function check_payment(payment_uuid, checkinterval, payment_data) {
             }
             else {
                 $('#status').text("Waiting for payment...").html();
+                return 0;
+            }
+        }
+    });
+}
+
+function check_deposit(deposit_uuid, checkinterval, deposit_data) {
+    $.get("/api/checkdeposit", {uuid: deposit_uuid}).then(function(checkdeposit_data) {
+        deposit_status = checkdeposit_data.status;
+        console.log(deposit_status);
+
+        $('#balance_sats').text(Math.round(deposit_status.confirmed_paid * 10**8)).html();
+
+        if (deposit_status.expired == 1) {
+            $('#status').text("Deposit expired.").html();
+            clearInterval(checkinterval);
+            return 1;
+        }
+
+        if (deposit_status.payment_complete == 1) {
+            $('#status').text("Minimum deposit reached.").html();
+            complete_payment(deposit_uuid, deposit_data);
+            clearInterval(checkinterval);
+            return 1;
+        }
+        else {
+            if (deposit_status.unconfirmed_paid > 0) {
+                $('#status').text("Discovered deposit. Waiting for more confirmations...").html();
+                return 0;
+            }
+            else {
+                $('#status').text("Waiting for deposit...").html();
                 return 0;
             }
         }

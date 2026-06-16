@@ -61,6 +61,15 @@ os.makedirs(qr_base_path, exist_ok=True)
             "invoice_type": InvoiceType.BIP21,
             "invoice_str": "bitcoin:mk2QpYatsKicvFVuTAQLBryyccRXMUaGHP?amount=0.02&label=bolt11_example&lightning=lntb20m1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygshp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqfpp3x9et2e20v6pu37c5d9vax37wxq72un989qrsgqdj545axuxtnfemtpwkc45hx9d2ft7x04mt8q7y6t0k2dge9e7h8kpy9p34ytyslj3yu569aalz2xdk8xkd7ltxqld94u8h2esmsmacgpghe9k8"
         },
+        {
+            "uuid": "deposit_example",
+            "invoice": {
+                "address": "mk2QpYatsKicvFVuTAQLBryyccRXMUaGHP",
+                "message": "Deposit for account"
+            },
+            "invoice_type": InvoiceType.BIP21_DEPOSIT,
+            "invoice_str": "bitcoin:mk2QpYatsKicvFVuTAQLBryyccRXMUaGHP?label=deposit_example&message=Deposit%20for%20account"
+        },
     ]
     )
 def test_bitcoin_invoice(invoice_data: list) -> None:

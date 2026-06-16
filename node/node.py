@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from decimal import Decimal
-from typing import Tuple
+from typing import Optional, Tuple
 
 
 class node(ABC):
@@ -14,8 +14,8 @@ class node(ABC):
         pass
 
     @abstractmethod
-    def get_address(self, amount: Decimal, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
+    def get_address(self, amount: Optional[Decimal], label: str,
+                    expiry: Optional[int]) -> Tuple[str, str, str]:
         pass
 
     @abstractmethod
