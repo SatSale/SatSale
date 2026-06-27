@@ -30,7 +30,7 @@ class lndhub(node.node):
                     root_url=self.config["backend_url"])
                 logging.info("Getting LNDHub node info...")
                 logging.info(json.dumps(self.get_info()))
-                logging.info("Sucessfully contacted LNDHub.")
+                logging.info("Successfully contacted LNDHub.")
                 break
 
             except Exception as e:
