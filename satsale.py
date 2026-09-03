@@ -153,6 +153,11 @@ class create_payment(Resource):
         if webhook is None:
             webhook = None
         else:
+            try:
+                woo_webhook.validate_webhook_url(webhook)
+            except ValueError as e:
+                logging.warning("Rejected webhook URL {}: {}".format(webhook, e))
+                return {"message": "Invalid webhook URL."}, 400
             logging.info("Webhook payment: {}".format(webhook))
         payment_message = request.args.get("message")
         if payment_message is not None and len(payment_message) > 35:
@@ -305,13 +310,24 @@ class complete_payment(Resource):
         # Call webhook to confirm payment with merchant
         if (invoice["webhook"] is not None) and (invoice["webhook"] != ""):
             logging.info("Calling webhook {}".format(invoice["webhook"]))
+            try:
+                woo_webhook.validate_webhook_url(invoice["webhook"])
+            except ValueError as e:
+                logging.error(
+                    "Refusing to call invalid webhook {}: {}".format(invoice["webhook"], e)
+                )
+                return {"message": "Invalid webhook URL."}, 400
             response = woo_webhook.hook(app.config["SECRET_KEY"], invoice, order_id)
 
             if response.status_code != 200:
-                err = "Failed to confirm order payment via webhook {}, please contact the store to ensure the order has been confirmed, error response is: {}".format(
-                    response.status_code, response.text
+                logging.error(
+                    "Webhook {} returned {}: {}".format(
+                        invoice["webhook"], response.status_code, response.text
+                    )
                 )
-                logging.error(err)
+                err = "Failed to confirm order payment via webhook (status {}), please contact the store to ensure the order has been confirmed.".format(
+                    response.status_code
+                )
                 return {"message": err}, 500
 
             logging.info("Successfully confirmed payment via webhook.")

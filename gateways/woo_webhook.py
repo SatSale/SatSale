@@ -3,7 +3,34 @@ import hashlib
 import json
 import codecs
 import time
+import socket
+import ipaddress
+from urllib.parse import urlparse
 import requests
+
+
+def validate_webhook_url(url):
+    # Reject webhook URLs that could be used for SSRF. Only public http/https
+    # hosts are allowed; raises ValueError if the URL uses another scheme or
+    # resolves to a private/loopback/link-local/reserved address (including
+    # cloud metadata endpoints such as 169.254.169.254).
+    if not url:
+        return
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError("Webhook URL must use http or https")
+    host = parsed.hostname
+    if not host:
+        raise ValueError("Webhook URL has no host")
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    try:
+        addrinfo = socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP)
+    except socket.gaierror:
+        raise ValueError("Webhook URL host could not be resolved")
+    for res in addrinfo:
+        ip = ipaddress.ip_address(res[4][0])
+        if not ip.is_global:
+            raise ValueError("Webhook URL resolves to a non-public address")
 
 
 def hook(satsale_secret, invoice, order_id):
