@@ -51,6 +51,11 @@ function check_payment(payment_uuid, checkinterval, payment_data) {
         payment_status = checkpayment_data.status;
         console.log(payment_status);
         if (payment_status.expired == 1) {
+            $('#qrClick').hide();
+            $('#address').hide();
+            $('#amount').hide();
+            $('#amount_sats').hide();
+            $('#timer').hide();
             $('#status').text("Payment expired.").html();
             document.getElementById('timerContainer').style.visibility = "hidden";
             clearInterval(checkinterval);
