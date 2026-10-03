@@ -5,7 +5,7 @@ import json
 from base64 import b64decode
 from decimal import Decimal
 from google.protobuf.json_format import MessageToJson
-from typing import Tuple
+from typing import Optional, Tuple
 
 import config
 import logging
@@ -135,8 +135,8 @@ class lnd(node.node):
 
         return lnd_invoice["paymentRequest"], lnd_invoice["rHash"]
 
-    def get_address(self, amount: Decimal, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
+    def get_address(self, amount: Optional[Decimal], label: str,
+                    expiry: Optional[int]) -> Tuple[str, str, str]:
         address, r_hash = self.create_lnd_invoice(
             amount, memo=label, expiry=expiry)
         return None, address, r_hash

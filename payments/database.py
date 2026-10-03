@@ -90,12 +90,20 @@ def migrate_database(name: str = DEFAULT_DATABASE) -> None:
         _set_database_schema_version(5, name)
 
     if schema_version < 6:
-        _log_migrate_database(4, 5, "Add message column to payments table")
+        _log_migrate_database(5, 6, "Add message column to payments table")
         with sqlite3.connect(name) as conn:
             conn.execute("ALTER TABLE payments ADD message TEXT")
         _set_database_schema_version(6, name)
 
-    #if schema_version < 7:
+    if schema_version < 7:
+        _log_migrate_database(6, 7, "Add deposit columns to payments table")
+        with sqlite3.connect(name) as conn:
+            conn.execute("ALTER TABLE payments ADD type TEXT DEFAULT 'invoice'")
+            conn.execute("ALTER TABLE payments ADD min_btc_value DECIMAL")
+            conn.execute("ALTER TABLE payments ADD expires_at DECIMAL")
+        _set_database_schema_version(7, name)
+
+    #if schema_version < 8:
     #   do next migration
 
     new_version = _get_database_schema_version(name)
@@ -113,8 +121,8 @@ def write_to_database(invoice: dict, name: str = DEFAULT_DATABASE) -> None:
         cur.execute(
             "INSERT INTO payments (uuid, base_currency, base_value, "
             "btc_value, method, address, time, webhook, rhash, "
-            "bolt11_invoice, message) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            "bolt11_invoice, message, type, min_btc_value, expires_at) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 invoice["uuid"],
                 invoice["base_currency"],
@@ -126,7 +134,10 @@ def write_to_database(invoice: dict, name: str = DEFAULT_DATABASE) -> None:
                 invoice["webhook"],
                 invoice["rhash"],
                 invoice["bolt11_invoice"],
-                invoice["message"]
+                invoice["message"],
+                invoice.get("type", "invoice"),
+                invoice.get("min_btc_value"),
+                invoice.get("expires_at"),
             ),
         )
     return

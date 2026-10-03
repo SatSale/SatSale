@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Deposit Bitcoin</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <script src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Deposit Bitcoin" />
+    <meta
+      name="description"
+      content="Lightweight Bitcoin payment processor written in easily deployable Python."
+    />
+  </head>
+
+  <body>
+    <div id="paybox">
+      <div style="text-align: center">
+        <h1>Deposit Bitcoin</h1>
+      </div>
+
+      <div id="paymentForm">
+        <form id="pay" action="/deposit_pay">
+          <div style="display: block; text-align: center">
+            <h3 style="margin-bottom: 5px; margin-top: 0">Minimum amount (optional)</h3>
+            <input
+              class="donate_input"
+              style="padding: 7.5px; font-size: 1.25em"
+              size="6"
+              type="float"
+              name="min_amount"
+              placeholder="0"
+            />
+            <select class="donate_input" name="currency">
+            {% for currency_option in params.supported_currencies %}
+                <option value="{{currency_option}}" {% if currency_option == params.base_currency %}selected{% endif %}>{{currency_option}}</option>
+            {% endfor %}
+            </select>
+            <br />
+            <h3 style="margin-bottom: 5px">Message</h3>
+            <textarea
+              class="donate_input"
+              name="message"
+              style="text-align: center; padding: 7.5px"
+              rows="2"
+              maxlength="35"
+              placeholder="(optional)"
+            ></textarea>
+            <br />
+            <br />
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 40px;
+              "
+            >
+              <input
+                class="button button-centered"
+                style="font-size: 1.5em"
+                type="submit"
+                value="Deposit"
+              />
+              <a
+                class="logo"
+                href="https://github.com/SatSale/SatSale"
+                target="_blank"
+                ><img
+                  width="65px"
+                  src="{{ url_for('static', filename='logo.svg') }}"
+              /></a>
+            </div>
+          </div>
+        </form>
+        <div id="paybutton"></div>
+      </div>
+      <br />
+      <div id="row" style="padding-top: 0px">
+        <div id="left">
+          {% if params.node_info %}
+          <small
+            ><a id="about" href="/node/" target="_blank"
+              >Open a Lightning channel with me!</a
+            ></small
+          >
+          <br />
+          {% endif %}
+        </div>
+        <div id="right" style="text-align: right">
+          <small style="vertical-align: middle"
+            ><a
+              id="about"
+              href="https://github.com/SatSale/SatSale"
+              target="_blank"
+              >SatSale</a
+            ></small
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

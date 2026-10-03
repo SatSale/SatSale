@@ -77,7 +77,31 @@ def pay():
     params["payment_methods"] = enabled_payment_methods
     params["redirect"] = config.redirect
     params["node_info"] = config.node_info
+    params["payment_type"] = "invoice"
     # Render payment page with the request arguments (?amount= etc.)
+    headers = {"Content-Type": "text/html"}
+    return make_response(render_template("index.html", params=params), 200, headers)
+
+
+# /deposit is a page for initiating an open-ended deposit
+@app.route("/deposit")
+def deposit_page():
+    params = dict(request.args)
+    params["supported_currencies"] = config.supported_currencies
+    params["base_currency"] = config.base_currency
+    params["node_info"] = config.node_info
+    headers = {"Content-Type": "text/html"}
+    return make_response(render_template("deposit.html", params=params), 200, headers)
+
+
+# /deposit_pay is the deposit payment page
+@app.route("/deposit_pay")
+def deposit_pay():
+    params = dict(request.args)
+    params["payment_methods"] = enabled_payment_methods
+    params["redirect"] = config.redirect
+    params["node_info"] = config.node_info
+    params["payment_type"] = "deposit"
     headers = {"Content-Type": "text/html"}
     return make_response(render_template("index.html", params=params), 200, headers)
 
@@ -120,6 +144,34 @@ status_model = api.model(
         "confirmed_paid": fields.Float(),
         "unconfirmed_paid": fields.Float(),
         "expired": fields.Integer(),
+    },
+)
+
+deposit_model = api.model(
+    "deposit",
+    {
+        "uuid": fields.String(),
+        "type": fields.String(),
+        "base_currency": fields.String(),
+        "min_base_value": fields.Float(),
+        "min_btc_value": fields.Float(),
+        "method": fields.String(),
+        "address": fields.String(),
+        "time": fields.Float(),
+        "expires_at": fields.Float(),
+        "onchain_dust_limit": fields.Float(),
+        "message": fields.String(),
+    },
+)
+
+deposit_status_model = api.model(
+    "deposit_status",
+    {
+        "payment_complete": fields.Integer(),
+        "confirmed_paid": fields.Float(),
+        "unconfirmed_paid": fields.Float(),
+        "expired": fields.Integer(),
+        "min_btc_value": fields.Float(),
     },
 )
 
@@ -300,6 +352,11 @@ class complete_payment(Resource):
         if status["payment_complete"] != 1:
             return {"message": "You havent paid you stingy bastard"}
 
+        if invoice.get("type") == "deposit":
+            # Deposits without a minimum never trigger webhooks
+            if invoice.get("min_btc_value") is None or invoice["min_btc_value"] == "":
+                return {"message": "Deposit confirmed."}, 200
+
         if (config.liquid_address is not None) and (
             invoice["method"] == "lightning"
         ):
@@ -336,6 +393,142 @@ class complete_payment(Resource):
         return {"message": "Payment confirmed."}, 200
 
 
+@api.doc(
+    params={
+        "min_amount": "(Optional) Minimum amount to consider deposit complete.",
+        "currency": "(Optional) Currency units of min_amount (defaults to `config.base_currency`).",
+        "message": "(Optional) Message to send with deposit.",
+        "method": "(Optional) Specify a payment method. Deposits currently require an onchain method.",
+        "w_url": "(Optional) Specify a webhook url to call after minimum deposit reached.",
+    }
+)
+class create_deposit(Resource):
+    @api.response(200, "Success", deposit_model)
+    @api.response(400, "Invalid payment method")
+    @api.response(400, "Deposit not supported for lightning")
+    @api.response(522, "Error fetching address from node")
+    def get(self):
+        "Create Deposit"
+        """Initiate a new open-ended onchain deposit."""
+        min_amount = request.args.get("min_amount")
+        currency = request.args.get("currency")
+        if currency is None:
+            currency = config.base_currency
+        payment_method = request.args.get("method")
+        if payment_method is None:
+            payment_method = enabled_payment_methods[0]
+        webhook = request.args.get("w_url")
+        if webhook is None or webhook == "":
+            webhook = None
+        else:
+            logging.info("Deposit webhook: {}".format(webhook))
+        payment_message = request.args.get("message")
+        if payment_message is not None and len(payment_message) > 35:
+            payment_message = payment_message[:35]
+
+        node = get_node(payment_method)
+        if node is None:
+            logging.warning("Invalid payment method {}".format(payment_method))
+            return {"message": "Invalid payment method."}, 400
+
+        if not node.is_onchain:
+            logging.warning("Deposit requested for non-onchain method {}".format(payment_method))
+            return {"message": "Deposits currently only support onchain payment methods."}, 400
+
+        min_btc_value = None
+        if min_amount is not None:
+            min_btc_value = get_btc_value(min_amount, currency)
+        elif config.deposit_min_btc > 0:
+            min_btc_value = config.deposit_min_btc
+            currency = "BTC"
+            min_amount = config.deposit_min_btc
+
+        if config.store_name:
+            deposit_uuid = "{}-{}".format(config.store_name, str(uuid.uuid4().hex))
+        else:
+            deposit_uuid = str(uuid.uuid4().hex)
+
+        deposit = {
+            "uuid": deposit_uuid,
+            "type": "deposit",
+            "base_currency": currency,
+            "base_value": None,
+            "min_base_value": min_amount,
+            "min_btc_value": btc_amount_format(min_btc_value) if min_btc_value is not None else None,
+            "btc_value": None,
+            "method": payment_method,
+            "time": time.time(),
+            "webhook": webhook,
+            "onchain_dust_limit": config.onchain_dust_limit,
+            "message": payment_message,
+        }
+
+        if config.deposit_timeout > 0:
+            deposit["expires_at"] = deposit["time"] + config.deposit_timeout
+        else:
+            deposit["expires_at"] = None
+
+        try:
+            deposit["address"], deposit["bolt11_invoice"], deposit["rhash"] = \
+                node.get_address(None, deposit["uuid"], config.deposit_timeout or 0)
+        except Exception as e:
+            logging.error("Failed to fetch address: {}".format(e))
+            return {"message": "Error fetching address. Check config.."}, 522
+
+        if not deposit["address"]:
+            logging.error("Failed to fetch address")
+            return {"message": "Error fetching address. Check config.."}, 522
+
+        btc_invoice_str = encode_bitcoin_invoice(
+            deposit["uuid"], deposit, InvoiceType.BIP21_DEPOSIT)
+        create_qr(deposit["uuid"], btc_invoice_str)
+
+        database.write_to_database(deposit)
+
+        logging.info("Created deposit:")
+        pprint(deposit)
+        print()
+
+        return {"deposit": deposit}, 200
+
+
+@api.doc(params={"uuid": "A deposit uuid. Received from /createdeposit."})
+class check_deposit(Resource):
+    @api.response(200, "Success", deposit_status_model)
+    @api.response(201, "Unconfirmed", deposit_status_model)
+    @api.response(202, "Deposit Expired", deposit_status_model)
+    def get(self):
+        "Check Deposit"
+        """Check the status of a deposit."""
+        uuid = request.args.get("uuid")
+        status = check_payment_status(uuid)
+
+        response = {
+            "payment_complete": 0,
+            "confirmed_paid": 0,
+            "unconfirmed_paid": 0,
+            "expired": 0,
+            "min_btc_value": status.get("min_btc_value"),
+        }
+
+        if status.get("time_left", 0) <= 0:
+            response.update({"expired": 1})
+            code = 202
+        else:
+            response.update({
+                "payment_complete": status["payment_complete"],
+                "confirmed_paid": status["confirmed_paid"],
+                "unconfirmed_paid": status["unconfirmed_paid"],
+            })
+
+        if response["payment_complete"] == 1:
+            code = 200
+        else:
+            code = 201
+
+        return {"status": response}, code
+
+
 def check_payment_status(uuid):
     status = {
         "payment_complete": 0,
@@ -346,7 +539,14 @@ def check_payment_status(uuid):
     if invoice is None:
         status.update({"time_left": 0, "not_found": 1})
     else:
-        status["time_left"] = config.payment_timeout - (time.time() - invoice["time"])
+        if invoice.get("type") == "deposit":
+            if invoice.get("expires_at") is not None:
+                status["time_left"] = invoice["expires_at"] - time.time()
+            else:
+                status["time_left"] = 365 * 24 * 60 * 60
+            status["min_btc_value"] = invoice.get("min_btc_value")
+        else:
+            status["time_left"] = config.payment_timeout - (time.time() - invoice["time"])
 
     # If payment has not expired, then we're going to check for any transactions
     if status["time_left"] > 0:
@@ -365,8 +565,16 @@ def check_payment_status(uuid):
         # Debugging and demo mode which auto confirms payments after 5 seconds
         dbg_free_mode_cond = config.free_mode and (time.time() - invoice["time"] > 5)
 
+        # Determine target amount for completion
+        if invoice.get("type") == "deposit":
+            target_btc_value = invoice.get("min_btc_value")
+        else:
+            target_btc_value = invoice["btc_value"]
+
         # If payment is paid
-        if (conf_paid >= float(invoice["btc_value"]) - config.allowed_underpay_amount) or dbg_free_mode_cond:
+        if target_btc_value is not None and (
+            (conf_paid >= float(target_btc_value) - config.allowed_underpay_amount) or dbg_free_mode_cond
+        ):
             status.update(
                 {
                     "payment_complete": 1,
@@ -401,6 +609,8 @@ def get_node(payment_method):
 api.add_resource(create_payment, "/api/createpayment")
 api.add_resource(check_payment, "/api/checkpayment")
 api.add_resource(complete_payment, "/api/completepayment")
+api.add_resource(create_deposit, "/api/createdeposit")
+api.add_resource(check_deposit, "/api/checkdeposit")
 
 # Test connections on startup:
 enabled_payment_methods = []

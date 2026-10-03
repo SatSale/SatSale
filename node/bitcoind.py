@@ -4,7 +4,7 @@ import os
 import requests
 import time
 from decimal import Decimal
-from typing import Tuple
+from typing import Optional, Tuple
 
 import config
 from node import node
@@ -115,8 +115,8 @@ class bitcoind(node.node):
 
         return conf_paid, unconf_paid
 
-    def get_address(self, amount: Decimal, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
+    def get_address(self, amount: Optional[Decimal], label: str,
+                    expiry: Optional[int]) -> Tuple[str, str, str]:
         for i in range(config.connection_attempts):
             try:
                 address = self._call_bitcoin_rpc("getnewaddress", [label])

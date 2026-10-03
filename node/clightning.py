@@ -1,7 +1,7 @@
 import time
 import logging
 from decimal import Decimal
-from typing import Tuple
+from typing import Optional, Tuple
 
 import config
 from node import node
@@ -79,8 +79,8 @@ class clightning(node.node):
         )
         return lnd_invoice["bolt11"], lnd_invoice["payment_hash"]
 
-    def get_address(self, amount: Decimal, label: str,
-                    expiry: int) -> Tuple[str, str, str]:
+    def get_address(self, amount: Optional[Decimal], label: str,
+                    expiry: Optional[int]) -> Tuple[str, str, str]:
         address, r_hash = self._create_clightning_invoice(amount, label, expiry)
         return None, address, r_hash
 

@@ -8,7 +8,8 @@ from utils import btc_amount_format
 
 class InvoiceType(Enum):
     BIP21 = 1,
-    BOLT11 = 2
+    BOLT11 = 2,
+    BIP21_DEPOSIT = 3
 
 
 def encode_bitcoin_invoice(uuid: str, invoice: dict,
@@ -25,6 +26,15 @@ def encode_bitcoin_invoice(uuid: str, invoice: dict,
             bip21_params["message"] = invoice["message"]
         if "bolt11_invoice" in invoice and invoice["bolt11_invoice"]:
             bip21_params["lightning"] = invoice["bolt11_invoice"]
+        return encode_bip21_uri(invoice["address"], bip21_params)
+
+    elif invtype == InvoiceType.BIP21_DEPOSIT:
+        assert (invoice["address"])
+        bip21_params = {
+            "label": uuid
+        }
+        if "message" in invoice:
+            bip21_params["message"] = invoice["message"]
         return encode_bip21_uri(invoice["address"], bip21_params)
 
     elif invtype == InvoiceType.BOLT11:

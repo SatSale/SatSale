@@ -21,7 +21,11 @@
     <script type="text/javascript">
       payment_data = {{ params|tojson }};
       console.log(payment_data);
-      payment(payment_data);
+      if (payment_data.payment_type === 'deposit') {
+        deposit(payment_data);
+      } else {
+        payment(payment_data);
+      }
     </script>
   </head>
 
@@ -29,7 +33,11 @@
     <div id="paybox">
       <div id="row" height="50px">
         <div id="left" style="display: inline-block" height="75px">
+          {% if params.payment_type == 'deposit' %}
+          <h1>Deposit Bitcoin</h1>
+          {% else %}
           <h1>Pay Bitcoin</h1>
+          {% endif %}
         </div>
         <div id="right">
           <a id="qrClick" target="_blank"
@@ -43,6 +51,16 @@
       </div>
 
       <div id="paymentDetails" style="display: none">
+        {% if params.payment_type == 'deposit' %}
+        <p id="depositAnyAmount" style="padding: 0">
+          Deposit any amount.
+        </p>
+        <p id="minAmountText" style="padding: 0; display: none">
+          Minimum: <b><span id="min_amount_sats" class="highlighted-payment-info"></span></b> sats
+          (<b><span id="min_amount_btc" class="highlighted-payment-info"></span></b> BTC)
+        </p>
+        <p style="padding: 0">Balance: <b><span id="balance_sats" class="highlighted-payment-info">0</span></b> sats</p>
+        {% else %}
         <p style="padding: 0">
           Send:
           <b><span id="amount_sats" class="highlighted-payment-info"></span></b>
@@ -54,6 +72,7 @@
           ></b>
           BTC)
         </p>
+        {% endif %}
         <p style="padding: 0">To:</p>
         <b
           ><p
@@ -65,10 +84,12 @@
         <p style="padding: 0">
           <span id="status">Waiting for payment...</span>
         </p>
+        {% if params.payment_type != 'deposit' %}
         <p id="timerContainer" style="visibility: hidden">
           <span id="timer" class="highlighted-payment-info"></span> seconds
           remaining.
         </p>
+        {% endif %}
       </div>
 
       <div id="error" style="display: none">
