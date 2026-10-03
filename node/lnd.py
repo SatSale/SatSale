@@ -155,6 +155,9 @@ class lnd(node.node):
         info = self.get_info()
         return info["uris"][0]
 
+    def list_invoices(self):
+        return json.loads(MessageToJson(self.lnd.list_invoices(num_max_invoices=100, reversed=True)))
+
     # Check whether the payment has been paid
     def check_payment(self, rhash: str) -> Tuple[Decimal, Decimal]:
         invoice_status = json.loads(
